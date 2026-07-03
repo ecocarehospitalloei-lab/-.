@@ -1031,53 +1031,65 @@
         if(document.getElementById('solar-cap')) document.getElementById('solar-cap').required = (m==='nometer');
     };
 })(); 
-    // 🔴 1. ใส่ URL ของ Web App ที่ได้จาก Google Apps Script ตรงนี้ 🔴
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCCrrHG_oi90UZTx7eq_Q6jAmQlLSjdLyTcZEMasSVKlkBVBSrUEb9jGuaQGAkQOHz/exec";
+    // ==========================================
+// ==========================================
+const WEB_APP_URL = "https://script.google.com/macros/s/เปลี่ยนเป็นURLของคุณตรงนี้/exec";
 
-    // 🚀 2. โค้ดสวมรอยระบบ (แปะไว้ตรงนี้แล้วไม่ต้องลบ/แก้ โค้ดเดิมของคุณเลยแม้แต่ตัวอักษรเดียว!)
-    const google = {
-        script: {
-            get run() {
-                const runObj = {
-                    withFailureHandler: function(errCallback) { this._errCallback = errCallback; return this; },
-                    withSuccessHandler: function(callback) { this._successCallback = callback; return this; }
-                };
-                return new Proxy(runObj, {
-                    get: function(target, prop) {
-                        if (prop in target) return target[prop];
-                        return function(...args) {
-                            let actionName = ''; let payloadData = args[0] || {};
-                            if (prop === 'checkHospitalLogin') {
-                                actionName = 'login'; payloadData = { hospName: args[0], password: args[1], recorderName: args[2] };
-                            } else if (prop === 'saveResourceData') { actionName = 'saveResource';
-                            } else if (prop === 'saveAppSatisfactionSurvey') { actionName = 'saveSurvey';
-                            } else if (prop === 'fetchDashboardData') {
-                                actionName = 'fetchDashboard'; payloadData = { hospName: args[0], role: args[1] };
-                            } else if (prop === 'fetchHospitalSummary') { actionName = 'fetchSummary';
-                            } else { console.warn("ไม่รองรับฟังก์ชัน:", prop); return; }
-                            
-                            // ส่งข้อมูลไปที่หลังบ้านอัตโนมัติ
-                            fetch(WEB_APP_URL, {
-                                method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
-                                body: JSON.stringify({ action: actionName, payload: payloadData })
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (target._successCallback) {
-                                    if (prop === 'fetchDashboardData' || prop === 'fetchHospitalSummary') {
-                                        target._successCallback(data.data || []);
-                                    } else { target._successCallback(data); }
-                                }
-                            }).catch(err => {
-                                console.error("API Error:", err);
-                                if (target._errCallback) target._errCallback(err);
-                            });
-                        };
-                    }
-                });
-            }
+const google = {
+    script: {
+        get run() {
+            const runObj = {
+                withFailureHandler: function(errCallback) { this._errCallback = errCallback; return this; },
+                withSuccessHandler: function(callback) { this._successCallback = callback; return this; }
+            };
+            return new Proxy(runObj, {
+                get: function(target, prop) {
+                    if (prop in target) return target[prop];
+                    return function(...args) {
+                        let actionName = ''; let payloadData = args[0] || {};
+                        if (prop === 'checkHospitalLogin') {
+                            actionName = 'login'; payloadData = { hospName: args[0], password: args[1], recorderName: args[2] };
+                        } else if (prop === 'saveResourceData') { actionName = 'saveResource';
+                        } else if (prop === 'saveAppSatisfactionSurvey') { actionName = 'saveSurvey';
+                        } else if (prop === 'fetchDashboardData') {
+                            actionName = 'fetchDashboard'; payloadData = { hospName: args[0], role: args[1] };
+                        } else if (prop === 'fetchHospitalSummary') { actionName = 'fetchSummary';
+                        } else { console.warn("ไม่รองรับฟังก์ชัน:", prop); return; }
+                        
+                        fetch(WEB_APP_URL, {
+                            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                            body: JSON.stringify({ action: actionName, payload: payloadData })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (target._successCallback) {
+                                if (prop === 'fetchDashboardData' || prop === 'fetchHospitalSummary') {
+                                    target._successCallback(data.data || []);
+                                } else { target._successCallback(data); }
+                            }
+                        }).catch(err => {
+                            console.error("API Error:", err);
+                            if (target._errCallback) target._errCallback(err);
+                        });
+                    };
+                }
+            });
         }
-    };
+    }
+};
+
+// แก้ไขบั๊กหน้าจอไม่ยอมแสดงฟอร์มและปุ่มบันทึกตอนอยู่บน GitHub
+window.addEventListener('DOMContentLoaded', () => {
+    if (typeof window.showSection === 'function') {
+        setTimeout(() => {
+            // สั่งให้ระบบเปิดหน้าแรกสุดใหม่อีกครั้งเพื่อบังคับให้ปุ่มและช่องกรอกข้อมูลแสดงผลครบถ้วน
+            window.showSection('dashboard'); 
+        }, 500);
+    }
+});
+// ==========================================
+// 🔚 จบโค้ดเชื่อมต่อระบบ
+// ==========================================
 </script>
 </body>
 </html>
