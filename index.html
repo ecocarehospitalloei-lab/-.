@@ -115,8 +115,8 @@
 <div id="login-screen">
     <div class="login-box">
         <div class="login-logo-wrap"><i class="fas fa-leaf"></i></div>
-        <h3 class="fw-bold mb-1" style="font-size:1.5rem;color:#0f172a;">ECOCARE Hospital</h3>
-        <p class="text-muted mb-4" style="font-size:0.85rem;">ระบบจัดการข้อมูลสิ่งแวดล้อมและทรัพยากรโรงพยาบาล</p>
+        <h3 class="fw-bold mb-1" style="font-size:1.5rem;color:#0f172a;">EnviHub Hospital</h3>
+        <p class="text-muted mb-4" style="font-size:0.85rem;">ระบบบันทึกข้อมูลสิ่งแวดล้อมและทรัพยากรโรงพยาบาล</p>
         <form id="loginForm" novalidate>
             <div class="login-field">
                 <label><i class="fas fa-hospital me-1 text-success"></i> ชื่อโรงพยาบาล / สาขา</label>
@@ -231,6 +231,23 @@
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-warning border-4 h-100"><div><span class="text-muted small fw-bold">ใช้ไฟฟ้ารวมทั้งองค์กร</span><h3 class="fw-bold text-warning m-0" id="sa-kpi-elec">0</h3><span class="text-muted small">kWh</span></div><div class="kpi-icon bg-ts-warning"><i class="fas fa-bolt"></i></div></div></div>
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-danger border-4 h-100"><div><span class="text-muted small fw-bold">ทิ้งขยะรวมทั้งองค์กร</span><h3 class="fw-bold text-danger m-0" id="sa-kpi-waste">0</h3><span class="text-muted small">กิโลกรัม (kg)</span></div><div class="kpi-icon bg-ts-danger"><i class="fas fa-trash"></i></div></div></div>
             </div>
+            <div class="row g-3 mb-4">
+                <div class="col-12">
+                    <div class="chart-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0"><i class="fas fa-chart-column text-primary me-2"></i> สถิติการใช้ทรัพยากร (รายเดือน)</h5>
+                            <select id="chartCategorySelector" class="form-select form-select-sm border-primary" style="width: auto; cursor: pointer;" onchange="updateMonthlyChart()">
+                                <option value="all">📊 รวมทุกทรัพยากร</option>
+                                <option value="energy">⚡ ไฟฟ้า</option>
+                                <option value="water">💧 น้ำประปา</option>
+                                <option value="waste">🗑️ ปริมาณขยะ</option>
+                            </select>
+                        </div>
+                        <canvas id="monthlyComparisonChart" style="height: 320px; width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+            ```
             <div class="row g-3 mb-4">
                 <div class="col-12 col-xl-7"><div class="chart-card"><h5 class="mb-3">เปรียบเทียบการปล่อยคาร์บอน แต่ละโรงพยาบาล</h5><canvas id="hospitalsCompareChart" style="max-height:300px;"></canvas></div></div>
                 <div class="col-12 col-xl-5"><div class="chart-card overflow-auto h-100"><h5 class="mb-3">หมวดที่ปล่อย CO₂ ต่อ รพ. สูงสุด</h5><table class="table table-sm text-center align-middle small table-hover"><thead class="table-light"><tr><th class="text-start">โรงพยาบาล</th><th>หมวดที่ใช้มากสุด</th><th>ปริมาณ (kgCO₂e)</th></tr></thead><tbody id="top-resource-tbody"></tbody></table></div></div>
