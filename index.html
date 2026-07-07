@@ -431,29 +431,21 @@
 
     function applyRBAC(role) {
         let r = String(role).toLowerCase().trim();
+        
+        // 1. เปิดเมนูทุกหมวดให้แสดงผล (กางออกหมดสำหรับทุกคน)
         document.querySelectorAll('.form-section-wrapper').forEach(el => el.style.display = 'block');
         document.querySelectorAll('.sub-nav-link').forEach(el => el.style.display = 'flex');
 
+        // 2. ตรวจสอบสิทธิ์ว่าใช่ส่วนกลาง (superadmin) หรือไม่
         if (r === 'superadmin') {
             document.getElementById('menu-superadmin').style.display = 'flex';
             document.getElementById('filter-hospital-container').style.display = 'block';
         } else {
+            // ถ้าเป็นโรงพยาบาลทั่วไป ให้ซ่อนแค่เมนูของแอดมินเท่านั้น (ส่วนเมนูกรอกข้อมูลด้านบนจะยังโชว์อยู่)
             document.getElementById('menu-superadmin').style.display = 'none';
             document.getElementById('filter-hospital-container').style.display = 'none';
         }
-
-        if (r !== 'superadmin' && r !== 'admin' && r !== '') {
-            document.querySelectorAll('.form-section-wrapper').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.sub-nav-link').forEach(el => el.style.display = 'none');
-            if (r.includes('energy'))   { document.querySelectorAll('.rbac-energy').forEach(el => { el.style.display = 'block'; if(el.classList.contains('sub-nav-link')) el.style.display='flex'; }); }
-            if (r.includes('fuel'))     { document.querySelectorAll('.rbac-fuel').forEach(el => { el.style.display = 'block'; if(el.classList.contains('sub-nav-link')) el.style.display='flex'; }); }
-            if (r.includes('air'))      { document.querySelectorAll('.rbac-air').forEach(el => { el.style.display = 'block'; if(el.classList.contains('sub-nav-link')) el.style.display='flex'; }); }
-            if (r.includes('waste'))    { document.querySelectorAll('.rbac-waste').forEach(el => { el.style.display = 'block'; if(el.classList.contains('sub-nav-link')) el.style.display='flex'; }); }
-            if (r.includes('supplies')) { document.querySelectorAll('.rbac-supplies').forEach(el => { el.style.display = 'block'; if(el.classList.contains('sub-nav-link')) el.style.display='flex'; }); }
-            if (r.includes('chemical')) { document.querySelectorAll('.rbac-chemical').forEach(el => { el.style.display = 'block'; if(el.classList.contains('sub-nav-link')) el.style.display='flex'; }); }
-        }
     }
-
     function populateHospitalDropdown() {
         let hospSet = new Set();
         localDB.logs.forEach(log => { if (log.hospName) hospSet.add(log.hospName); });
