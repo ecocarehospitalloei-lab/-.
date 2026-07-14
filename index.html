@@ -188,7 +188,7 @@
             <a class="nav-link" data-target="leaderboard-view"><i class="fas fa-trophy text-warning"></i> กระดานจัดอันดับ</a>
         </div>
         <div class="p-4">
-            <button class="btn-logout" onclick="location.reload()"><i class="fas fa-sign-out-alt me-2"></i>ออกจากระบบ</button>
+            <button class="btn-logout" onclick="window.location.reload()"><i class="fas fa-sign-out-alt me-2"></i>ออกจากระบบ</button>
         </div>
     </div>
 
@@ -202,11 +202,13 @@
             </div>
             <div>
                 <label class="text-muted small fw-bold">เลือกปี (พ.ศ.)</label>
-            <select id="filter-year" class="form-select">
-  <option value="2569" selected>ปี 2569 </option>
-  <option value="2568">ปี 2568</option>
-  <option value="2567">ปี 2567</option>
-</select>
+                <!-- แก้ไข ID ตรงนี้ให้ตรงกับ JavaScript อ้างอิง -->
+                <select id="filter-year" class="form-select" onchange="applyFilters()">
+                    <option value="all">-- รวมทุกปี --</option>
+                    <option value="2569" selected>ปี 2569</option>
+                    <option value="2568">ปี 2568</option>
+                    <option value="2567">ปี 2567</option>
+                </select>
             </div>
             <div>
                 <label class="text-muted small fw-bold">เลือกเดือน</label>
@@ -246,7 +248,6 @@
                     </div>
                 </div>
             </div>
-            ```
             <div class="row g-3 mb-4">
                 <div class="col-12 col-xl-7"><div class="chart-card"><h5 class="mb-3">เปรียบเทียบการปล่อยคาร์บอน แต่ละโรงพยาบาล</h5><canvas id="hospitalsCompareChart" style="max-height:300px;"></canvas></div></div>
                 <div class="col-12 col-xl-5"><div class="chart-card overflow-auto h-100"><h5 class="mb-3">หมวดที่ปล่อย CO₂ ต่อ รพ. สูงสุด</h5><table class="table table-sm text-center align-middle small table-hover"><thead class="table-light"><tr><th class="text-start">โรงพยาบาล</th><th>หมวดที่ใช้มากสุด</th><th>ปริมาณ (kgCO₂e)</th></tr></thead><tbody id="top-resource-tbody"></tbody></table></div></div>
@@ -416,6 +417,7 @@
     'use strict';
 
     let SESSION = { hospName: '', recorderName: '', role: '' };
+    let windowSurveyDone = false; // เปลี่ียนจาก localStorage เพื่อความปลอดภัยของ Sandbox
     let charts = { co2Pie:null, trend:null, yearly:null, wastePie:null, hospCompare:null };
     let localDB = { logs:[] };
     
@@ -457,7 +459,7 @@
             document.getElementById('menu-superadmin').style.display = 'flex';
             document.getElementById('filter-hospital-container').style.display = 'block';
         } else {
-            // ถ้าเป็นโรงพยาบาลทั่วไป ให้ซ่อนแค่เมนูของแอดมินเท่านั้น (ส่วนเมนูกรอกข้อมูลด้านบนจะยังโชว์อยู่)
+            // ถ้าเป็นโรงพยาบาลทั่วไป ให้ซ่อนแค่เมนูของแอดมินเท่านั้น
             document.getElementById('menu-superadmin').style.display = 'none';
             document.getElementById('filter-hospital-container').style.display = 'none';
         }
@@ -591,8 +593,7 @@
                         loadLeaderboard(); 
                         
                         setTimeout(() => {
-                            let surveyKey = 'survey_done_' + SESSION.recorderName;
-                            if (!localStorage.getItem(surveyKey)) {
+                            if (!windowSurveyDone) {
                                 document.getElementById('survey-form-container').style.display = 'block';
                                 document.getElementById('survey-thankyou-container').style.display = 'none';
                                 new bootstrap.Modal(document.getElementById('surveyModal')).show();
@@ -725,7 +726,7 @@
                 suggestion: document.getElementById('survey-suggestion').value
             };
             
-            localStorage.setItem('survey_done_' + SESSION.recorderName, 'true');
+            windowSurveyDone = true;
 
             document.getElementById('survey-form-container').style.display = 'none';
             document.getElementById('survey-thankyou-container').style.display = 'block';
@@ -737,7 +738,7 @@
     }
 
     /* ========== 5. Data Processing & Charts ========== */
-    function getFilteredData() {
+    window.getFilteredData = function() {
         let year       = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
         let month      = document.getElementById('filter-month') ? document.getElementById('filter-month').value : 'all';
         let hospFilter = (SESSION.role === 'superadmin') ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
@@ -762,7 +763,7 @@
             }
         });
         return t;
-    }
+    };
 
     function getYearlyCarbonTotal(targetYear) {
         let elec = 0, fuel = 0;
@@ -892,11 +893,10 @@
 
         if(charts.yearly) charts.yearly.destroy();
         if(document.getElementById('yearlyCompareChart')) {
-            charts.yearly = new Chart(document.getElementById('yearlyCompareChart').getContext('2d'),{type:'bar',data:{labels:['2569','2570','2571'],datasets:[{label:'Carbon Footprint',data:[getYearlyCarbonTotal('2026'),getYearlyCarbonTotal('2027'),getYearlyCarbonTotal('2028')],backgroundColor:'#15b371'}]}});
+            charts.yearly = new Chart(document.getElementById('yearlyCompareChart').getContext('2d'),{type:'bar',data:{labels:['2567','2568','2569'],datasets:[{label:'Carbon Footprint',data:[getYearlyCarbonTotal('2024'),getYearlyCarbonTotal('2025'),getYearlyCarbonTotal('2026')],backgroundColor:'#15b371'}]}});
         }
     }
 
-    /* ข้อมูลเก่ากลับมาครบ 8 หมวดหมู่ครับ! */
     window.loadCategorySummary = function () {
         let t = getFilteredData();
         let container = document.getElementById('summary-cards-container');
@@ -1040,9 +1040,6 @@
         if(document.getElementById('solar-cap')) document.getElementById('solar-cap').required = (m==='nometer');
     };
 })(); 
-    // ==========================================
-// ==========================================
-
 
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzKOye_3wZzhMTJX0mQ_eTcQk_Jo34NX0M9la2PKOsgtfA0JmAKfSFan500XutvSvrZ/exec";
 
@@ -1089,23 +1086,19 @@ const google = {
     }
 };
 
-// แก้ไขบั๊กหน้าจอไม่ยอมแสดงฟอร์มและปุ่มบันทึกตอนอยู่บน GitHub
 window.addEventListener('DOMContentLoaded', () => {
     if (typeof window.showSection === 'function') {
         setTimeout(() => {
-            // สั่งให้ระบบเปิดหน้าแรกสุดใหม่อีกครั้งเพื่อบังคับให้ปุ่มและช่องกรอกข้อมูลแสดงผลครบถ้วน
             window.showSection('dashboard'); 
         }, 500);
     }
 });
-// ==========================================
-// 🔚 จบโค้ดเชื่อมต่อระบบ
-// ==========================================
-    let monthlyBarChart = null;
+
+let monthlyBarChart = null;
 let rawChartData = []; 
 
 function setupMonthlyChart(logs) {
-    console.log("ตั้งค่ากราฟด้วยข้อมูล:", logs); // ช่วยเช็กข้อมูลในหน้าจอ Console
+    console.log("ตั้งค่ากราฟด้วยข้อมูล:", logs); 
     rawChartData = logs || []; 
     updateMonthlyChart(); 
 }
@@ -1125,7 +1118,8 @@ function updateMonthlyChart() {
         let d = new Date(log.date || log.timestamp || new Date());
         let m = d.getMonth(); 
         
-      let amount = parseFloat(log.amount || log.value || log.total || log.val || 0);
+        // 📌 แก้ไขส่วนรวมข้อมูลตรงนี้ (เพิ่ม log.val)
+        let amount = parseFloat(log.val || log.amount || log.value || log.total || 0); 
         let str = JSON.stringify(log).toLowerCase();
 
         if(str.includes('ไฟ') || str.includes('energy')) {
