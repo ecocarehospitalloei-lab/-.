@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <title>ECOCARE Hospital - Enterprise Multi-Tenant & SuperAdmin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <!-- Secure CDNs for CSS Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
+    
     <style>
         :root { --primary: #15b371; --dark-bg: #1a2332; --sidebar-hover: #243145; --bg-body: #f4f6f9; }
         body { font-family: 'Sarabun', sans-serif; background: var(--bg-body); color: #2c3e50; margin: 0; font-size: 1rem; }
@@ -54,18 +53,8 @@
         .btn-logout { background: transparent; border: 2px solid #ef4444; color: #ef4444; border-radius: 12px; padding: 10px; font-weight: bold; width: 100%; cursor: pointer; }
 
         /* ===== LOGIN SCREEN ===== */
-        #login-screen {
-            position: fixed; inset: 0; z-index: 1000;
-            background: var(--dark-bg);
-            display: flex; align-items: center; justify-content: center; padding: 1rem;
-        }
-        .login-box {
-            background: white; border-radius: 24px;
-            padding: 2.5rem 2rem; width: 100%; max-width: 420px;
-            text-align: center;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.45);
-            animation: slideUp 0.4s ease;
-        }
+        #login-screen { position: fixed; inset: 0; z-index: 1000; background: var(--dark-bg); display: flex; align-items: center; justify-content: center; padding: 1rem; }
+        .login-box { background: white; border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.45); animation: slideUp 0.4s ease; }
         @keyframes slideUp { from { opacity:0; transform: translateY(28px); } to { opacity:1; transform: translateY(0); } }
         .login-logo-wrap { width: 72px; height: 72px; background: linear-gradient(135deg,#d4f5e5,#a8edcb); border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; box-shadow: 0 8px 20px rgba(21,179,113,0.2); }
         .login-logo-wrap i { font-size: 2rem; color: var(--primary); }
@@ -196,23 +185,24 @@
         <div class="filter-panel" id="global-filter-panel">
             <div id="filter-hospital-container" style="display:none;">
                 <label class="text-muted small fw-bold text-primary">เลือกโรงพยาบาล (SuperAdmin)</label>
-                <select id="filter-hospital" class="form-select border-primary" onchange="applyFilters()">
+                <select id="filter-hospital" class="form-select border-primary">
                     <option value="all">-- รวมทุกโรงพยาบาล --</option>
                 </select>
             </div>
             <div>
-                <label class="text-muted small fw-bold">เลือกปี (พ.ศ.)</label>
-                <!-- แก้ไข ID ตรงนี้ให้ตรงกับ JavaScript อ้างอิง -->
-                <select id="filter-year" class="form-select" onchange="applyFilters()">
+                <label class="text-muted small fw-bold">เลือกปี</label>
+                <!-- 📌 แก้ไขค่า Value เป็นปี ค.ศ. เพื่อให้ตรงกับ log.date ย้อนหลัง (ลบ 543) -->
+                <select id="filter-year" class="form-select">
                     <option value="all">-- รวมทุกปี --</option>
-                    <option value="2569" selected>ปี 2569</option>
-                    <option value="2568">ปี 2568</option>
-                    <option value="2567">ปี 2567</option>
+                    <option value="2026">ปี 2569 (2026)</option>
+                    <option value="2025">ปี 2568 (2025)</option>
+                    <option value="2024" selected>ปี 2567 (2024)</option>
+                    <option value="2023">ปี 2566 (2023)</option>
                 </select>
             </div>
             <div>
                 <label class="text-muted small fw-bold">เลือกเดือน</label>
-                <select id="filter-month" class="form-select border-success" onchange="applyFilters()">
+                <select id="filter-month" class="form-select border-success">
                     <option value="all" selected>-- ดูภาพรวมทั้งปี --</option>
                     <option value="01">มกราคม</option>  <option value="02">กุมภาพันธ์</option>
                     <option value="03">มีนาคม</option>  <option value="04">เมษายน</option>
@@ -222,7 +212,7 @@
                     <option value="11">พฤศจิกายน</option><option value="12">ธันวาคม</option>
                 </select>
             </div>
-            <button class="btn btn-success fw-bold px-4 py-2" onclick="applyFilters()"><i class="fas fa-search me-2"></i>อัปเดต</button>
+            <button id="btn-apply-filters" class="btn btn-success fw-bold px-4 py-2"><i class="fas fa-search me-2"></i>อัปเดต</button>
         </div>
 
         <div id="superadmin-view" class="view-section">
@@ -237,7 +227,7 @@
                     <div class="chart-card">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="mb-0"><i class="fas fa-chart-column text-primary me-2"></i> สถิติการใช้ทรัพยากร (รายเดือน)</h5>
-                            <select id="chartCategorySelector" class="form-select form-select-sm border-primary" style="width: auto; cursor: pointer;" onchange="updateMonthlyChart()">
+                            <select id="chartCategorySelector" class="form-select form-select-sm border-primary" style="width: auto; cursor: pointer;">
                                 <option value="all">📊 รวมทุกทรัพยากร</option>
                                 <option value="energy">⚡ ไฟฟ้า</option>
                                 <option value="water">💧 น้ำประปา</option>
@@ -291,30 +281,28 @@
         </div>
 
         <div id="entry-view" class="view-section">
+            <!-- (เมนูกรอกข้อมูลถูกเก็บไว้ครบถ้วน) -->
             <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-edit text-success me-2"></i> บันทึกข้อมูลทรัพยากร (ส่วนที่รับผิดชอบ)</h4>
-            <div class="form-section-wrapper rbac-energy" id="sec-energy"><div class="form-section-title">⚡ พลังงานและน้ำประปา</div><div class="cat-grid"><div class="cat-btn" onclick="openModal('elec','พลังงานและน้ำ')"><div class="cat-icon-box bg-ts-warning"><i class="fas fa-bolt"></i></div><div class="cat-text-group"><h5>ไฟฟ้าหลัก (kWh)</h5></div></div><div class="cat-btn" onclick="openModal('water','พลังงานและน้ำ')"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-tint"></i></div><div class="cat-text-group"><h5>น้ำประปา (m³)</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-fuel" id="sec-fuel"><div class="form-section-title">🚗 เชื้อเพลิงและแก๊สหุงต้ม</div><div class="cat-grid"><div class="cat-btn" onclick="openModal('fuel-vehicle','เชื้อเพลิง')"><div class="cat-icon-box bg-ts-danger"><i class="fas fa-car"></i></div><div class="cat-text-group"><h5>น้ำมันรถ (ลิตร)</h5></div></div><div class="cat-btn" onclick="openModal('fuel-machine','เชื้อเพลิง')"><div class="cat-icon-box bg-ts-secondary"><i class="fas fa-cogs"></i></div><div class="cat-text-group"><h5>น้ำมันเครื่องจักร (ลิตร)</h5></div></div><div class="cat-btn" onclick="openModal('lpg','เชื้อเพลิง')"><div class="cat-icon-box bg-ts-orange"><i class="fas fa-fire"></i></div><div class="cat-text-group"><h5>ก๊าซหุงต้ม (LPG)</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-air" id="sec-air"><div class="form-section-title">❄️ ระบบปรับอากาศ & สารดับเพลิง</div><div class="cat-grid"><div class="cat-btn" onclick="openModal('air-ref','ระบบปรับอากาศ')"><div class="cat-icon-box bg-ts-info"><i class="fas fa-snowflake"></i></div><div class="cat-text-group"><h5>สารทำความเย็นแอร์</h5></div></div><div class="cat-btn" onclick="openModal('fire-ext','สารดับเพลิง')"><div class="cat-icon-box bg-ts-rose"><i class="fas fa-fire-extinguisher"></i></div><div class="cat-text-group"><h5>ถังดับเพลิง CO₂</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-waste" id="sec-waste"><div class="form-section-title">🗑️ การกำจัดขยะ</div><div class="cat-grid"><div class="cat-btn" onclick="openModal('waste-main','การกำจัดขยะ')"><div class="cat-icon-box bg-ts-dark"><i class="fas fa-trash"></i></div><div class="cat-text-group"><h5>ขยะ 4 ประเภท</h5></div></div><div class="cat-btn" onclick="openModal('waste-recycle','การกำจัดขยะ')"><div class="cat-icon-box bg-ts-success"><i class="fas fa-recycle"></i></div><div class="cat-text-group"><h5>ขยะรีไซเคิล</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-supplies" id="sec-supplies"><div class="form-section-title">🧼 วัสดุสิ้นเปลือง</div><div class="cat-grid"><div class="cat-btn" onclick="openModal('clean-supplies','วัสดุสิ้นเปลือง')"><div class="cat-icon-box bg-ts-indigo"><i class="fas fa-pump-soap"></i></div><div class="cat-text-group"><h5>ทำความสะอาด/ของใช้</h5></div></div><div class="cat-btn" onclick="openModal('office-supplies','วัสดุสิ้นเปลือง')"><div class="cat-icon-box bg-ts-secondary"><i class="fas fa-file-alt"></i></div><div class="cat-text-group"><h5>วัสดุสำนักงาน</h5></div></div><div class="cat-btn" onclick="openModal('medical-supplies','วัสดุสิ้นเปลือง')"><div class="cat-icon-box bg-ts-teal"><i class="fas fa-head-side-mask"></i></div><div class="cat-text-group"><h5>อุปกรณ์แพทย์เซฟตี้</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-chemical" id="sec-chemicals"><div class="form-section-title">🧪 สารเคมี & ระบบบำบัดน้ำเสีย</div><div class="cat-grid"><div class="cat-btn" onclick="openModal('med-chemicals','สารเคมี')"><div class="cat-icon-box bg-ts-pink"><i class="fas fa-flask"></i></div><div class="cat-text-group"><h5>เคมีและยาสลบ</h5></div></div><div class="cat-btn" onclick="openModal('water-treatment','ระบบบำบัดน้ำเสีย')"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-water"></i></div><div class="cat-text-group"><h5>ระบบบำบัดน้ำเสีย</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-energy" id="sec-solar"><div class="form-section-title">☀️ พลังงานทดแทน</div><div class="cat-grid"><div class="cat-btn" onclick="openModal('solar-system','พลังงานทดแทน')"><div class="cat-icon-box bg-ts-success"><i class="fas fa-solar-panel"></i></div><div class="cat-text-group"><h5>ระบบ Solar Cell</h5></div></div></div></div>
+            <div class="form-section-wrapper rbac-energy" id="sec-energy"><div class="form-section-title">⚡ พลังงานและน้ำประปา</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="elec"><div class="cat-icon-box bg-ts-warning"><i class="fas fa-bolt"></i></div><div class="cat-text-group"><h5>ไฟฟ้าหลัก (kWh)</h5></div></div><div class="cat-btn cat-trigger" data-mode="water"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-tint"></i></div><div class="cat-text-group"><h5>น้ำประปา (m³)</h5></div></div></div></div>
+            <div class="form-section-wrapper rbac-fuel" id="sec-fuel"><div class="form-section-title">🚗 เชื้อเพลิงและแก๊สหุงต้ม</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="fuel-vehicle"><div class="cat-icon-box bg-ts-danger"><i class="fas fa-car"></i></div><div class="cat-text-group"><h5>น้ำมันรถ (ลิตร)</h5></div></div><div class="cat-btn cat-trigger" data-mode="fuel-machine"><div class="cat-icon-box bg-ts-secondary"><i class="fas fa-cogs"></i></div><div class="cat-text-group"><h5>น้ำมันเครื่องจักร (ลิตร)</h5></div></div><div class="cat-btn cat-trigger" data-mode="lpg"><div class="cat-icon-box bg-ts-orange"><i class="fas fa-fire"></i></div><div class="cat-text-group"><h5>ก๊าซหุงต้ม (LPG)</h5></div></div></div></div>
+            <div class="form-section-wrapper rbac-air" id="sec-air"><div class="form-section-title">❄️ ระบบปรับอากาศ & สารดับเพลิง</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="air-ref"><div class="cat-icon-box bg-ts-info"><i class="fas fa-snowflake"></i></div><div class="cat-text-group"><h5>สารทำความเย็นแอร์</h5></div></div><div class="cat-btn cat-trigger" data-mode="fire-ext"><div class="cat-icon-box bg-ts-rose"><i class="fas fa-fire-extinguisher"></i></div><div class="cat-text-group"><h5>ถังดับเพลิง CO₂</h5></div></div></div></div>
+            <div class="form-section-wrapper rbac-waste" id="sec-waste"><div class="form-section-title">🗑️ การกำจัดขยะ</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="waste-main"><div class="cat-icon-box bg-ts-dark"><i class="fas fa-trash"></i></div><div class="cat-text-group"><h5>ขยะ 4 ประเภท</h5></div></div><div class="cat-btn cat-trigger" data-mode="waste-recycle"><div class="cat-icon-box bg-ts-success"><i class="fas fa-recycle"></i></div><div class="cat-text-group"><h5>ขยะรีไซเคิล</h5></div></div></div></div>
+            <div class="form-section-wrapper rbac-supplies" id="sec-supplies"><div class="form-section-title">🧼 วัสดุสิ้นเปลือง</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="clean-supplies"><div class="cat-icon-box bg-ts-indigo"><i class="fas fa-pump-soap"></i></div><div class="cat-text-group"><h5>ทำความสะอาด/ของใช้</h5></div></div><div class="cat-btn cat-trigger" data-mode="office-supplies"><div class="cat-icon-box bg-ts-secondary"><i class="fas fa-file-alt"></i></div><div class="cat-text-group"><h5>วัสดุสำนักงาน</h5></div></div><div class="cat-btn cat-trigger" data-mode="medical-supplies"><div class="cat-icon-box bg-ts-teal"><i class="fas fa-head-side-mask"></i></div><div class="cat-text-group"><h5>อุปกรณ์แพทย์เซฟตี้</h5></div></div></div></div>
+            <div class="form-section-wrapper rbac-chemical" id="sec-chemicals"><div class="form-section-title">🧪 สารเคมี & ระบบบำบัดน้ำเสีย</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="med-chemicals"><div class="cat-icon-box bg-ts-pink"><i class="fas fa-flask"></i></div><div class="cat-text-group"><h5>เคมีและยาสลบ</h5></div></div><div class="cat-btn cat-trigger" data-mode="water-treatment"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-water"></i></div><div class="cat-text-group"><h5>ระบบบำบัดน้ำเสีย</h5></div></div></div></div>
+            <div class="form-section-wrapper rbac-energy" id="sec-solar"><div class="form-section-title">☀️ พลังงานทดแทน</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="solar-system"><div class="cat-icon-box bg-ts-success"><i class="fas fa-solar-panel"></i></div><div class="cat-text-group"><h5>ระบบ Solar Cell</h5></div></div></div></div>
         </div>
 
         <div id="leaderboard-view" class="view-section">
             <h4 class="fw-bold mb-4">กระดานจัดอันดับผู้เข้าร่วม (Leaderboard)</h4>
-            
             <div class="card bg-white p-4 rounded-4 border shadow-sm">
                 <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
                     <h5 class="fw-bold m-0"><i class="fas fa-trophy text-warning me-2"></i>อันดับผู้เข้าร่วมสูงสุดของโรงพยาบาล: <span id="lb-hosp-name" class="text-primary"></span></h5>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="loadLeaderboard()"><i class="fas fa-sync-alt"></i> รีเฟรชข้อมูลล่าสุด</button>
+                    <button class="btn btn-sm btn-outline-secondary" id="btn-refresh-lb"><i class="fas fa-sync-alt"></i> รีเฟรชข้อมูลล่าสุด</button>
                 </div>
-
                 <div id="leaderboard-loading" class="text-center py-5">
                     <div class="spinner-border text-success spinner-border-sm" role="status"></div>
                     <span class="ms-2 small text-muted">กำลังดึงข้อมูลอันดับ...</span>
                 </div>
-
                 <div id="leaderboard-content" style="display: none;">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle m-0">
@@ -325,8 +313,7 @@
                                     <th style="width: 180px;">จำนวนครั้งที่เข้าร่วม</th>
                                 </tr>
                             </thead>
-                            <tbody id="leaderboard-tbody">
-                                </tbody>
+                            <tbody id="leaderboard-tbody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -366,12 +353,10 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius:20px; border:none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <div class="modal-body p-4 p-md-5 text-center">
-                
                 <div id="survey-form-container">
                     <i class="fa-solid fa-square-poll-horizontal text-primary fs-1 mb-3"></i>
                     <h4 class="fw-bold mb-1">ประเมินความพึงพอใจ</h4>
                     <p class="text-muted small mb-4">ความคิดเห็นของคุณช่วยให้เราพัฒนาแอปให้ดียิ่งขึ้น</p>
-                    
                     <form id="surveyForm">
                         <div class="text-start mb-3">
                             <label class="small fw-bold mb-2">ข้อ 1: ภาพรวมแล้ว คุณพอใจกับเว็บแอปนี้มากแค่ไหน?</label>
@@ -398,37 +383,94 @@
                         <button type="submit" class="btn btn-success w-100 fw-bold py-2 rounded-pill shadow-sm">ส่งข้อมูลประเมิน</button>
                     </form>
                 </div>
-                
                 <div id="survey-thankyou-container" style="display: none; padding: 2rem 0;">
                     <i class="fa-solid fa-circle-check text-success" style="font-size: 4rem; margin-bottom: 1rem;"></i>
                     <h3 class="fw-bold text-dark mb-2">ขอบคุณสำหรับการประเมิน!</h3>
                     <p class="text-muted">เราได้รับข้อมูลของคุณเรียบร้อยแล้ว ทุกเสียงสะท้อนมีค่าสำหรับเรา</p>
                     <button type="button" class="btn btn-outline-success rounded-pill mt-3 px-4 fw-bold" data-bs-dismiss="modal">ปิดหน้าต่าง</button>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- JS Libraries via Secure CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.12/sweetalert2.all.min.js" crossorigin="anonymous"></script>
+
 <script>
-(function () {
+document.addEventListener("DOMContentLoaded", function () {
     'use strict';
 
-    let SESSION = { hospName: '', recorderName: '', role: '' };
-    let windowSurveyDone = false; // เปลี่ียนจาก localStorage เพื่อความปลอดภัยของ Sandbox
-    let charts = { co2Pie:null, trend:null, yearly:null, wastePie:null, hospCompare:null };
-    let localDB = { logs:[] };
-    
-    let surveyScores = { q1: 0, q2: 0, q3: 0 }; 
+    // ============================================
+    // การจำลอง Google Script Proxy สำหรับรันออฟไลน์/ผ่าน GitHub Pages
+    // ============================================
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzKOye_3wZzhMTJX0mQ_eTcQk_Jo34NX0M9la2PKOsgtfA0JmAKfSFan500XutvSvrZ/exec";
 
-    if (document.getElementById('entry-date')) {
-        document.getElementById('entry-date').value = new Date().toISOString().split('T')[0];
+    if (typeof window.google === 'undefined' || !window.google.script) {
+        window.google = {
+            script: {
+                get run() {
+                    const runObj = {
+                        withFailureHandler: function(errCallback) { this._errCallback = errCallback; return this; },
+                        withSuccessHandler: function(callback)    { this._successCallback = callback; return this; }
+                    };
+                    return new Proxy(runObj, {
+                        get: function(target, prop) {
+                            if (prop in target) return target[prop];
+                            return function(...args) {
+                                let actionName = '', payloadData = args[0] || {};
+                                if (prop === 'checkHospitalLogin') {
+                                    actionName = 'login'; payloadData = { hospName: args[0], password: args[1], recorderName: args[2] };
+                                } else if (prop === 'saveResourceData') { actionName = 'saveResource';
+                                } else if (prop === 'saveAppSatisfactionSurvey') { actionName = 'saveSurvey';
+                                } else if (prop === 'fetchDashboardData') {
+                                    actionName = 'fetchDashboard'; payloadData = { hospName: args[0], role: args[1] };
+                                } else if (prop === 'fetchHospitalSummary') { actionName = 'fetchSummary';
+                                } else { console.warn("Unknown function:", prop); return; }
+                                
+                                fetch(WEB_APP_URL, {
+                                    method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                                    body: JSON.stringify({ action: actionName, payload: payloadData })
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (target._successCallback) {
+                                        if (prop === 'fetchDashboardData' || prop === 'fetchHospitalSummary') {
+                                            target._successCallback(data.data || []);
+                                        } else { target._successCallback(data); }
+                                    }
+                                }).catch(err => {
+                                    console.error("API Error:", err);
+                                    if (target._errCallback) target._errCallback(err);
+                                });
+                            };
+                        }
+                    });
+                }
+            }
+        };
     }
 
-    if (document.getElementById('toggle-pass-btn')) {
-        document.getElementById('toggle-pass-btn').addEventListener('click', function () {
+    // ============================================
+    // ตัวแปรและสถานะระบบหลัก
+    // ============================================
+    let SESSION = { hospName: '', recorderName: '', role: '' };
+    let windowSurveyDone = false; 
+    let charts = { co2Pie:null, trend:null, yearly:null, wastePie:null, hospCompare:null };
+    let localDB = { logs:[] };
+    let surveyScores = { q1: 0, q2: 0, q3: 0 }; 
+    let monthlyBarChart = null;
+    let rawChartData = []; 
+
+    // ตั้งค่าเริ่มต้นของระบบ UI
+    const dateInput = document.getElementById('entry-date');
+    if (dateInput) { dateInput.value = new Date().toISOString().split('T')[0]; }
+
+    const togglePassBtn = document.getElementById('toggle-pass-btn');
+    if (togglePassBtn) {
+        togglePassBtn.addEventListener('click', function () {
             const inp  = document.getElementById('password-input');
             const icon = document.getElementById('toggle-pass-icon');
             const hide = inp.type === 'password';
@@ -439,31 +481,33 @@
     }
 
     function markError(id) {
-        document.getElementById(id).classList.add('input-error');
-        document.getElementById(id).focus();
+        const el = document.getElementById(id);
+        el.classList.add('input-error');
+        el.focus();
     }
+    
     ['hospname-input','password-input','recorder-input'].forEach(id => {
         let el = document.getElementById(id);
         if (el) el.addEventListener('input', function () { this.classList.remove('input-error'); });
     });
 
+    // ============================================
+    // การควบคุมสิทธิ์และเปิดปิดเมนู (RBAC / Filtering)
+    // ============================================
     function applyRBAC(role) {
         let r = String(role).toLowerCase().trim();
-        
-        // 1. เปิดเมนูทุกหมวดให้แสดงผล (กางออกหมดสำหรับทุกคน)
         document.querySelectorAll('.form-section-wrapper').forEach(el => el.style.display = 'block');
         document.querySelectorAll('.sub-nav-link').forEach(el => el.style.display = 'flex');
 
-        // 2. ตรวจสอบสิทธิ์ว่าใช่ส่วนกลาง (superadmin) หรือไม่
         if (r === 'superadmin') {
             document.getElementById('menu-superadmin').style.display = 'flex';
             document.getElementById('filter-hospital-container').style.display = 'block';
         } else {
-            // ถ้าเป็นโรงพยาบาลทั่วไป ให้ซ่อนแค่เมนูของแอดมินเท่านั้น
             document.getElementById('menu-superadmin').style.display = 'none';
             document.getElementById('filter-hospital-container').style.display = 'none';
         }
     }
+
     function populateHospitalDropdown() {
         let hospSet = new Set();
         localDB.logs.forEach(log => { if (log.hospName) hospSet.add(log.hospName); });
@@ -478,9 +522,12 @@
         }
     }
 
-    /* ========== 1. LOGIN ========== */
-    if (document.getElementById('loginForm')) {
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+    // ============================================
+    // การจัดการล็อกอิน
+    // ============================================
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const hospName     = document.getElementById('hospname-input').value.trim();
             const password     = document.getElementById('password-input').value;
@@ -495,12 +542,6 @@
             loadingEl.style.display = 'flex';
             document.getElementById('login-btn').disabled = true;
 
-            if (typeof google === 'undefined') {
-                loadingEl.style.display = 'none';
-                document.getElementById('login-btn').disabled = false;
-                return Swal.fire({ icon:'warning', title:'ไม่พบฐานข้อมูล', html:'<small>ต้องรันผ่าน Google Apps Script</small>', confirmButtonColor:'#15b371' });
-            }
-
             google.script.run
                 .withSuccessHandler(function (res) {
                     if (res.success) {
@@ -512,9 +553,7 @@
                         document.getElementById('mobile-hospital-name').innerText  = SESSION.hospName;
                         document.getElementById('hosp-name-display').innerText     = SESSION.hospName;
                         document.getElementById('recorder-display-name').innerText = SESSION.recorderName;
-                        
-                        let lbHosp = document.getElementById('lb-hosp-name');
-                        if (lbHosp) lbHosp.innerText = SESSION.hospName;
+                        if(document.getElementById('lb-hosp-name')) document.getElementById('lb-hosp-name').innerText = SESSION.hospName;
 
                         applyRBAC(SESSION.role);
                         document.getElementById('loading-text').innerText = 'ดึงข้อมูลล่าสุด...';
@@ -522,7 +561,7 @@
                         google.script.run
                             .withSuccessHandler(function (logsData) {
                                 localDB.logs = logsData || [];
-                                setupMonthlyChart(logsData);
+                                rawChartData = logsData || []; 
                                 loadingEl.style.display = 'none';
                                 document.getElementById('login-screen').style.display = 'none';
                                 document.getElementById('app').style.display = 'block';
@@ -534,7 +573,7 @@
                             .withFailureHandler(function (err) {
                                 loadingEl.style.display = 'none';
                                 document.getElementById('login-btn').disabled = false;
-                                Swal.fire('ผิดพลาด', 'ดึงข้อมูลไม่สำเร็จ: ' + err.message, 'error');
+                                Swal.fire('ผิดพลาด', 'ดึงข้อมูลล็อกรหัสไม่สำเร็จ: ' + err.message, 'error');
                             })
                             .fetchDashboardData(SESSION.hospName, SESSION.role);
                     } else {
@@ -552,12 +591,13 @@
         });
     }
 
-    /* ========== 2. บันทึกข้อมูลทรัพยากร ========== */
-    if (document.getElementById('dataForm')) {
-        document.getElementById('dataForm').onsubmit = function (e) {
+    // ============================================
+    // การบันทึกข้อมูลทรัพยากร
+    // ============================================
+    const dataForm = document.getElementById('dataForm');
+    if (dataForm) {
+        dataForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            if (typeof google === 'undefined') return Swal.fire('Error', 'ไม่พบฐานข้อมูลเพื่อบันทึกงาน', 'error');
-
             const loadingEl = document.getElementById('loading-overlay');
             document.getElementById('loading-text').innerText = 'กำลังบันทึกข้อมูล...';
             loadingEl.style.display = 'flex';
@@ -584,10 +624,10 @@
                 .withSuccessHandler(function (res) {
                     if (res.success) {
                         localDB.logs = localDB.logs.concat(payload.logs);
+                        rawChartData = localDB.logs;
                         loadingEl.style.display = 'none';
-                        
-                        let formInst = bootstrap.Modal.getInstance(document.getElementById('formModal'));
-                        if (formInst) formInst.hide();
+                        const formModal = bootstrap.Modal.getInstance(document.getElementById('formModal'));
+                        if (formModal) formModal.hide();
                         
                         applyFilters();
                         loadLeaderboard(); 
@@ -601,7 +641,6 @@
                                 Swal.fire({ icon: 'success', title: 'บันทึกข้อมูลสำเร็จ', timer: 1500, showConfirmButton: false });
                             }
                         }, 500);
-
                     } else {
                         loadingEl.style.display = 'none';
                         Swal.fire('ผิดพลาด', res.message || 'ไม่สามารถบันทึกข้อมูลได้', 'error');
@@ -612,93 +651,25 @@
                     Swal.fire('ผิดพลาด', 'บันทึกล้มเหลว: ' + err.message, 'error');
                 })
                 .saveResourceData(payload);
-        };
-    }
-
-    /* ========== 3. ระบบ Leaderboard ========== */
-    window.loadLeaderboard = function() {
-        const loadingDiv = document.getElementById('leaderboard-loading');
-        const contentDiv = document.getElementById('leaderboard-content');
-        const tbody = document.getElementById('leaderboard-tbody');
-
-        if(loadingDiv) loadingDiv.style.display = 'block';
-        if(contentDiv) contentDiv.style.display = 'none';
-        if(tbody) tbody.innerHTML = '';
-
-        setTimeout(() => {
-            let hospLogs = localDB.logs.filter(l => l.hospName === SESSION.hospName);
-            if (SESSION.role === 'superadmin') {
-                hospLogs = localDB.logs;
-            }
-
-            let userCounts = {};
-            hospLogs.forEach(log => {
-                let name = log.recorderName || 'ไม่ระบุชื่อ';
-                let key = SESSION.role === 'superadmin' ? `${log.hospName} - ${name}` : name;
-                userCounts[key] = (userCounts[key] || 0) + 1;
-            });
-
-            let leaderboardData = Object.keys(userCounts).map(name => {
-                return { name: name, count: userCounts[name] };
-            });
-            leaderboardData.sort((a, b) => b.count - a.count);
-
-            renderLeaderboardTable(leaderboardData, tbody);
-
-            if(loadingDiv) loadingDiv.style.display = 'none';
-            if(contentDiv) contentDiv.style.display = 'block';
-        }, 400); 
-    };
-
-    function renderLeaderboardTable(list, tbody) {
-        if (!list.length) {
-            tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4">ยังไม่มีข้อมูลบุคลากรของโรงพยาบาลนี้</td></tr>';
-            return;
-        }
-
-        let html = '';
-        list.forEach((item, i) => {
-            let rank = i + 1;
-            let rankBadge = `<span class="badge bg-secondary rounded-circle px-2">${rank}</span>`;
-            if (rank === 1) rankBadge = `<span class="fs-4">🥇</span>`;
-            if (rank === 2) rankBadge = `<span class="fs-4">🥈</span>`;
-            if (rank === 3) rankBadge = `<span class="fs-4">🥉</span>`;
-
-            let nameLabel = item.name;
-            let isOwn = (nameLabel === SESSION.recorderName);
-            let cls = isOwn ? 'table-success fw-bold' : '';
-            if (isOwn && SESSION.role !== 'superadmin') nameLabel += ' (คุณ)';
-
-            html += `
-            <tr class="${cls}">
-                <td class="text-center fw-bold">${rankBadge}</td>
-                <td class="fw-semibold text-dark">${nameLabel}</td>
-                <td class="text-center text-success fw-bold">${item.count} ครั้ง</td>
-            </tr>`;
         });
-        tbody.innerHTML = html;
     }
 
-    /* ========== 4. Survey ควบคุมดาวและ Validation ========== */
+    // ============================================
+    // การจัดการดาวและแบบประเมินความพึงพอใจ
+    // ============================================
     function initSurveyStars() {
         document.querySelectorAll('.star-rating i').forEach(s => {
             s.addEventListener('mouseenter', function() {
                 let v = this.dataset.value;
-                this.parentElement.querySelectorAll('i').forEach(star => {
-                    star.classList.toggle('hover-active', star.dataset.value <= v);
-                });
+                this.parentElement.querySelectorAll('i').forEach(star => star.classList.toggle('hover-active', star.dataset.value <= v));
             });
             s.addEventListener('mouseleave', function() {
-                this.parentElement.querySelectorAll('i').forEach(star => {
-                    star.classList.remove('hover-active');
-                });
+                this.parentElement.querySelectorAll('i').forEach(star => star.classList.remove('hover-active'));
             });
-            
             s.onclick = function () {
                 let v = this.dataset.value;
                 let q = this.parentElement.dataset.question; 
                 surveyScores[q] = v; 
-                
                 this.parentElement.querySelectorAll('i').forEach(star => {
                     star.classList.toggle('fa-solid', star.dataset.value <= v);
                     star.classList.toggle('fa-regular', star.dataset.value > v);
@@ -708,37 +679,25 @@
         });
     }
 
-    if (document.getElementById('surveyForm')) {
-        document.getElementById('surveyForm').onsubmit = function (e) {
+    const surveyForm = document.getElementById('surveyForm');
+    if (surveyForm) {
+        surveyForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
             if (surveyScores.q1 == 0 || surveyScores.q2 == 0 || surveyScores.q3 == 0) {
-                Swal.fire({ icon: 'warning', title: 'โปรดกรอกข้อมูลให้ครบ', text: 'กรุณาแตะเลือกดาวประเมินให้ครบทั้ง 3 ข้อก่อนกดส่งครับ', confirmButtonColor: '#15b371' });
-                return;
+                return Swal.fire({ icon: 'warning', title: 'โปรดกรอกข้อมูลให้ครบ', text: 'กรุณาแตะเลือกดาวประเมินให้ครบทั้ง 3 ข้อก่อนกดส่งครับ', confirmButtonColor: '#15b371' });
             }
-
-            let payload = {
-                hospName: SESSION.hospName, 
-                recorderName: SESSION.recorderName,
-                q1: surveyScores.q1, 
-                q2: surveyScores.q2, 
-                q3: surveyScores.q3,
-                suggestion: document.getElementById('survey-suggestion').value
-            };
-            
+            let payload = { hospName: SESSION.hospName, recorderName: SESSION.recorderName, q1: surveyScores.q1, q2: surveyScores.q2, q3: surveyScores.q3, suggestion: document.getElementById('survey-suggestion').value };
             windowSurveyDone = true;
-
             document.getElementById('survey-form-container').style.display = 'none';
             document.getElementById('survey-thankyou-container').style.display = 'block';
-
-            if (typeof google !== 'undefined') {
-                google.script.run.saveAppSatisfactionSurvey(payload);
-            }
-        };
+            google.script.run.saveAppSatisfactionSurvey(payload);
+        });
     }
 
-    /* ========== 5. Data Processing & Charts ========== */
-    window.getFilteredData = function() {
+    // ============================================
+    // การคำนวณสถิติ การกรองตัวเลข กราฟ
+    // ============================================
+    function getFilteredData() {
         let year       = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
         let month      = document.getElementById('filter-month') ? document.getElementById('filter-month').value : 'all';
         let hospFilter = (SESSION.role === 'superadmin') ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
@@ -751,19 +710,23 @@
             solar_internal_use:0, solar_kwh:0, solar_cap:0, solar_panels:0, solar_days:0, wt_type:'บ่อลึก (ลึกกว่า 2 เมตร)', wt_cod:282, solar_mode:'meter'
         };
         if (!localDB.logs) return t;
+
         localDB.logs.forEach(log => {
             if (!log.date) return;
             let parts = log.date.split('-');
             let hospMatch = (hospFilter === 'all' || hospFilter === (log.hospName || ''));
             if ((year === 'all' || year === parts[0]) && (month === 'all' || month === parts[1]) && hospMatch) {
-                let dbKey = log.id.replace(/-/g, '_');
-                if (log.id === 'wt-type' || log.id === 'solar-mode') { t[dbKey] = log.val; }
-                else if (log.id === 'wt-cod') { t.wt_cod = parseFloat(log.val) || 0; }
-                else if (t[dbKey] !== undefined) { t[dbKey] += parseFloat(log.val) || 0; }
+                // ✅ แก้ไข: รองรับ log.val
+                let val = parseFloat(log.val || log.value || log.amount || 0);
+                let dbKey = String(log.id||'').replace(/-/g, '_');
+                
+                if (log.id === 'wt-type' || log.id === 'solar-mode') { t[dbKey] = log.val || val; }
+                else if (log.id === 'wt-cod') { t.wt_cod = val; }
+                else if (t[dbKey] !== undefined) { t[dbKey] += val; }
             }
         });
         return t;
-    };
+    }
 
     function getYearlyCarbonTotal(targetYear) {
         let elec = 0, fuel = 0;
@@ -772,7 +735,10 @@
         localDB.logs.forEach(log => {
             if (!log.date || !log.date.startsWith(targetYear)) return;
             if (hospFilter !== 'all' && hospFilter !== (log.hospName || '')) return;
-            let dbKey = log.id.replace(/-/g, '_'), val = parseFloat(log.val) || 0;
+            
+            let val = parseFloat(log.val || log.value || log.amount || 0);
+            let dbKey = String(log.id||'').replace(/-/g, '_');
+            
             if (dbKey === 'elec_kwh') elec += val;
             else if (dbKey === 'diesel_v'  || dbKey === 'diesel_m')   fuel += val * 2.708;
             else if (dbKey === 'gasoline_v'|| dbKey === 'gasoline_m') fuel += val * 2.189;
@@ -781,12 +747,198 @@
         return (elec * 0.4999) + fuel;
     }
 
+    function applyFilters() {
+        let el = document.getElementById('loading-overlay');
+        if(el) { document.getElementById('loading-text').innerText = 'ประมวลผลข้อมูล...'; el.style.display = 'flex'; }
+        setTimeout(() => { 
+            try { loadCharts(); } catch(err) { console.error(err); }
+            try { loadCategorySummary(); } catch(err) { console.error(err); }
+            try { renderSuperAdminDash(); } catch(err) { console.error(err); }
+            try { updateMonthlyChart(); } catch(err) { console.error(err); } // ต้องอัปเดตกราฟแท่งรายเดือนด้วย
+            if(el) el.style.display='none'; 
+        }, 300);
+    }
+    
+    // Binding the applyFilters event handler securely
+    const btnApplyFilters = document.getElementById('btn-apply-filters');
+    if(btnApplyFilters) btnApplyFilters.addEventListener('click', applyFilters);
+    ['filter-hospital', 'filter-year', 'filter-month'].forEach(id => {
+        let el = document.getElementById(id);
+        if(el) el.addEventListener('change', applyFilters);
+    });
+
+    function updateMonthlyChart() {
+        const ctx = document.getElementById('monthlyComparisonChart');
+        if(!ctx) return;
+
+        const selectedCat = document.getElementById('chartCategorySelector') ? document.getElementById('chartCategorySelector').value : 'all';
+        const yearFilter  = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
+        const hospFilter  = SESSION.role === 'superadmin' ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
+
+        let dataEnergy = new Array(12).fill(0);
+        let dataWater = new Array(12).fill(0);
+        let dataWaste = new Array(12).fill(0);
+
+        rawChartData.forEach(log => {
+            if(!log.date) return;
+            let logY = log.date.split('-')[0];
+            let hospMatch = (hospFilter === 'all' || hospFilter === (log.hospName || ''));
+            
+            if ((yearFilter === 'all' || yearFilter === logY) && hospMatch) {
+                let d = new Date(log.date || new Date());
+                let m = d.getMonth(); 
+                
+                // ✅ แก้ไขตรรกะการคัดแยกหมวดหมู่และตรวจสอบ key (.val)
+                let amount = parseFloat(log.val || log.amount || log.value || log.total || 0); 
+                let logId = String(log.id || '').toLowerCase();
+                let logCat = String(log.cat || '').toLowerCase();
+
+                if (logId.includes('elec') || logCat.includes('ไฟ') || logCat.includes('พลังงาน')) {
+                    dataEnergy[m] += amount;
+                } else if (logId.includes('water') || logCat.includes('น้ำ')) {
+                    dataWater[m] += amount;
+                } else if (logId.includes('waste') || logId.includes('rc-') || logCat.includes('ขยะ')) {
+                    dataWaste[m] += amount;
+                }
+            }
+        });
+
+        let datasets = [];
+        if (selectedCat === 'all' || selectedCat === 'energy') datasets.push({ label: 'ไฟฟ้า', data: dataEnergy, backgroundColor: '#ffc107', borderRadius: 4 });
+        if (selectedCat === 'all' || selectedCat === 'water')  datasets.push({ label: 'น้ำประปา', data: dataWater, backgroundColor: '#0dcaf0', borderRadius: 4 });
+        if (selectedCat === 'all' || selectedCat === 'waste')  datasets.push({ label: 'ปริมาณขยะ', data: dataWaste, backgroundColor: '#dc3545', borderRadius: 4 });
+
+        if(monthlyBarChart) monthlyBarChart.destroy();
+        monthlyBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'], datasets: datasets },
+            options: {
+                responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } },
+                plugins: { tooltip: { mode: 'index', intersect: false }, legend: { position: 'top' } }
+            }
+        });
+    }
+
+    const chartCategorySelector = document.getElementById('chartCategorySelector');
+    if(chartCategorySelector) chartCategorySelector.addEventListener('change', updateMonthlyChart);
+
+    function loadCharts() {
+        let t = getFilteredData();
+        let cElec  = t.elec_kwh * 0.4999;
+        let cFuel  = ((t.diesel_v+t.diesel_m)*2.708) + ((t.gasoline_v+t.gasoline_m)*2.189) + (t.total_lpg*3.111);
+        let cTotal = cElec + cFuel;
+
+        if(document.getElementById('kpi-co2-total')) document.getElementById('kpi-co2-total').innerText = cTotal.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+        if(document.getElementById('kpi-co2-elec')) document.getElementById('kpi-co2-elec').innerText  = cElec.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+        if(document.getElementById('kpi-co2-fuel')) document.getElementById('kpi-co2-fuel').innerText  = cFuel.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+
+        let solarKwh = (t.solar_mode==='nometer') ? (t.solar_cap||0)*(t.solar_days||0)*4 : (t.solar_kwh||0);
+        let solarCo2 = solarKwh*0.4999, trees = Math.floor(solarCo2/9.5);
+        if(document.getElementById('kpi-solar-kwh')) document.getElementById('kpi-solar-kwh').innerText = solarKwh.toLocaleString(undefined,{minimumFractionDigits:2});
+        if(document.getElementById('kpi-solar-co2')) document.getElementById('kpi-solar-co2').innerText = solarCo2.toLocaleString(undefined,{minimumFractionDigits:2});
+        if(document.getElementById('kpi-trees')) document.getElementById('kpi-trees').innerText     = trees.toLocaleString();
+
+        let emSrc = [
+            {name:'ไฟฟ้า',       value:cElec,                                                         icon:'fa-bolt', color:'text-warning'},
+            {name:'น้ำมันรถ',      value:(t.diesel_v||0)*2.708+(t.gasoline_v||0)*2.189,           icon:'fa-car',  color:'text-danger'},
+            {name:'น้ำมันเครื่อง', value:(t.diesel_m||0)*2.708+(t.gasoline_m||0)*2.189,           icon:'fa-cogs', color:'text-secondary'},
+            {name:'ก๊าซ LPG',      value:(t.total_lpg||0)*3.111,                                  icon:'fa-fire', color:'text-orange'}
+        ].sort((a,b)=>b.value-a.value);
+        let top3 = emSrc.slice(0,3).filter(x => x.value > 0).map(x => `<li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom"><div class="fw-bold"><i class="fas ${x.icon} ${x.color} me-2"></i>${x.name}</div><span class="badge bg-danger rounded-pill">${x.value.toLocaleString(undefined,{maximumFractionDigits:1})}</span></li>`).join('');
+        if(document.getElementById('top-emissions-list')) document.getElementById('top-emissions-list').innerHTML = top3 || '<li class="list-group-item text-center text-muted py-3">ยังไม่มีข้อมูล</li>';
+
+        if(charts.co2Pie) charts.co2Pie.destroy();
+        if(document.getElementById('co2PieChart')) charts.co2Pie = new Chart(document.getElementById('co2PieChart').getContext('2d'),{type:'doughnut',data:{labels:['ไฟฟ้า','เชื้อเพลิง'],datasets:[{data:[cElec||0,cFuel||0],backgroundColor:['#ffc107','#dc3545']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+
+        let rcTotal = (t.rc_paper||0)+(t.rc_alum||0)+(t.rc_plastic||0)+(t.rc_iron||0)+(t.rc_metal||0)+(t.rc_glass||0);
+        let wOther  = (t.waste_gen||0)+(t.waste_inf||0)+(t.waste_org||0)+(t.waste_haz||0);
+        if(charts.wastePie) charts.wastePie.destroy();
+        if(document.getElementById('wastePieChart')) charts.wastePie = new Chart(document.getElementById('wastePieChart').getContext('2d'),{type:'doughnut',data:{labels:['รีไซเคิลได้','ขยะอื่นๆ'],datasets:[{data:[rcTotal,wOther],backgroundColor:['#15b371','#6c757d']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+
+        let pastTotal = localDB.logs.length>0 ? cTotal*0.8 : 0;
+        if(charts.trend) charts.trend.destroy();
+        if(document.getElementById('electricityTrendChart')) charts.trend = new Chart(document.getElementById('electricityTrendChart').getContext('2d'),{type:'line',data:{labels:['งวดที่แล้ว','งวดที่เลือก'],datasets:[{label:'kgCO₂e',data:[pastTotal,cTotal],borderColor:'#15b371',fill:true,tension:0.3}]}});
+
+        if(charts.yearly) charts.yearly.destroy();
+        if(document.getElementById('yearlyCompareChart')) charts.yearly = new Chart(document.getElementById('yearlyCompareChart').getContext('2d'),{type:'bar',data:{labels:['2567','2568','2569'],datasets:[{label:'Carbon Footprint',data:[getYearlyCarbonTotal('2024'),getYearlyCarbonTotal('2025'),getYearlyCarbonTotal('2026')],backgroundColor:'#15b371'}]}});
+    }
+
+    function loadCategorySummary() {
+        let t = getFilteredData();
+        let container = document.getElementById('summary-cards-container');
+        if(!container) return;
+        
+        container.innerHTML = `
+        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-bolt text-warning"></i> พลังงานและน้ำ</div><ul class="summary-list">
+            <li><span>ไฟฟ้าหลัก</span><span class="summary-value">${(t.elec_kwh||0).toLocaleString()} kWh</span></li>
+            <li><span>น้ำประปา</span><span class="summary-value">${(t.water_m3||0).toLocaleString()} m³</span></li>
+        </ul></div></div>
+        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-gas-pump text-danger"></i> ยานพาหนะและเชื้อเพลิง</div><ul class="summary-list">
+            <li><span>น้ำมันรถ (ดีเซล)</span><span class="summary-value">${(t.diesel_v||0).toLocaleString()} L</span></li>
+            <li><span>น้ำมันรถ (เบนซิน)</span><span class="summary-value">${(t.gasoline_v||0).toLocaleString()} L</span></li>
+            <li><span>น้ำมันเครื่องจักร (ดีเซล)</span><span class="summary-value">${(t.diesel_m||0).toLocaleString()} L</span></li>
+            <li><span>น้ำมันเครื่องจักร (เบนซิน)</span><span class="summary-value">${(t.gasoline_m||0).toLocaleString()} L</span></li>
+            <li><span>ก๊าซหุงต้ม (LPG)</span><span class="summary-value">${(t.total_lpg||0).toLocaleString()} kg</span></li>
+        </ul></div></div>
+        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-snowflake text-info"></i> ปรับอากาศ & ดับเพลิง</div><ul class="summary-list">
+            <li><span>น้ำยาแอร์ (HFC-134a)</span><span class="summary-value">${(t.hfc134a||0).toLocaleString()} kg</span></li>
+            <li><span>น้ำยาแอร์ (R22)</span><span class="summary-value">${(t.r22||0).toLocaleString()} kg</span></li>
+            <li><span>ถังดับเพลิง CO₂</span><span class="summary-value">${(t.total_fire||0).toLocaleString()} kg</span></li>
+        </ul></div></div>
+        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-trash-alt text-secondary"></i> ขยะทั่วไปและอันตราย</div><ul class="summary-list">
+            <li><span>ขยะทั่วไป</span><span class="summary-value">${(t.waste_gen||0).toLocaleString()} kg</span></li>
+            <li><span>ขยะติดเชื้อ</span><span class="summary-value">${(t.waste_inf||0).toLocaleString()} kg</span></li>
+            <li><span>ขยะอินทรีย์</span><span class="summary-value">${(t.waste_org||0).toLocaleString()} kg</span></li>
+            <li><span>ขยะอันตราย</span><span class="summary-value">${(t.waste_haz||0).toLocaleString()} kg</span></li>
+        </ul></div></div>
+        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-recycle text-success"></i> ขยะรีไซเคิล</div><ul class="summary-list">
+            <li><span>กระดาษ</span><span class="summary-value">${(t.rc_paper||0).toLocaleString()} kg</span></li>
+            <li><span>อะลูมิเนียม</span><span class="summary-value">${(t.rc_alum||0).toLocaleString()} kg</span></li>
+            <li><span>พลาสติก</span><span class="summary-value">${(t.rc_plastic||0).toLocaleString()} kg</span></li>
+            <li><span>เหล็ก</span><span class="summary-value">${(t.rc_iron||0).toLocaleString()} kg</span></li>
+            <li><span>โลหะอื่นๆ</span><span class="summary-value">${(t.rc_metal||0).toLocaleString()} kg</span></li>
+            <li><span>แก้ว</span><span class="summary-value">${(t.rc_glass||0).toLocaleString()} kg</span></li>
+        </ul></div></div>
+        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-pump-soap text-primary"></i> วัสดุสิ้นเปลือง</div><ul class="summary-list">
+            <li><span>ผงซักฟอก</span><span class="summary-value">${(t.clean_pow||0).toLocaleString()} kg</span></li>
+            <li><span>น้ำยาซักล้าง</span><span class="summary-value">${(t.clean_liq||0).toLocaleString()} ml</span></li>
+            <li><span>ถุงพลาสติก</span><span class="summary-value">${(t.bags_kg||0).toLocaleString()} kg</span></li>
+            <li><span>กระดาษ A4</span><span class="summary-value">${(t.paper_ream||0).toLocaleString()} รีม</span></li>
+            <li><span>หมึกพิมพ์</span><span class="summary-value">${(t.ink_cart||0).toLocaleString()} ตลับ</span></li>
+            <li><span>หน้ากากอนามัย</span><span class="summary-value">${(t.mask_box||0).toLocaleString()} กล่อง</span></li>
+            <li><span>ถุงมือแพทย์</span><span class="summary-value">${(t.glove_pcs||0).toLocaleString()} ชิ้น</span></li>
+        </ul></div></div>
+        <div class="col-12 col-md-6 col-lg-6"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-flask text-pink"></i> สารเคมี และ ยาสลบ</div><ul class="summary-list">
+            <li><span>แอลกอฮอล์ (Alcohol)</span><span class="summary-value">${(t.alc_liq||0).toLocaleString()} ml</span></li>
+            <li><span>แอมโมเนีย (Ammonia)</span><span class="summary-value">${(t.ammonia||0).toLocaleString()} ml</span></li>
+            <li><span>ก๊าซไนตรัสออกไซด์</span><span class="summary-value">${(t.nitrous_kg||0).toLocaleString()} kg</span></li>
+            <li><span>Isoflurane</span><span class="summary-value">${(t.isoflurane||0).toLocaleString()} กล่อง</span></li>
+            <li><span>Desflurane</span><span class="summary-value">${(t.desflurane||0).toLocaleString()} กล่อง</span></li>
+            <li><span>Sevoflurane</span><span class="summary-value">${(t.sevoflurane||0).toLocaleString()} กล่อง</span></li>
+        </ul></div></div>
+        <div class="col-12 col-md-6 col-lg-6"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-water text-primary"></i> ระบบบำบัดน้ำเสีย</div><ul class="summary-list">
+            <li><span>ปริมาตรน้ำเสีย</span><span class="summary-value">${(t.wt_vol||0).toLocaleString()} m³</span></li>
+            <li><span>ค่า COD</span><span class="summary-value">${parseFloat(t.wt_cod||282).toLocaleString()} mg/l</span></li>
+            <li><span>โซเดียมไฮดรอกไซด์</span><span class="summary-value">${(t.wt_naoh||0).toLocaleString()} kg</span></li>
+            <li><span>สารส้ม</span><span class="summary-value">${(t.wt_alum||0).toLocaleString()} kg</span></li>
+            <li><span>กรดซัลฟุริค</span><span class="summary-value">${(t.wt_sulfuric||0).toLocaleString()} kg</span></li>
+            <li><span>ปูนขาว</span><span class="summary-value">${(t.wt_lime||0).toLocaleString()} kg</span></li>
+            <li><span>คลอรีน</span><span class="summary-value">${(t.wt_chlorine||0).toLocaleString()} kg</span></li>
+        </ul></div></div>
+        <div class="col-12 col-md-12 col-lg-12"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-solar-panel text-success"></i> พลังงานทดแทน (Solar)</div><ul class="summary-list">
+            <li><span>ไฟที่ใช้ในระบบผลิต</span><span class="summary-value">${(t.solar_internal_use||0).toLocaleString()} kWh</span></li>
+            <li><span>ไฟฟ้าผลิตได้จริง</span><span class="summary-value">${(t.solar_mode==='meter'?(t.solar_kwh||0):(t.solar_cap||0)*(t.solar_days||0)*4).toLocaleString()} kWh</span></li>
+            <li><span>กำลัง / แผง / วัน</span><span class="summary-value text-secondary small">${(t.solar_cap||0)} kW / ${(t.solar_panels||0)} แผง / ${(t.solar_days||0)} วัน</span></li>
+        </ul></div></div>`;
+    }
+
     function renderSuperAdminDash() {
         if (SESSION.role !== 'superadmin') return;
         let year = document.getElementById('filter-year').value;
         let month = document.getElementById('filter-month').value;
         let hospData = {}, co2ByHosp = {}, co2SrcByHosp = {};
         let gCo2 = 0, gElec = 0, gWaste = 0;
+        
         if (!localDB.logs) return;
         localDB.logs.forEach(log => {
             let h = log.hospName || 'ไม่ระบุ';
@@ -794,21 +946,24 @@
             if (!log.date) return;
             let p = log.date.split('-');
             if ((year==='all'||year===p[0])&&(month==='all'||month===p[1])) {
-                let val = parseFloat(log.val)||0;
-                if (log.id==='elec-kwh') { gElec+=val; }
-                if (['waste-gen','waste-inf','waste-org','waste-haz'].includes(log.id)) gWaste+=val;
+                let val = parseFloat(log.val || log.value || log.amount || 0);
+                if (log.id==='elec-kwh') gElec += val;
+                if (['waste-gen','waste-inf','waste-org','waste-haz'].includes(log.id)) gWaste += val;
+                
                 if (['elec-kwh','water-m3','solar-kwh','solar-cap'].includes(log.id)) { hospData[h].energy=true; if(log.id==='elec-kwh') co2SrcByHosp[h].elec+=val*0.4999; }
                 if (['diesel_v','gasoline_v','diesel_m','gasoline_m','lpg-size'].includes(log.id)) { hospData[h].fuel=true; co2SrcByHosp[h].fuel+=val*2.7; }
                 if (['hfc134a','r22','fire-size'].includes(log.id)) { hospData[h].air=true; co2SrcByHosp[h].air+=val*1000; }
                 if (['waste-gen','waste-inf','waste-org','waste-haz','rc-paper'].includes(log.id)) hospData[h].waste=true;
                 if (['clean-pow','clean-liq','bags-kg','paper-ream'].includes(log.id)) hospData[h].sup=true;
                 if (['alc-liq','ammonia','nitrous-kg','wt-vol'].includes(log.id)) hospData[h].chem=true;
-                co2ByHosp[h]=co2SrcByHosp[h].elec+co2SrcByHosp[h].fuel+co2SrcByHosp[h].air;
+                
+                co2ByHosp[h] = co2SrcByHosp[h].elec+co2SrcByHosp[h].fuel+co2SrcByHosp[h].air;
             }
         });
+        
         for (let h in co2ByHosp) gCo2 += co2ByHosp[h];
-        if(document.getElementById('sa-kpi-co2')) document.getElementById('sa-kpi-co2').innerText   = gCo2.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-        if(document.getElementById('sa-kpi-elec')) document.getElementById('sa-kpi-elec').innerText  = gElec.toLocaleString();
+        if(document.getElementById('sa-kpi-co2'))   document.getElementById('sa-kpi-co2').innerText   = gCo2.toLocaleString(undefined,{minimumFractionDigits:2});
+        if(document.getElementById('sa-kpi-elec'))  document.getElementById('sa-kpi-elec').innerText  = gElec.toLocaleString();
         if(document.getElementById('sa-kpi-waste')) document.getElementById('sa-kpi-waste').innerText = gWaste.toLocaleString();
 
         let htmlComp = '';
@@ -826,163 +981,70 @@
             htmlTop+=`<tr><td class="text-start fw-bold">${h}</td><td><span class="badge bg-info text-dark">${topType}</span></td><td class="fw-bold text-danger">${maxV.toLocaleString(undefined,{maximumFractionDigits:2})}</td></tr>`;
             hospLabels.push(h); cData.push(co2ByHosp[h]);
         }
-        if(document.getElementById('top-resource-tbody')) document.getElementById('top-resource-tbody').innerHTML = htmlTop || '<tr><td colspan="3" class="text-muted">ยังไม่มีข้อมูล</td></tr>';
+        if(document.getElementById('top-resource-tbody')) document.getElementById('top-resource-tbody').innerHTML = htmlTop || '<tr><td colspan="3" class="text-muted text-center">ยังไม่มีข้อมูล</td></tr>';
         
         if (charts.hospCompare) charts.hospCompare.destroy();
         let ctx = document.getElementById('hospitalsCompareChart');
         if (ctx) { charts.hospCompare = new Chart(ctx.getContext('2d'),{type:'bar',data:{labels:hospLabels,datasets:[{label:'Carbon (kgCO₂e)',data:cData,backgroundColor:'#15b371'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}}); }
     }
 
-    window.applyFilters = function () {
-        let el = document.getElementById('loading-overlay');
-        if(el) { document.getElementById('loading-text').innerText = 'ประมวลผลข้อมูล...'; el.style.display = 'flex'; }
-        setTimeout(() => { 
-            try { loadCharts(); } catch(err) { console.error(err); }
-            try { window.loadCategorySummary(); } catch(err) { console.error(err); }
-            try { renderSuperAdminDash(); } catch(err) { console.error(err); }
-            if(el) el.style.display='none'; 
-        }, 300);
-    };
+    function loadLeaderboard() {
+        const loadingDiv = document.getElementById('leaderboard-loading');
+        const contentDiv = document.getElementById('leaderboard-content');
+        const tbody = document.getElementById('leaderboard-tbody');
 
-    function loadCharts() {
-        let t = getFilteredData();
-        let cElec  = t.elec_kwh * 0.4999;
-        let cFuel  = ((t.diesel_v+t.diesel_m)*2.708) + ((t.gasoline_v+t.gasoline_m)*2.189) + (t.total_lpg*3.111);
-        let cTotal = cElec + cFuel;
+        if(loadingDiv) loadingDiv.style.display = 'block';
+        if(contentDiv) contentDiv.style.display = 'none';
+        if(tbody) tbody.innerHTML = '';
 
-        if(document.getElementById('kpi-co2-total')) document.getElementById('kpi-co2-total').innerText = cTotal.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-        if(document.getElementById('kpi-co2-elec')) document.getElementById('kpi-co2-elec').innerText  = cElec.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-        if(document.getElementById('kpi-co2-fuel')) document.getElementById('kpi-co2-fuel').innerText  = cFuel.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+        setTimeout(() => {
+            let hospLogs = localDB.logs.filter(l => l.hospName === SESSION.hospName);
+            if (SESSION.role === 'superadmin') { hospLogs = localDB.logs; }
 
-        let solarKwh = (t.solar_mode==='nometer') ? (t.solar_cap||0)*(t.solar_days||0)*4 : (t.solar_kwh||0);
-        let solarCo2 = solarKwh*0.4999, trees = Math.floor(solarCo2/9.5);
-        if(document.getElementById('kpi-solar-kwh')) document.getElementById('kpi-solar-kwh').innerText = solarKwh.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-        if(document.getElementById('kpi-solar-co2')) document.getElementById('kpi-solar-co2').innerText = solarCo2.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-        if(document.getElementById('kpi-trees')) document.getElementById('kpi-trees').innerText     = trees.toLocaleString();
+            let userCounts = {};
+            hospLogs.forEach(log => {
+                let name = log.recorderName || 'ไม่ระบุชื่อ';
+                let key = SESSION.role === 'superadmin' ? `${log.hospName} - ${name}` : name;
+                userCounts[key] = (userCounts[key] || 0) + 1;
+            });
 
-        let emSrc = [
-            {name:'ไฟฟ้า',       value:cElec,                                                         icon:'fa-bolt', color:'text-warning'},
-            {name:'น้ำมันรถ',      value:(t.diesel_v||0)*2.708+(t.gasoline_v||0)*2.189,           icon:'fa-car',  color:'text-danger'},
-            {name:'น้ำมันเครื่อง', value:(t.diesel_m||0)*2.708+(t.gasoline_m||0)*2.189,           icon:'fa-cogs', color:'text-secondary'},
-            {name:'ก๊าซ LPG',      value:(t.total_lpg||0)*3.111,                                  icon:'fa-fire', color:'text-orange'}
-        ];
-        emSrc.sort((a,b)=>b.value-a.value);
-        let top3='';
-        for(let i=0;i<3;i++) {
-            if(emSrc[i].value>0) top3+=`<li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom"><div class="fw-bold"><i class="fas ${emSrc[i].icon} ${emSrc[i].color} me-2"></i>${emSrc[i].name}</div><span class="badge bg-danger rounded-pill">${emSrc[i].value.toLocaleString(undefined,{maximumFractionDigits:1})}</span></li>`;
-        }
-        if(document.getElementById('top-emissions-list')) document.getElementById('top-emissions-list').innerHTML = top3 || '<li class="list-group-item text-center text-muted py-3">ยังไม่มีข้อมูล</li>';
+            let leaderboardData = Object.keys(userCounts).map(name => { return { name: name, count: userCounts[name] }; });
+            leaderboardData.sort((a, b) => b.count - a.count);
 
-        if(charts.co2Pie) charts.co2Pie.destroy();
-        if(document.getElementById('co2PieChart')) {
-            charts.co2Pie = new Chart(document.getElementById('co2PieChart').getContext('2d'),{type:'doughnut',data:{labels:['ไฟฟ้า','เชื้อเพลิง'],datasets:[{data:[cElec||0,cFuel||0],backgroundColor:['#ffc107','#dc3545']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
-        }
+            if (!leaderboardData.length) {
+                if(tbody) tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4">ยังไม่มีข้อมูลบุคลากรของโรงพยาบาลนี้</td></tr>';
+            } else {
+                let html = '';
+                leaderboardData.forEach((item, i) => {
+                    let rank = i + 1;
+                    let rankBadge = `<span class="badge bg-secondary rounded-circle px-2">${rank}</span>`;
+                    if (rank === 1) rankBadge = `<span class="fs-4">🥇</span>`;
+                    if (rank === 2) rankBadge = `<span class="fs-4">🥈</span>`;
+                    if (rank === 3) rankBadge = `<span class="fs-4">🥉</span>`;
+                    let nameLabel = item.name;
+                    let isOwn = (nameLabel === SESSION.recorderName);
+                    let cls = isOwn ? 'table-success fw-bold' : '';
+                    if (isOwn && SESSION.role !== 'superadmin') nameLabel += ' (คุณ)';
 
-        let rcTotal = (t.rc_paper||0)+(t.rc_alum||0)+(t.rc_plastic||0)+(t.rc_iron||0)+(t.rc_metal||0)+(t.rc_glass||0);
-        let wOther  = (t.waste_gen||0)+(t.waste_inf||0)+(t.waste_org||0)+(t.waste_haz||0);
-        if(charts.wastePie) charts.wastePie.destroy();
-        if(document.getElementById('wastePieChart')) {
-            charts.wastePie = new Chart(document.getElementById('wastePieChart').getContext('2d'),{type:'doughnut',data:{labels:['รีไซเคิลได้','ขยะอื่นๆ'],datasets:[{data:[rcTotal,wOther],backgroundColor:['#15b371','#6c757d']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
-        }
-
-        let pastTotal = localDB.logs.length>0 ? cTotal*0.8 : 0;
-        if(charts.trend) charts.trend.destroy();
-        if(document.getElementById('electricityTrendChart')) {
-            charts.trend = new Chart(document.getElementById('electricityTrendChart').getContext('2d'),{type:'line',data:{labels:['งวดที่แล้ว','งวดที่เลือก'],datasets:[{label:'kgCO₂e',data:[pastTotal,cTotal],borderColor:'#15b371',fill:true,tension:0.3}]}});
-        }
-
-        if(charts.yearly) charts.yearly.destroy();
-        if(document.getElementById('yearlyCompareChart')) {
-            charts.yearly = new Chart(document.getElementById('yearlyCompareChart').getContext('2d'),{type:'bar',data:{labels:['2567','2568','2569'],datasets:[{label:'Carbon Footprint',data:[getYearlyCarbonTotal('2024'),getYearlyCarbonTotal('2025'),getYearlyCarbonTotal('2026')],backgroundColor:'#15b371'}]}});
-        }
+                    html += `<tr class="${cls}"><td class="text-center fw-bold">${rankBadge}</td><td class="fw-semibold text-dark">${nameLabel}</td><td class="text-center text-success fw-bold">${item.count} ครั้ง</td></tr>`;
+                });
+                if(tbody) tbody.innerHTML = html;
+            }
+            if(loadingDiv) loadingDiv.style.display = 'none';
+            if(contentDiv) contentDiv.style.display = 'block';
+        }, 400); 
     }
+    const btnRefreshLb = document.getElementById('btn-refresh-lb');
+    if(btnRefreshLb) btnRefreshLb.addEventListener('click', loadLeaderboard);
 
-    window.loadCategorySummary = function () {
-        let t = getFilteredData();
-        let container = document.getElementById('summary-cards-container');
-        if(!container) return;
-        
-        container.innerHTML = `
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-bolt text-warning"></i> พลังงานและน้ำ</div><ul class="summary-list">
-            <li><span>ไฟฟ้าหลัก</span><span class="summary-value">${(t.elec_kwh||0).toLocaleString()} kWh</span></li>
-            <li><span>น้ำประปา</span><span class="summary-value">${(t.water_m3||0).toLocaleString()} m³</span></li>
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-gas-pump text-danger"></i> ยานพาหนะและเชื้อเพลิง</div><ul class="summary-list">
-            <li><span>น้ำมันรถ (ดีเซล)</span><span class="summary-value">${(t.diesel_v||0).toLocaleString()} L</span></li>
-            <li><span>น้ำมันรถ (เบนซิน)</span><span class="summary-value">${(t.gasoline_v||0).toLocaleString()} L</span></li>
-            <li><span>น้ำมันเครื่องจักร (ดีเซล)</span><span class="summary-value">${(t.diesel_m||0).toLocaleString()} L</span></li>
-            <li><span>น้ำมันเครื่องจักร (เบนซิน)</span><span class="summary-value">${(t.gasoline_m||0).toLocaleString()} L</span></li>
-            <li><span>ก๊าซหุงต้ม (LPG)</span><span class="summary-value">${(t.total_lpg||0).toLocaleString()} kg</span></li>
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-snowflake text-info"></i> ปรับอากาศ & ดับเพลิง</div><ul class="summary-list">
-            <li><span>น้ำยาแอร์ (HFC-134a)</span><span class="summary-value">${(t.hfc134a||0).toLocaleString()} kg</span></li>
-            <li><span>น้ำยาแอร์ (R22)</span><span class="summary-value">${(t.r22||0).toLocaleString()} kg</span></li>
-            <li><span>ถังดับเพลิง CO₂</span><span class="summary-value">${(t.total_fire||0).toLocaleString()} kg</span></li>
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-trash-alt text-secondary"></i> ขยะทั่วไปและอันตราย</div><ul class="summary-list">
-            <li><span>ขยะทั่วไป</span><span class="summary-value">${(t.waste_gen||0).toLocaleString()} kg</span></li>
-            <li><span>ขยะติดเชื้อ</span><span class="summary-value">${(t.waste_inf||0).toLocaleString()} kg</span></li>
-            <li><span>ขยะอินทรีย์</span><span class="summary-value">${(t.waste_org||0).toLocaleString()} kg</span></li>
-            <li><span>ขยะอันตราย</span><span class="summary-value">${(t.waste_haz||0).toLocaleString()} kg</span></li>
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-recycle text-success"></i> ขยะรีไซเคิล</div><ul class="summary-list">
-            <li><span>กระดาษ</span><span class="summary-value">${(t.rc_paper||0).toLocaleString()} kg</span></li>
-            <li><span>อะลูมิเนียม</span><span class="summary-value">${(t.rc_alum||0).toLocaleString()} kg</span></li>
-            <li><span>พลาสติก</span><span class="summary-value">${(t.rc_plastic||0).toLocaleString()} kg</span></li>
-            <li><span>เหล็ก</span><span class="summary-value">${(t.rc_iron||0).toLocaleString()} kg</span></li>
-            <li><span>โลหะอื่นๆ</span><span class="summary-value">${(t.rc_metal||0).toLocaleString()} kg</span></li>
-            <li><span>แก้ว</span><span class="summary-value">${(t.rc_glass||0).toLocaleString()} kg</span></li>
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-pump-soap text-primary"></i> วัสดุสิ้นเปลือง</div><ul class="summary-list">
-            <li><span>ผงซักฟอก</span><span class="summary-value">${(t.clean_pow||0).toLocaleString()} kg</span></li>
-            <li><span>น้ำยาซักล้าง</span><span class="summary-value">${(t.clean_liq||0).toLocaleString()} ml</span></li>
-            <li><span>ถุงพลาสติก</span><span class="summary-value">${(t.bags_kg||0).toLocaleString()} kg</span></li>
-            <li><span>กระดาษ A4</span><span class="summary-value">${(t.paper_ream||0).toLocaleString()} รีม</span></li>
-            <li><span>หมึกพิมพ์</span><span class="summary-value">${(t.ink_cart||0).toLocaleString()} ตลับ</span></li>
-            <li><span>หน้ากากอนามัย</span><span class="summary-value">${(t.mask_box||0).toLocaleString()} กล่อง</span></li>
-            <li><span>ถุงมือแพทย์</span><span class="summary-value">${(t.glove_pcs||0).toLocaleString()} ชิ้น</span></li>
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-6"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-flask text-pink"></i> สารเคมี และ ยาสลบ</div><ul class="summary-list">
-            <li><span>แอลกอฮอล์ (Alcohol)</span><span class="summary-value">${(t.alc_liq||0).toLocaleString()} ml</span></li>
-            <li><span>แอมโมเนีย (Ammonia)</span><span class="summary-value">${(t.ammonia||0).toLocaleString()} ml</span></li>
-            <li><span>ก๊าซไนตรัสออกไซด์</span><span class="summary-value">${(t.nitrous_kg||0).toLocaleString()} kg</span></li>
-            <li><span>Isoflurane</span><span class="summary-value">${(t.isoflurane||0).toLocaleString()} กล่อง</span></li>
-            <li><span>Desflurane</span><span class="summary-value">${(t.desflurane||0).toLocaleString()} กล่อง</span></li>
-            <li><span>Sevoflurane</span><span class="summary-value">${(t.sevoflurane||0).toLocaleString()} กล่อง</span></li>
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-6"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-water text-primary"></i> ระบบบำบัดน้ำเสีย</div><ul class="summary-list">
-            <li><span>ปริมาตรน้ำเสีย</span><span class="summary-value">${(t.wt_vol||0).toLocaleString()} m³</span></li>
-            <li><span>ค่า COD</span><span class="summary-value">${(t.wt_cod||282).toLocaleString()} mg/l</span></li>
-            <li><span>โซเดียมไฮดรอกไซด์</span><span class="summary-value">${(t.wt_naoh||0).toLocaleString()} kg</span></li>
-            <li><span>สารส้ม</span><span class="summary-value">${(t.wt_alum||0).toLocaleString()} kg</span></li>
-            <li><span>กรดซัลฟุริค</span><span class="summary-value">${(t.wt_sulfuric||0).toLocaleString()} kg</span></li>
-            <li><span>ปูนขาว</span><span class="summary-value">${(t.wt_lime||0).toLocaleString()} kg</span></li>
-            <li><span>คลอรีน</span><span class="summary-value">${(t.wt_chlorine||0).toLocaleString()} kg</span></li>
-        </ul></div></div>
-        
-        <div class="col-12 col-md-12 col-lg-12"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-solar-panel text-success"></i> พลังงานทดแทน (Solar)</div><ul class="summary-list">
-            <li><span>ไฟที่ใช้ในระบบผลิต</span><span class="summary-value">${(t.solar_internal_use||0).toLocaleString()} kWh</span></li>
-            <li><span>ไฟฟ้าผลิตได้จริง</span><span class="summary-value">${(t.solar_mode==='meter'?(t.solar_kwh||0):(t.solar_cap||0)*(t.solar_days||0)*4).toLocaleString()} kWh</span></li>
-            <li><span>กำลัง / แผง / วัน</span><span class="summary-value text-secondary small">${(t.solar_cap||0)} kW / ${(t.solar_panels||0)} แผง / ${(t.solar_days||0)} วัน</span></li>
-        </ul></div></div>`;
-    };
-
-    /* ========== Sidebar Navigation ========== */
+    // ============================================
+    // Sidebar & Navigation Event Listeners
+    // ============================================
     let mobileToggle = document.getElementById('mobile-toggle-btn');
-    if(mobileToggle) {
-        mobileToggle.addEventListener('click', () => { document.getElementById('app-sidebar').classList.toggle('active'); document.getElementById('sidebar-overlay').classList.toggle('active'); });
-    }
+    if(mobileToggle) mobileToggle.addEventListener('click', () => { document.getElementById('app-sidebar').classList.toggle('active'); document.getElementById('sidebar-overlay').classList.toggle('active'); });
+
     let sidebarOverlay = document.getElementById('sidebar-overlay');
-    if(sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', () => { document.getElementById('app-sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').classList.remove('active'); });
-    }
+    if(sidebarOverlay) sidebarOverlay.addEventListener('click', () => { document.getElementById('app-sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').classList.remove('active'); });
 
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
@@ -996,170 +1058,70 @@
         });
     });
 
+    // ============================================
+    // Modal Forms Handling 
+    // ============================================
     const inputHTML = (label,id,unit,type='number',val=0) => `<div class="mb-3"><label class="fw-bold small">${label} (${unit})</label><div class="input-group"><input type="${type}" step="any" id="${id}" class="form-control border-success" data-label="${label}" required value="${val}"><span class="input-group-text bg-light">${unit}</span></div></div>`;
 
-    window.openModal = function(mode, categoryName) {
-        document.getElementById('main-cat-key').value = mode;
-        document.getElementById('form-category-name').value = categoryName || mode;
-        const container = document.getElementById('dynamic-fields-container');
-        container.innerHTML = '';
-        if (!document.getElementById('entry-date').value) document.getElementById('entry-date').value = new Date().toISOString().split('T')[0];
-        
-        let title = '';
-        if      (mode==='elec')            { title='⚡ ไฟฟ้าหลัก'; container.innerHTML=inputHTML('ปริมาณไฟฟ้าที่ใช้','elec-kwh','kWh'); }
-        else if (mode==='water')           { title='💧 น้ำประปา'; container.innerHTML=inputHTML('ปริมาณน้ำที่ใช้','water-m3','m³'); }
-        else if (mode==='fuel-vehicle')    { title='🚗 น้ำมันยานพาหนะ';     container.innerHTML=inputHTML('⛽ ดีเซล','diesel_v','ลิตร')+inputHTML('⛽ เบนซิน','gasoline_v','ลิตร'); }
-        else if (mode==='fuel-machine')    { title='⚙️ น้ำมันเครื่องจักร';  container.innerHTML=inputHTML('⛽ ดีเซล','diesel_m','ลิตร')+inputHTML('⛽ เบนซิน','gasoline_m','ลิตร'); }
-        else if (mode==='lpg')             { title='🔥 ก๊าซหุงต้ม (LPG)';   container.innerHTML=`<div class="row g-2 mb-3"><div class="col-6"><label class="fw-bold small">ขนาดถัง (kg)</label><input type="number" id="lpg-size" data-label="ขนาดถัง LPG" class="form-control border-success" oninput="window.calcLPG()"></div><div class="col-6"><label class="fw-bold small">จำนวนถัง</label><input type="number" id="lpg-qty" data-label="จำนวนถัง LPG" class="form-control border-success" oninput="window.calcLPG()"></div></div>`+inputHTML('ปริมาณรวมอัตโนมัติ','total-lpg','kg','number',0); }
-        else if (mode==='air-ref')         { title='❄️ สารทำความเย็นแอร์';  container.innerHTML=inputHTML('🧪 HFC-134a','hfc134a','kg')+inputHTML('🧪 R22','r22','kg'); }
-        else if (mode==='fire-ext')        { title='🧯 ดับเพลิง CO₂';       container.innerHTML=`<div class="row g-2 mb-3"><div class="col-6"><label class="fw-bold small">ขนาดบรรจุ (kg)</label><input type="number" id="fire-size" data-label="ขนาดถังดับเพลิง" class="form-control border-success" oninput="window.calcFire()"></div><div class="col-6"><label class="fw-bold small">จำนวนถัง</label><input type="number" id="fire-qty" data-label="จำนวนถังดับเพลิง" class="form-control border-success" oninput="window.calcFire()"></div></div>`+inputHTML('ปริมาณรวมอัตโนมัติ','total-fire','kg','number',0); }
-        else if (mode==='waste-main')      { title='🗑️ ขยะหลัก 4 ประเภท';  container.innerHTML=inputHTML('ทั่วไป','waste-gen','kg')+inputHTML('ติดเชื้อ','waste-inf','kg')+inputHTML('อินทรีย์','waste-org','kg')+inputHTML('อันตราย','waste-haz','kg'); }
-        else if (mode==='waste-recycle')   { title='♻️ ขยะรีไซเคิล';        container.innerHTML=inputHTML('กระดาษ','rc-paper','kg')+inputHTML('อะลูมิเนียม','rc-alum','kg')+inputHTML('พลาสติก','rc-plastic','kg')+inputHTML('เหล็ก','rc-iron','kg')+inputHTML('โลหะ','rc-metal','kg')+inputHTML('แก้ว','rc-glass','kg'); }
-        else if (mode==='clean-supplies')  { title='🧼 ทำความสะอาด';         container.innerHTML=inputHTML('ผงซักฟอก','clean-pow','kg')+inputHTML('น้ำยาซักผ้า','clean-liq','ml')+inputHTML('ถุงพลาสติก','bags-kg','kg'); }
-        else if (mode==='office-supplies') { title='📄 สำนักงาน';            container.innerHTML=inputHTML('กระดาษ A4','paper-ream','รีม')+inputHTML('หมึกพิมพ์','ink-cart','ตลับ'); }
-        else if (mode==='medical-supplies'){ title='🩺 อุปกรณ์แพทย์';      container.innerHTML=inputHTML('หน้ากากอนามัย','mask-box','กล่อง')+inputHTML('ถุงมือ','glove-pcs','ชิ้น'); }
-        else if (mode==='med-chemicals')   { title='🧪 สารเคมี & ยาสลบ';
-            container.innerHTML=`<div class="text-success fw-bold mb-2 small">กลุ่มสารเคมี:</div>${inputHTML('Alcohol ชนิดน้ำ','alc-liq','ml')}${inputHTML('Ammonia','ammonia','ml')}<div class="text-danger fw-bold mt-3 mb-2 small">กลุ่มยาสลบ:</div>${inputHTML('ก๊าซไนตรัสออกไซด์','nitrous-kg','kg')}${inputHTML('Isoflurane','isoflurane','กล่อง')}${inputHTML('Desflurane','desflurane','กล่อง')}${inputHTML('Sevoflurane','sevoflurane','กล่อง')}`; }
-        else if (mode==='water-treatment') { title='🌊 ระบบบำบัดน้ำเสีย';
-            container.innerHTML=`<div class="text-primary fw-bold mb-2 small">1. ปริมาณน้ำเสีย:</div>${inputHTML('น้ำเสียที่เข้าสู่ระบบ','wt-vol','m³')}<div class="text-primary fw-bold mt-3 mb-2 small">2. ประเภทบ่อ:</div><div class="mb-3"><select id="wt-type" data-label="ประเภทบ่อ" class="form-select border-success"><option value="บ่อลึก (ลึกกว่า 2 เมตร)">บ่อลึก (ลึกกว่า 2 เมตร)</option><option value="บ่อตื้น (ลึกไม่เกิน 2 เมตร)">บ่อตื้น (ลึกไม่เกิน 2 เมตร)</option></select></div><div class="text-primary fw-bold mt-3 mb-2 small">3. ข้อมูลเคมีและ COD:</div>${inputHTML('ค่า COD','wt-cod','mg/l','number',282)}${inputHTML('โซเดียมไฮดรอกไซด์','wt-naoh','kg')}${inputHTML('สารส้ม','wt-alum','kg')}${inputHTML('กรดซัลฟุริค','wt-sulfuric','kg')}${inputHTML('ปูนขาว','wt-lime','kg')}${inputHTML('คลอรีน','wt-chlorine','kg')}`; }
-        else if (mode==='solar-system')    { title='☀️ พลังงานทดแทน Solar Cell';
-            container.innerHTML=`<div class="p-3 mb-3 rounded-3 border bg-white"><h6 class="fw-bold text-success mb-2 small"><i class="fas fa-info-circle me-2"></i>1. ข้อมูลทั่วไป</h6>${inputHTML('ไฟที่ใช้ผลิต','solar-internal-use','kWh')}</div><div class="p-3 rounded-3 border bg-white"><h6 class="fw-bold text-success mb-2 small"><i class="fas fa-solar-panel me-2"></i>2. ข้อมูลโซลาเซลล์</h6><div class="mb-3"><select id="solar-mode" data-label="รูปแบบมิเตอร์" class="form-select border-success" onchange="window.toggleSolarFields()"><option value="meter">กรณีมีมิเตอร์</option><option value="nometer">กรณีไม่มีมิเตอร์</option></select></div><div id="solar-meter-field" class="p-3 rounded bg-light border border-warning">${inputHTML('ไฟที่ผลิตได้','solar-kwh','kWh')}</div><div id="solar-nometer-fields" class="p-3 rounded bg-light border border-info" style="display:none;">${inputHTML('กำลังผลิต','solar-cap','kW')}${inputHTML('จำนวนแผง','solar-panels','แผง')}${inputHTML('จำนวนวัน','solar-days','วัน')}</div></div>`;
-            setTimeout(() => window.toggleSolarFields(), 50); }
-        
-        document.getElementById('form-title').innerText = title;
-        new bootstrap.Modal(document.getElementById('formModal')).show();
-    };
-
-    window.calcLPG  = () => { document.getElementById('total-lpg').value  = ((parseFloat(document.getElementById('lpg-size').value)||0)  * (parseFloat(document.getElementById('lpg-qty').value)||0)).toFixed(2); };
-    window.calcFire = () => { document.getElementById('total-fire').value = ((parseFloat(document.getElementById('fire-size').value)||0) * (parseFloat(document.getElementById('fire-qty').value)||0)).toFixed(2); };
-    window.toggleSolarFields = () => {
-        let m = document.getElementById('solar-mode').value;
-        if(document.getElementById('solar-meter-field')) document.getElementById('solar-meter-field').style.display    = m==='meter'   ? 'block' : 'none';
-        if(document.getElementById('solar-nometer-fields')) document.getElementById('solar-nometer-fields').style.display = m==='nometer' ? 'block' : 'none';
-        if(document.getElementById('solar-kwh')) document.getElementById('solar-kwh').required = (m==='meter');
-        if(document.getElementById('solar-cap')) document.getElementById('solar-cap').required = (m==='nometer');
-    };
-})(); 
-
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzKOye_3wZzhMTJX0mQ_eTcQk_Jo34NX0M9la2PKOsgtfA0JmAKfSFan500XutvSvrZ/exec";
-
-const google = {
-    script: {
-        get run() {
-            const runObj = {
-                withFailureHandler: function(errCallback) { this._errCallback = errCallback; return this; },
-                withSuccessHandler: function(callback) { this._successCallback = callback; return this; }
-            };
-            return new Proxy(runObj, {
-                get: function(target, prop) {
-                    if (prop in target) return target[prop];
-                    return function(...args) {
-                        let actionName = ''; let payloadData = args[0] || {};
-                        if (prop === 'checkHospitalLogin') {
-                            actionName = 'login'; payloadData = { hospName: args[0], password: args[1], recorderName: args[2] };
-                        } else if (prop === 'saveResourceData') { actionName = 'saveResource';
-                        } else if (prop === 'saveAppSatisfactionSurvey') { actionName = 'saveSurvey';
-                        } else if (prop === 'fetchDashboardData') {
-                            actionName = 'fetchDashboard'; payloadData = { hospName: args[0], role: args[1] };
-                        } else if (prop === 'fetchHospitalSummary') { actionName = 'fetchSummary';
-                        } else {  console.warn("ไม่รองรับฟังก์ชัน:", prop); return; }
-                        
-                        fetch(WEB_APP_URL, {
-                            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
-                            body: JSON.stringify({ action: actionName, payload: payloadData })
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (target._successCallback) {
-                                if (prop === 'fetchDashboardData' || prop === 'fetchHospitalSummary') {
-                                    target._successCallback(data.data || []);
-                                } else { target._successCallback(data); }
-                            }
-                        }).catch(err => {
-                            console.error("API Error:", err);
-                            if (target._errCallback) target._errCallback(err);
-                        });
-                    };
-                }
-            });
-        }
-    }
-};
-
-window.addEventListener('DOMContentLoaded', () => {
-    if (typeof window.showSection === 'function') {
-        setTimeout(() => {
-            window.showSection('dashboard'); 
-        }, 500);
-    }
-});
-
-let monthlyBarChart = null;
-let rawChartData = []; 
-
-function setupMonthlyChart(logs) {
-    console.log("ตั้งค่ากราฟด้วยข้อมูล:", logs); 
-    rawChartData = logs || []; 
-    updateMonthlyChart(); 
-}
-
-function updateMonthlyChart() {
-    const ctx = document.getElementById('monthlyComparisonChart');
-    if(!ctx) return;
-
-    const selectedCat = document.getElementById('chartCategorySelector').value;
-    const monthNames = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-    
-    let dataEnergy = new Array(12).fill(0);
-    let dataWater = new Array(12).fill(0);
-    let dataWaste = new Array(12).fill(0);
-
-    rawChartData.forEach(log => {
-        let d = new Date(log.date || log.timestamp || new Date());
-        let m = d.getMonth(); 
-        
-        // 📌 แก้ไขส่วนรวมข้อมูลตรงนี้ (เพิ่ม log.val)
-        let amount = parseFloat(log.val || log.amount || log.value || log.total || 0); 
-        let str = JSON.stringify(log).toLowerCase();
-
-        if(str.includes('ไฟ') || str.includes('energy')) {
-            dataEnergy[m] += amount;
-        } else if(str.includes('น้ำ') || str.includes('water')) {
-            dataWater[m] += amount;
-        } else if(str.includes('ขยะ') || str.includes('waste')) {
-            dataWaste[m] += amount;
-        }
-    });
-
-    let datasets = [];
-    if (selectedCat === 'all' || selectedCat === 'energy') {
-        datasets.push({ label: 'ไฟฟ้า', data: dataEnergy, backgroundColor: '#ffc107', borderRadius: 4 });
-    }
-    if (selectedCat === 'all' || selectedCat === 'water') {
-        datasets.push({ label: 'น้ำประปา', data: dataWater, backgroundColor: '#0dcaf0', borderRadius: 4 });
-    }
-    if (selectedCat === 'all' || selectedCat === 'waste') {
-        datasets.push({ label: 'ปริมาณขยะ', data: dataWaste, backgroundColor: '#dc3545', borderRadius: 4 });
-    }
-
-    if(monthlyBarChart) {
-        monthlyBarChart.destroy();
-    }
-
-    monthlyBarChart = new Chart(ctx, {
-        type: 'bar',
-        data: { labels: monthNames, datasets: datasets },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true } },
-            plugins: {
-                tooltip: { mode: 'index', intersect: false },
-                legend: { position: 'top' }
+    document.querySelectorAll('.cat-trigger').forEach(btn => {
+        btn.addEventListener('click', function() {
+            let mode = this.dataset.mode;
+            let categoryName = this.closest('.form-section-wrapper').querySelector('.form-section-title').innerText.replace(/[^ก-๙a-zA-Z]/g, '').trim() || mode;
+            document.getElementById('main-cat-key').value = mode;
+            document.getElementById('form-category-name').value = categoryName;
+            
+            const container = document.getElementById('dynamic-fields-container');
+            container.innerHTML = '';
+            if (!document.getElementById('entry-date').value) document.getElementById('entry-date').value = new Date().toISOString().split('T')[0];
+            
+            let title = '';
+            if      (mode==='elec')            { title='⚡ ไฟฟ้าหลัก'; container.innerHTML=inputHTML('ปริมาณไฟฟ้าที่ใช้','elec-kwh','kWh'); }
+            else if (mode==='water')           { title='💧 น้ำประปา'; container.innerHTML=inputHTML('ปริมาณน้ำที่ใช้','water-m3','m³'); }
+            else if (mode==='fuel-vehicle')    { title='🚗 น้ำมันยานพาหนะ';     container.innerHTML=inputHTML('⛽ ดีเซล','diesel_v','ลิตร')+inputHTML('⛽ เบนซิน','gasoline_v','ลิตร'); }
+            else if (mode==='fuel-machine')    { title='⚙️ น้ำมันเครื่องจักร';  container.innerHTML=inputHTML('⛽ ดีเซล','diesel_m','ลิตร')+inputHTML('⛽ เบนซิน','gasoline_m','ลิตร'); }
+            else if (mode==='lpg')             { title='🔥 ก๊าซหุงต้ม (LPG)';   container.innerHTML=`<div class="row g-2 mb-3"><div class="col-6"><label class="fw-bold small">ขนาดถัง (kg)</label><input type="number" id="lpg-size" data-label="ขนาดถัง LPG" class="form-control lpg-calc border-success"></div><div class="col-6"><label class="fw-bold small">จำนวนถัง</label><input type="number" id="lpg-qty" data-label="จำนวนถัง LPG" class="form-control lpg-calc border-success"></div></div>`+inputHTML('ปริมาณรวมอัตโนมัติ','total-lpg','kg','number',0); }
+            else if (mode==='air-ref')         { title='❄️ สารทำความเย็นแอร์';  container.innerHTML=inputHTML('🧪 HFC-134a','hfc134a','kg')+inputHTML('🧪 R22','r22','kg'); }
+            else if (mode==='fire-ext')        { title='🧯 ดับเพลิง CO₂';       container.innerHTML=`<div class="row g-2 mb-3"><div class="col-6"><label class="fw-bold small">ขนาดบรรจุ (kg)</label><input type="number" id="fire-size" data-label="ขนาดถังดับเพลิง" class="form-control fire-calc border-success"></div><div class="col-6"><label class="fw-bold small">จำนวนถัง</label><input type="number" id="fire-qty" data-label="จำนวนถังดับเพลิง" class="form-control fire-calc border-success"></div></div>`+inputHTML('ปริมาณรวมอัตโนมัติ','total-fire','kg','number',0); }
+            else if (mode==='waste-main')      { title='🗑️ ขยะหลัก 4 ประเภท';  container.innerHTML=inputHTML('ทั่วไป','waste-gen','kg')+inputHTML('ติดเชื้อ','waste-inf','kg')+inputHTML('อินทรีย์','waste-org','kg')+inputHTML('อันตราย','waste-haz','kg'); }
+            else if (mode==='waste-recycle')   { title='♻️ ขยะรีไซเคิล';        container.innerHTML=inputHTML('กระดาษ','rc-paper','kg')+inputHTML('อะลูมิเนียม','rc-alum','kg')+inputHTML('พลาสติก','rc-plastic','kg')+inputHTML('เหล็ก','rc-iron','kg')+inputHTML('โลหะ','rc-metal','kg')+inputHTML('แก้ว','rc-glass','kg'); }
+            else if (mode==='clean-supplies')  { title='🧼 ทำความสะอาด';         container.innerHTML=inputHTML('ผงซักฟอก','clean-pow','kg')+inputHTML('น้ำยาซักผ้า','clean-liq','ml')+inputHTML('ถุงพลาสติก','bags-kg','kg'); }
+            else if (mode==='office-supplies') { title='📄 สำนักงาน';            container.innerHTML=inputHTML('กระดาษ A4','paper-ream','รีม')+inputHTML('หมึกพิมพ์','ink-cart','ตลับ'); }
+            else if (mode==='medical-supplies'){ title='🩺 อุปกรณ์แพทย์';      container.innerHTML=inputHTML('หน้ากากอนามัย','mask-box','กล่อง')+inputHTML('ถุงมือ','glove-pcs','ชิ้น'); }
+            else if (mode==='med-chemicals')   { title='🧪 สารเคมี & ยาสลบ';
+                container.innerHTML=`<div class="text-success fw-bold mb-2 small">กลุ่มสารเคมี:</div>${inputHTML('Alcohol ชนิดน้ำ','alc-liq','ml')}${inputHTML('Ammonia','ammonia','ml')}<div class="text-danger fw-bold mt-3 mb-2 small">กลุ่มยาสลบ:</div>${inputHTML('ก๊าซไนตรัสออกไซด์','nitrous-kg','kg')}${inputHTML('Isoflurane','isoflurane','กล่อง')}${inputHTML('Desflurane','desflurane','กล่อง')}${inputHTML('Sevoflurane','sevoflurane','กล่อง')}`; }
+            else if (mode==='water-treatment') { title='🌊 ระบบบำบัดน้ำเสีย';
+                container.innerHTML=`<div class="text-primary fw-bold mb-2 small">1. ปริมาณน้ำเสีย:</div>${inputHTML('น้ำเสียที่เข้าสู่ระบบ','wt-vol','m³')}<div class="text-primary fw-bold mt-3 mb-2 small">2. ประเภทบ่อ:</div><div class="mb-3"><select id="wt-type" data-label="ประเภทบ่อ" class="form-select border-success"><option value="บ่อลึก (ลึกกว่า 2 เมตร)">บ่อลึก (ลึกกว่า 2 เมตร)</option><option value="บ่อตื้น (ลึกไม่เกิน 2 เมตร)">บ่อตื้น (ลึกไม่เกิน 2 เมตร)</option></select></div><div class="text-primary fw-bold mt-3 mb-2 small">3. ข้อมูลเคมีและ COD:</div>${inputHTML('ค่า COD','wt-cod','mg/l','number',282)}${inputHTML('โซเดียมไฮดรอกไซด์','wt-naoh','kg')}${inputHTML('สารส้ม','wt-alum','kg')}${inputHTML('กรดซัลฟุริค','wt-sulfuric','kg')}${inputHTML('ปูนขาว','wt-lime','kg')}${inputHTML('คลอรีน','wt-chlorine','kg')}`; }
+            else if (mode==='solar-system')    { title='☀️ พลังงานทดแทน Solar Cell';
+                container.innerHTML=`<div class="p-3 mb-3 rounded-3 border bg-white"><h6 class="fw-bold text-success mb-2 small"><i class="fas fa-info-circle me-2"></i>1. ข้อมูลทั่วไป</h6>${inputHTML('ไฟที่ใช้ผลิต','solar-internal-use','kWh')}</div><div class="p-3 rounded-3 border bg-white"><h6 class="fw-bold text-success mb-2 small"><i class="fas fa-solar-panel me-2"></i>2. ข้อมูลโซลาเซลล์</h6><div class="mb-3"><select id="solar-mode" data-label="รูปแบบมิเตอร์" class="form-select border-success"><option value="meter">กรณีมีมิเตอร์</option><option value="nometer">กรณีไม่มีมิเตอร์</option></select></div><div id="solar-meter-field" class="p-3 rounded bg-light border border-warning">${inputHTML('ไฟที่ผลิตได้','solar-kwh','kWh')}</div><div id="solar-nometer-fields" class="p-3 rounded bg-light border border-info" style="display:none;">${inputHTML('กำลังผลิต','solar-cap','kW')}${inputHTML('จำนวนแผง','solar-panels','แผง')}${inputHTML('จำนวนวัน','solar-days','วัน')}</div></div>`;
+                
+                setTimeout(() => {
+                    const sel = document.getElementById('solar-mode');
+                    if(sel) sel.addEventListener('change', function() {
+                        let m = this.value;
+                        if(document.getElementById('solar-meter-field')) document.getElementById('solar-meter-field').style.display    = m==='meter'   ? 'block' : 'none';
+                        if(document.getElementById('solar-nometer-fields')) document.getElementById('solar-nometer-fields').style.display = m==='nometer' ? 'block' : 'none';
+                        if(document.getElementById('solar-kwh')) document.getElementById('solar-kwh').required = (m==='meter');
+                        if(document.getElementById('solar-cap')) document.getElementById('solar-cap').required = (m==='nometer');
+                    });
+                }, 50); 
             }
-        }
+            
+            // Add input listeners for dynamic calculations
+            setTimeout(() => {
+                document.querySelectorAll('.lpg-calc').forEach(el => {
+                    el.addEventListener('input', () => { document.getElementById('total-lpg').value = ((parseFloat(document.getElementById('lpg-size').value)||0) * (parseFloat(document.getElementById('lpg-qty').value)||0)).toFixed(2); });
+                });
+                document.querySelectorAll('.fire-calc').forEach(el => {
+                    el.addEventListener('input', () => { document.getElementById('total-fire').value = ((parseFloat(document.getElementById('fire-size').value)||0) * (parseFloat(document.getElementById('fire-qty').value)||0)).toFixed(2); });
+                });
+            }, 100);
+
+            document.getElementById('form-title').innerText = title;
+            new bootstrap.Modal(document.getElementById('formModal')).show();
+        });
     });
-}
+
+});
 </script>
 </body>
 </html>
