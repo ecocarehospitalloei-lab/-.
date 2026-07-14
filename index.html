@@ -203,12 +203,11 @@
             <div>
                 <label class="text-muted small fw-bold">เลือกปี (พ.ศ.)</label>
                 <select id="filter-year" class="form-select border-success" onchange="applyFilters()">
-                   <option value="all">-- ทุกปีรวมกัน --</option>
-    <option value="2026" selected>ปี 2569 (ปัจจุบัน)</option>
-    <option value="2025">ปี 2568</option>
-    <option value="2024">ปี 2567</option>
-    <option value="2023">ปี 2566</option>
-</select>
+                    <option value="all">-- ทุกปีรวมกัน --</option>
+                    <option value="2026" selected>ปี 2569 (ปีฐาน)</option>
+                    <option value="2027">ปี 2570</option>
+                    <option value="2028">ปี 2571</option>
+                </select>
             </div>
             <div>
                 <label class="text-muted small fw-bold">เลือกเดือน</label>
@@ -248,6 +247,7 @@
                     </div>
                 </div>
             </div>
+            ```
             <div class="row g-3 mb-4">
                 <div class="col-12 col-xl-7"><div class="chart-card"><h5 class="mb-3">เปรียบเทียบการปล่อยคาร์บอน แต่ละโรงพยาบาล</h5><canvas id="hospitalsCompareChart" style="max-height:300px;"></canvas></div></div>
                 <div class="col-12 col-xl-5"><div class="chart-card overflow-auto h-100"><h5 class="mb-3">หมวดที่ปล่อย CO₂ ต่อ รพ. สูงสุด</h5><table class="table table-sm text-center align-middle small table-hover"><thead class="table-light"><tr><th class="text-start">โรงพยาบาล</th><th>หมวดที่ใช้มากสุด</th><th>ปริมาณ (kgCO₂e)</th></tr></thead><tbody id="top-resource-tbody"></tbody></table></div></div>
@@ -326,7 +326,7 @@
                                 </tr>
                             </thead>
                             <tbody id="leaderboard-tbody">
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -449,13 +449,16 @@
     function applyRBAC(role) {
         let r = String(role).toLowerCase().trim();
         
+        // 1. เปิดเมนูทุกหมวดให้แสดงผล (กางออกหมดสำหรับทุกคน)
         document.querySelectorAll('.form-section-wrapper').forEach(el => el.style.display = 'block');
         document.querySelectorAll('.sub-nav-link').forEach(el => el.style.display = 'flex');
 
+        // 2. ตรวจสอบสิทธิ์ว่าใช่ส่วนกลาง (superadmin) หรือไม่
         if (r === 'superadmin') {
             document.getElementById('menu-superadmin').style.display = 'flex';
             document.getElementById('filter-hospital-container').style.display = 'block';
         } else {
+            // ถ้าเป็นโรงพยาบาลทั่วไป ให้ซ่อนแค่เมนูของแอดมินเท่านั้น (ส่วนเมนูกรอกข้อมูลด้านบนจะยังโชว์อยู่)
             document.getElementById('menu-superadmin').style.display = 'none';
             document.getElementById('filter-hospital-container').style.display = 'none';
         }
@@ -894,6 +897,7 @@
         }
     }
 
+    /* ข้อมูลเก่ากลับมาครบ 8 หมวดหมู่ครับ! */
     window.loadCategorySummary = function () {
         let t = getFilteredData();
         let container = document.getElementById('summary-cards-container');
@@ -937,7 +941,7 @@
         
         <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-pump-soap text-primary"></i> วัสดุสิ้นเปลือง</div><ul class="summary-list">
             <li><span>ผงซักฟอก</span><span class="summary-value">${(t.clean_pow||0).toLocaleString()} kg</span></li>
-            <li><span>น้ำยาซักผ้า</span><span class="summary-value">${(t.clean_liq||0).toLocaleString()} ml</span></li>
+            <li><span>น้ำยาซักล้าง</span><span class="summary-value">${(t.clean_liq||0).toLocaleString()} ml</span></li>
             <li><span>ถุงพลาสติก</span><span class="summary-value">${(t.bags_kg||0).toLocaleString()} kg</span></li>
             <li><span>กระดาษ A4</span><span class="summary-value">${(t.paper_ream||0).toLocaleString()} รีม</span></li>
             <li><span>หมึกพิมพ์</span><span class="summary-value">${(t.ink_cart||0).toLocaleString()} ตลับ</span></li>
@@ -1037,6 +1041,9 @@
         if(document.getElementById('solar-cap')) document.getElementById('solar-cap').required = (m==='nometer');
     };
 })(); 
+    // ==========================================
+// ==========================================
+
 
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzKOye_3wZzhMTJX0mQ_eTcQk_Jo34NX0M9la2PKOsgtfA0JmAKfSFan500XutvSvrZ/exec";
 
@@ -1083,19 +1090,23 @@ const google = {
     }
 };
 
+// แก้ไขบั๊กหน้าจอไม่ยอมแสดงฟอร์มและปุ่มบันทึกตอนอยู่บน GitHub
 window.addEventListener('DOMContentLoaded', () => {
     if (typeof window.showSection === 'function') {
         setTimeout(() => {
+            // สั่งให้ระบบเปิดหน้าแรกสุดใหม่อีกครั้งเพื่อบังคับให้ปุ่มและช่องกรอกข้อมูลแสดงผลครบถ้วน
             window.showSection('dashboard'); 
         }, 500);
     }
 });
-
-let monthlyBarChart = null;
+// ==========================================
+// 🔚 จบโค้ดเชื่อมต่อระบบ
+// ==========================================
+    let monthlyBarChart = null;
 let rawChartData = []; 
 
 function setupMonthlyChart(logs) {
-    console.log("ตั้งค่ากราฟด้วยข้อมูล:", logs); 
+    console.log("ตั้งค่ากราฟด้วยข้อมูล:", logs); // ช่วยเช็กข้อมูลในหน้าจอ Console
     rawChartData = logs || []; 
     updateMonthlyChart(); 
 }
@@ -1115,10 +1126,10 @@ function updateMonthlyChart() {
         let d = new Date(log.date || log.timestamp || new Date());
         let m = d.getMonth(); 
         
-        let amount = parseFloat(log.amount || log.value || log.total || log.val || 0); 
+        let amount = parseFloat(log.amount || log.value || log.total || 0); 
         let str = JSON.stringify(log).toLowerCase();
 
-        if(str.includes('ไฟ') || str.includes('energy') || str.includes('elec')) {
+        if(str.includes('ไฟ') || str.includes('energy')) {
             dataEnergy[m] += amount;
         } else if(str.includes('น้ำ') || str.includes('water')) {
             dataWater[m] += amount;
