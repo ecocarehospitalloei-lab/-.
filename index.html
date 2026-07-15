@@ -234,12 +234,14 @@
                                 <option value="waste">🗑️ ปริมาณขยะ</option>
                             </select>
                         </div>
-                        <canvas id="monthlyComparisonChart" style="height: 320px; width: 100%;"></canvas>
+                       <div style="position: relative; height: 320px; width: 100%;">
+    <canvas id="monthlyComparisonChart"></canvas>
+</div>
                     </div>
                 </div>
             </div>
             <div class="row g-3 mb-4">
-                <div class="col-12 col-xl-7"><div class="chart-card"><h5 class="mb-3">เปรียบเทียบการปล่อยคาร์บอน แต่ละโรงพยาบาล</h5><canvas id="hospitalsCompareChart" style="max-height:300px;"></canvas></div></div>
+                <div class="col-12 col-xl-7"><div class="chart-card"><h5 class="mb-3">เปรียบเทียบการปล่อยคาร์บอน แต่ละโรงพยาบาล</h5><div style="position: relative; height: 300px; width: 100%;">     <canvas id="hospitalsCompareChart"></canvas> </div></div></div>
                 <div class="col-12 col-xl-5"><div class="chart-card overflow-auto h-100"><h5 class="mb-3">หมวดที่ปล่อย CO₂ ต่อ รพ. สูงสุด</h5><table class="table table-sm text-center align-middle small table-hover"><thead class="table-light"><tr><th class="text-start">โรงพยาบาล</th><th>หมวดที่ใช้มากสุด</th><th>ปริมาณ (kgCO₂e)</th></tr></thead><tbody id="top-resource-tbody"></tbody></table></div></div>
             </div>
             <div class="chart-card">
@@ -265,12 +267,12 @@
                 <div class="col-12 col-md-6"><div class="kpi-card border-start border-primary border-4 h-100" style="background:#f0fdf4;"><div><span class="text-success small fw-bold">เทียบเท่าการปลูกต้นไม้</span><h3 class="fw-bold text-success m-0" id="kpi-trees">0</h3><span class="text-muted small">ต้น</span></div><div class="kpi-icon bg-white text-success shadow-sm"><i class="fas fa-tree"></i></div></div></div>
             </div>
             <div class="row g-4">
-                <div class="col-12 col-xl-8"><div class="chart-card"><h5>แนวโน้มการปล่อย Carbon Footprint</h5><canvas id="electricityTrendChart"></canvas></div></div>
+                <div class="col-12 col-xl-8">     <div class="chart-card">         <h5>แนวโน้มการปล่อย Carbon Footprint</h5>         <div style="position: relative; height: 300px; width: 100%;">             <canvas id="electricityTrendChart"></canvas>         </div>     </div> </div>
                 <div class="col-12 col-xl-4">
                     <div class="chart-card mb-4"><h5>สัดส่วนแหล่งปล่อยคาร์บอน</h5><canvas id="co2PieChart"></canvas></div>
                     <div class="chart-card"><h5>สัดส่วนการจัดการขยะ</h5><canvas id="wastePieChart"></canvas></div>
                 </div>
-                <div class="col-12 col-xl-8"><div class="chart-card h-100"><h5 class="mb-3">เปรียบเทียบปริมาณคาร์บอนย้อนหลัง 3 ปี</h5><canvas id="yearlyCompareChart"></canvas></div></div>
+                <div class="col-12 col-xl-8">     <div class="chart-card h-100">         <h5 class="mb-3">เปรียบเทียบปริมาณคาร์บอนย้อนหลัง 3 ปี</h5>         <div style="position: relative; height: 300px; width: 100%;">             <canvas id="yearlyCompareChart"></canvas>         </div>     </div> </div>
                 <div class="col-12 col-xl-4"><div class="chart-card h-100"><h5 class="mb-3"><i class="fas fa-exclamation-triangle text-danger me-2"></i>Top 3 แหล่งปล่อยคาร์บอน</h5><ul class="list-group list-group-flush small" id="top-emissions-list"></ul></div></div>
             </div>
         </div>
