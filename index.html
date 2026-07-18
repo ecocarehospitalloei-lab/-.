@@ -699,9 +699,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // ============================================
     // การคำนวณสถิติ การกรองตัวเลข กราฟ
     // ============================================
-    function getFilteredData() {
-        let year       = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
+      function getFilteredData(specificYear = null) {
+        // ถ้าระบุ specificYear มา ให้ใช้ค่านั้น ถ้าไม่ระบุให้ดึงจาก Dropdown
+        let year       = specificYear !== null ? specificYear : (document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all');
         let month      = document.getElementById('filter-month') ? document.getElementById('filter-month').value : 'all';
+        
+        // ล็อกสิทธิ์: ถ้าไม่ใช่ superadmin ให้ดูข้อมูลได้เฉพาะ SESSION.hospName ของตัวเองเท่านั้น
         let hospFilter = (SESSION.role === 'superadmin') ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
 
         let t = {
@@ -716,9 +719,11 @@ document.addEventListener("DOMContentLoaded", function () {
         localDB.logs.forEach(log => {
             if (!log.date) return;
             let parts = log.date.split('-');
+            
+            // เช็คว่าเป็นข้อมูลของโรงพยาบาลที่ผู้ใช้มีสิทธิ์ดูหรือไม่
             let hospMatch = (hospFilter === 'all' || hospFilter === (log.hospName || ''));
+            
             if ((year === 'all' || year === parts[0]) && (month === 'all' || month === parts[1]) && hospMatch) {
-                // ✅ แก้ไข: รองรับ log.val
                 let val = parseFloat(log.val || log.value || log.amount || 0);
                 let dbKey = String(log.id||'').replace(/-/g, '_');
                 
@@ -729,7 +734,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         return t;
     }
-
     function getYearlyCarbonTotal(targetYear) {
         let elec = 0, fuel = 0;
         let hospFilter = (SESSION.role === 'superadmin') ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
@@ -866,71 +870,99 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function loadCategorySummary() {
-        let t = getFilteredData();
+        // ดึงปีที่เลือกจากระบบ
+        let currentSelectedYear = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
+        let cYear = currentSelectedYear !== 'all' ? parseInt(currentSelectedYear) : new Date().getFullYear();
+        let pYear = cYear - 1;
+
+        // ดึงข้อมูล 2 ชุด (ปีปัจจบัน vs ปีที่แล้ว)
+        let tCur = getFilteredData(cYear.toString());
+        let tPast = getFilteredData(pYear.toString());
+
         let container = document.getElementById('summary-cards-container');
         if(!container) return;
         
+        // ฟังก์ชันช่วยสร้าง HTML แต่ละบรรทัด พร้อมตัวเลขเปรียบเทียบย้อนหลัง
+        const listItem = (label, curVal, pastVal, unit) => `
+            <li>
+                <span>${label}</span>
+                <div class="text-end">
+                    <span class="summary-value">${(curVal||0).toLocaleString()} ${unit}</span>
+                    <span class="text-muted" style="font-size:0.75rem;">(ปีก่อน: ${(pastVal||0).toLocaleString()})</span>
+                </div>
+            </li>`;
+
         container.innerHTML = `
         <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-bolt text-warning"></i> พลังงานและน้ำ</div><ul class="summary-list">
-            <li><span>ไฟฟ้าหลัก</span><span class="summary-value">${(t.elec_kwh||0).toLocaleString()} kWh</span></li>
-            <li><span>น้ำประปา</span><span class="summary-value">${(t.water_m3||0).toLocaleString()} m³</span></li>
+            ${listItem('ไฟฟ้าหลัก', tCur.elec_kwh, tPast.elec_kwh, 'kWh')}
+            ${listItem('น้ำประปา', tCur.water_m3, tPast.water_m3, 'm³')}
         </ul></div></div>
+        
         <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-gas-pump text-danger"></i> ยานพาหนะและเชื้อเพลิง</div><ul class="summary-list">
-            <li><span>น้ำมันรถ (ดีเซล)</span><span class="summary-value">${(t.diesel_v||0).toLocaleString()} L</span></li>
-            <li><span>น้ำมันรถ (เบนซิน)</span><span class="summary-value">${(t.gasoline_v||0).toLocaleString()} L</span></li>
-            <li><span>น้ำมันเครื่องจักร (ดีเซล)</span><span class="summary-value">${(t.diesel_m||0).toLocaleString()} L</span></li>
-            <li><span>น้ำมันเครื่องจักร (เบนซิน)</span><span class="summary-value">${(t.gasoline_m||0).toLocaleString()} L</span></li>
-            <li><span>ก๊าซหุงต้ม (LPG)</span><span class="summary-value">${(t.total_lpg||0).toLocaleString()} kg</span></li>
+            ${listItem('น้ำมันรถ (ดีเซล)', tCur.diesel_v, tPast.diesel_v, 'L')}
+            ${listItem('น้ำมันรถ (เบนซิน)', tCur.gasoline_v, tPast.gasoline_v, 'L')}
+            ${listItem('น้ำมันเครื่องจักร (ดีเซล)', tCur.diesel_m, tPast.diesel_m, 'L')}
+            ${listItem('น้ำมันเครื่องจักร (เบนซิน)', tCur.gasoline_m, tPast.gasoline_m, 'L')}
+            ${listItem('ก๊าซหุงต้ม (LPG)', tCur.total_lpg, tPast.total_lpg, 'kg')}
         </ul></div></div>
+        
         <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-snowflake text-info"></i> ปรับอากาศ & ดับเพลิง</div><ul class="summary-list">
-            <li><span>น้ำยาแอร์ (HFC-134a)</span><span class="summary-value">${(t.hfc134a||0).toLocaleString()} kg</span></li>
-            <li><span>น้ำยาแอร์ (R22)</span><span class="summary-value">${(t.r22||0).toLocaleString()} kg</span></li>
-            <li><span>ถังดับเพลิง CO₂</span><span class="summary-value">${(t.total_fire||0).toLocaleString()} kg</span></li>
+            ${listItem('น้ำยาแอร์ (HFC-134a)', tCur.hfc134a, tPast.hfc134a, 'kg')}
+            ${listItem('น้ำยาแอร์ (R22)', tCur.r22, tPast.r22, 'kg')}
+            ${listItem('ถังดับเพลิง CO₂', tCur.total_fire, tPast.total_fire, 'kg')}
         </ul></div></div>
+        
         <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-trash-alt text-secondary"></i> ขยะทั่วไปและอันตราย</div><ul class="summary-list">
-            <li><span>ขยะทั่วไป</span><span class="summary-value">${(t.waste_gen||0).toLocaleString()} kg</span></li>
-            <li><span>ขยะติดเชื้อ</span><span class="summary-value">${(t.waste_inf||0).toLocaleString()} kg</span></li>
-            <li><span>ขยะอินทรีย์</span><span class="summary-value">${(t.waste_org||0).toLocaleString()} kg</span></li>
-            <li><span>ขยะอันตราย</span><span class="summary-value">${(t.waste_haz||0).toLocaleString()} kg</span></li>
+            ${listItem('ขยะทั่วไป', tCur.waste_gen, tPast.waste_gen, 'kg')}
+            ${listItem('ขยะติดเชื้อ', tCur.waste_inf, tPast.waste_inf, 'kg')}
+            ${listItem('ขยะอินทรีย์', tCur.waste_org, tPast.waste_org, 'kg')}
+            ${listItem('ขยะอันตราย', tCur.waste_haz, tPast.waste_haz, 'kg')}
         </ul></div></div>
+        
         <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-recycle text-success"></i> ขยะรีไซเคิล</div><ul class="summary-list">
-            <li><span>กระดาษ</span><span class="summary-value">${(t.rc_paper||0).toLocaleString()} kg</span></li>
-            <li><span>อะลูมิเนียม</span><span class="summary-value">${(t.rc_alum||0).toLocaleString()} kg</span></li>
-            <li><span>พลาสติก</span><span class="summary-value">${(t.rc_plastic||0).toLocaleString()} kg</span></li>
-            <li><span>เหล็ก</span><span class="summary-value">${(t.rc_iron||0).toLocaleString()} kg</span></li>
-            <li><span>โลหะอื่นๆ</span><span class="summary-value">${(t.rc_metal||0).toLocaleString()} kg</span></li>
-            <li><span>แก้ว</span><span class="summary-value">${(t.rc_glass||0).toLocaleString()} kg</span></li>
+            ${listItem('กระดาษ', tCur.rc_paper, tPast.rc_paper, 'kg')}
+            ${listItem('อะลูมิเนียม', tCur.rc_alum, tPast.rc_alum, 'kg')}
+            ${listItem('พลาสติก', tCur.rc_plastic, tPast.rc_plastic, 'kg')}
+            ${listItem('เหล็ก', tCur.rc_iron, tPast.rc_iron, 'kg')}
+            ${listItem('โลหะอื่นๆ', tCur.rc_metal, tPast.rc_metal, 'kg')}
+            ${listItem('แก้ว', tCur.rc_glass, tPast.rc_glass, 'kg')}
         </ul></div></div>
+        
         <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-pump-soap text-primary"></i> วัสดุสิ้นเปลือง</div><ul class="summary-list">
-            <li><span>ผงซักฟอก</span><span class="summary-value">${(t.clean_pow||0).toLocaleString()} kg</span></li>
-            <li><span>น้ำยาซักล้าง</span><span class="summary-value">${(t.clean_liq||0).toLocaleString()} ml</span></li>
-            <li><span>ถุงพลาสติก</span><span class="summary-value">${(t.bags_kg||0).toLocaleString()} kg</span></li>
-            <li><span>กระดาษ A4</span><span class="summary-value">${(t.paper_ream||0).toLocaleString()} รีม</span></li>
-            <li><span>หมึกพิมพ์</span><span class="summary-value">${(t.ink_cart||0).toLocaleString()} ตลับ</span></li>
-            <li><span>หน้ากากอนามัย</span><span class="summary-value">${(t.mask_box||0).toLocaleString()} กล่อง</span></li>
-            <li><span>ถุงมือแพทย์</span><span class="summary-value">${(t.glove_pcs||0).toLocaleString()} ชิ้น</span></li>
+            ${listItem('ผงซักฟอก', tCur.clean_pow, tPast.clean_pow, 'kg')}
+            ${listItem('น้ำยาซักล้าง', tCur.clean_liq, tPast.clean_liq, 'ml')}
+            ${listItem('ถุงพลาสติก', tCur.bags_kg, tPast.bags_kg, 'kg')}
+            ${listItem('กระดาษ A4', tCur.paper_ream, tPast.paper_ream, 'รีม')}
+            ${listItem('หมึกพิมพ์', tCur.ink_cart, tPast.ink_cart, 'ตลับ')}
+            ${listItem('หน้ากากอนามัย', tCur.mask_box, tPast.mask_box, 'กล่อง')}
+            ${listItem('ถุงมือแพทย์', tCur.glove_pcs, tPast.glove_pcs, 'ชิ้น')}
         </ul></div></div>
+        
         <div class="col-12 col-md-6 col-lg-6"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-flask text-pink"></i> สารเคมี และ ยาสลบ</div><ul class="summary-list">
-            <li><span>แอลกอฮอล์ (Alcohol)</span><span class="summary-value">${(t.alc_liq||0).toLocaleString()} ml</span></li>
-            <li><span>แอมโมเนีย (Ammonia)</span><span class="summary-value">${(t.ammonia||0).toLocaleString()} ml</span></li>
-            <li><span>ก๊าซไนตรัสออกไซด์</span><span class="summary-value">${(t.nitrous_kg||0).toLocaleString()} kg</span></li>
-            <li><span>Isoflurane</span><span class="summary-value">${(t.isoflurane||0).toLocaleString()} กล่อง</span></li>
-            <li><span>Desflurane</span><span class="summary-value">${(t.desflurane||0).toLocaleString()} กล่อง</span></li>
-            <li><span>Sevoflurane</span><span class="summary-value">${(t.sevoflurane||0).toLocaleString()} กล่อง</span></li>
+            ${listItem('แอลกอฮอล์ (Alcohol)', tCur.alc_liq, tPast.alc_liq, 'ml')}
+            ${listItem('แอมโมเนีย (Ammonia)', tCur.ammonia, tPast.ammonia, 'ml')}
+            ${listItem('ก๊าซไนตรัสออกไซด์', tCur.nitrous_kg, tPast.nitrous_kg, 'kg')}
+            ${listItem('Isoflurane', tCur.isoflurane, tPast.isoflurane, 'กล่อง')}
+            ${listItem('Desflurane', tCur.desflurane, tPast.desflurane, 'กล่อง')}
+            ${listItem('Sevoflurane', tCur.sevoflurane, tPast.sevoflurane, 'กล่อง')}
         </ul></div></div>
+        
         <div class="col-12 col-md-6 col-lg-6"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-water text-primary"></i> ระบบบำบัดน้ำเสีย</div><ul class="summary-list">
-            <li><span>ปริมาตรน้ำเสีย</span><span class="summary-value">${(t.wt_vol||0).toLocaleString()} m³</span></li>
-            <li><span>ค่า COD</span><span class="summary-value">${parseFloat(t.wt_cod||282).toLocaleString()} mg/l</span></li>
-            <li><span>โซเดียมไฮดรอกไซด์</span><span class="summary-value">${(t.wt_naoh||0).toLocaleString()} kg</span></li>
-            <li><span>สารส้ม</span><span class="summary-value">${(t.wt_alum||0).toLocaleString()} kg</span></li>
-            <li><span>กรดซัลฟุริค</span><span class="summary-value">${(t.wt_sulfuric||0).toLocaleString()} kg</span></li>
-            <li><span>ปูนขาว</span><span class="summary-value">${(t.wt_lime||0).toLocaleString()} kg</span></li>
-            <li><span>คลอรีน</span><span class="summary-value">${(t.wt_chlorine||0).toLocaleString()} kg</span></li>
+            ${listItem('ปริมาตรน้ำเสีย', tCur.wt_vol, tPast.wt_vol, 'm³')}
+            ${listItem('ค่า COD', parseFloat(tCur.wt_cod||282), parseFloat(tPast.wt_cod||282), 'mg/l')}
+            ${listItem('โซเดียมไฮดรอกไซด์', tCur.wt_naoh, tPast.wt_naoh, 'kg')}
+            ${listItem('สารส้ม', tCur.wt_alum, tPast.wt_alum, 'kg')}
+            ${listItem('กรดซัลฟุริค', tCur.wt_sulfuric, tPast.wt_sulfuric, 'kg')}
+            ${listItem('ปูนขาว', tCur.wt_lime, tPast.wt_lime, 'kg')}
+            ${listItem('คลอรีน', tCur.wt_chlorine, tPast.wt_chlorine, 'kg')}
         </ul></div></div>
+        
         <div class="col-12 col-md-12 col-lg-12"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-solar-panel text-success"></i> พลังงานทดแทน (Solar)</div><ul class="summary-list">
-            <li><span>ไฟที่ใช้ในระบบผลิต</span><span class="summary-value">${(t.solar_internal_use||0).toLocaleString()} kWh</span></li>
-            <li><span>ไฟฟ้าผลิตได้จริง</span><span class="summary-value">${(t.solar_mode==='meter'?(t.solar_kwh||0):(t.solar_cap||0)*(t.solar_days||0)*4).toLocaleString()} kWh</span></li>
-            <li><span>กำลัง / แผง / วัน</span><span class="summary-value text-secondary small">${(t.solar_cap||0)} kW / ${(t.solar_panels||0)} แผง / ${(t.solar_days||0)} วัน</span></li>
+            ${listItem('ไฟที่ใช้ในระบบผลิต', tCur.solar_internal_use, tPast.solar_internal_use, 'kWh')}
+            ${listItem('ไฟฟ้าผลิตได้จริง', 
+                (tCur.solar_mode==='meter' ? (tCur.solar_kwh||0) : (tCur.solar_cap||0)*(tCur.solar_days||0)*4), 
+                (tPast.solar_mode==='meter' ? (tPast.solar_kwh||0) : (tPast.solar_cap||0)*(tPast.solar_days||0)*4), 
+                'kWh')}
         </ul></div></div>`;
     }
 
