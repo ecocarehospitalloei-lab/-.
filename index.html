@@ -117,7 +117,7 @@
             <a class="nav-link text-warning" id="menu-superadmin" data-target="superadmin-view" style="display:none;"><i class="fas fa-globe"></i> ภาพรวมส่วนกลาง</a>
             <a class="nav-link active" data-target="dashboard-view"><i class="fas fa-chart-pie"></i> สรุปผลภาพรวม</a>
             <div class="nav-item-group">
-                <a class="nav-link" data-target="entry-view"><i class="fas fa-edit"></i> บันทึกข้อมูทรัพยากร</a>
+                <a class="nav-link" data-target="entry-view"><i class="fas fa-edit"></i> บันทึกข้อมูลทรัพยากร</a>
                 <div class="submenu-container" id="entry-submenu" style="display:flex;">
                     <a class="sub-nav-link" data-section="sec-energy">   <i class="fas fa-bolt"></i>       พลังงานและน้ำ</a>
                     <a class="sub-nav-link" data-section="sec-fuel">     <i class="fas fa-car"></i>        เชื้อเพลิงและแก๊ส</a>
@@ -138,9 +138,12 @@
         <div class="filter-panel" id="global-filter-panel">
             <div id="filter-hospital-container" style="display:none;"><label class="text-muted small fw-bold text-primary">เลือกโรงพยาบาล</label><select id="filter-hospital" class="form-select border-primary"><option value="all">-- รวมทุกโรงพยาบาล --</option></select></div>
             <div><label class="text-muted small fw-bold">เลือกปี</label>
+                <!-- ปรับให้เริ่มจากปี 2026 (ปีปัจจุบัน) และเรียงมากไปน้อย -->
                 <select id="filter-year" class="form-select">
                     <option value="all">-- รวมทุกปี --</option>
-                    <option value="2026">ปี 2569 (2026)</option><option value="2025">ปี 2568 (2025)</option><option value="2024" selected>ปี 2567 (2024)</option>
+                    <option value="2026" selected>ปี 2569 (2026)</option>
+                    <option value="2025">ปี 2568 (2025)</option>
+                    <option value="2024">ปี 2567 (2024)</option>
                 </select>
             </div>
             <div><label class="text-muted small fw-bold">เลือกเดือน</label>
@@ -157,6 +160,7 @@
         <div id="dashboard-view" class="view-section active">
             <h4 class="fw-bold text-dark mb-3"><i class="fas fa-chart-pie text-success me-2"></i> แดชบอร์ดสรุปผลการปล่อยคาร์บอน (Gross Emissions)</h4>
             <div class="row g-3 mb-4">
+                <!-- รวมทุกหมวด -->
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-danger border-4 h-100"><div><span class="text-muted small fw-bold">CARBON FOOTPRINT (รวมทุกหมวด)</span><h3 class="fw-bold text-danger m-0" id="kpi-co2-total">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-danger"><i class="fas fa-cloud"></i></div></div></div>
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-warning border-4 h-100"><div><span class="text-muted small fw-bold">ปล่อยจากพลังงานไฟฟ้า</span><h3 class="fw-bold text-warning m-0" id="kpi-co2-elec">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-warning"><i class="fas fa-bolt"></i></div></div></div>
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-secondary border-4 h-100"><div><span class="text-muted small fw-bold">ปล่อยจากเชื้อเพลิง และ แอร์</span><h3 class="fw-bold text-secondary m-0" id="kpi-co2-fuel">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-secondary"><i class="fas fa-car"></i></div></div></div>
@@ -164,19 +168,20 @@
 
             <h5 class="fw-bold text-success mb-3"><i class="fas fa-shield-alt text-success me-2"></i> การลดและชดเชยคาร์บอน (Carbon Offsets)</h5>
             <div class="row g-3 mb-4">
+                <!-- ปรับหน่วยการลดโลกร้อนให้ชัดเจน -->
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-success border-4 h-100 shadow-sm" style="background:#f0fdf4;"><div><span class="small fw-bold text-success">ลดก๊าซฯ จากการรีไซเคิลขยะ</span><h3 class="fw-bold text-success m-0" id="offset-recycle">0.00</h3><span class="text-muted small">kgCO₂e ที่ลดได้</span></div><div class="kpi-icon bg-white text-success shadow-sm"><i class="fas fa-recycle"></i></div></div></div>
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-info border-4 h-100 shadow-sm" style="background:#eff6ff;"><div><span class="small fw-bold text-info">ลดก๊าซฯ จากพลังงาน Solar</span><h3 class="fw-bold text-info m-0" id="offset-solar">0.00</h3><span class="text-muted small">kgCO₂e ที่ลดได้</span></div><div class="kpi-icon bg-white text-info shadow-sm"><i class="fas fa-solar-panel"></i></div></div></div>
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-primary border-4 h-100 shadow-sm" style="background:#edf2fa;"><div><span class="small fw-bold text-primary">ดูดซับด้วยพื้นที่สีเขียว/ต้นไม้</span><h3 class="fw-bold text-primary m-0" id="offset-trees">0.00</h3><span class="text-muted small">kgCO₂e (จากต้นไม้ <span id="val-trees-count" class="text-dark fw-bold">0</span> ต้น)</span></div><div class="kpi-icon bg-white text-primary shadow-sm"><i class="fas fa-tree"></i></div></div></div>
             </div>
 
             <div class="row g-4">
-                <div class="col-12 col-xl-8"><div class="chart-card"><h5>แนวโน้มการปล่อย Carbon Footprint</h5><div style="position: relative; height: 300px; width: 100%;"><canvas id="electricityTrendChart"></canvas></div></div></div>
+                <div class="col-12 col-xl-8"><div class="chart-card"><h5>แหล่งการปล่อยคาร์บอนฟุตพริ้นท์รวมทั้งหมด</h5><div style="position: relative; height: 300px; width: 100%;"><canvas id="electricityTrendChart"></canvas></div></div></div>
                 <div class="col-12 col-xl-4"><div class="chart-card mb-4"><h5>สัดส่วนแหล่งปล่อยคาร์บอน (Gross)</h5><canvas id="co2PieChart"></canvas></div></div>
             </div>
         </div>
 
         <div id="summary-view" class="view-section">
-            <h4 class="fw-bold text-dark mb-4"><i class="fas fa-file-invoice text-primary me-2"></i> สรุปข้อมูลแยกตามหมวด (เปรียบเทียบปีต่อปี)</h4>
+            <h4 class="fw-bold text-dark mb-4"><i class="fas fa-file-invoice text-primary me-2"></i> สรุปข้อมูลแยกตามหมวด (เปรียบเทียบปีปัจจุบัน กับ ปีย้อนหลัง)</h4>
             <div class="row g-3" id="summary-cards-container"></div>
         </div>
 
@@ -193,6 +198,7 @@
             
             <div class="form-section-wrapper" id="sec-meds"><div class="form-section-title">💊 ยาและเวชภัณฑ์</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="medications"><div class="cat-icon-box bg-ts-purple"><i class="fas fa-pills"></i></div><div class="cat-text-group"><h5>กลุ่มยาเฉพาะ</h5><span>Amlodipine, Gabapentin...</span></div></div></div></div>
 
+            <!-- เพิ่มฟอร์มต้นไม้อยู่ในหมวดเดียวกับ Solar Cell -->
             <div class="form-section-wrapper" id="sec-solar"><div class="form-section-title">🌱 พลังงานทดแทน และ สิ่งแวดล้อม</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="solar-system"><div class="cat-icon-box bg-ts-success"><i class="fas fa-solar-panel"></i></div><div class="cat-text-group"><h5>ระบบ Solar Cell</h5></div></div><div class="cat-btn cat-trigger" data-mode="trees"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-tree"></i></div><div class="cat-text-group"><h5>จำนวนต้นไม้ในพื้นที่</h5><span>เพื่อคำนวณการดูดซับ</span></div></div></div></div>
         </div>
 
@@ -273,7 +279,6 @@
                 alc_liq:0, ammonia:0, nitrous_kg:0, isoflurane:0, desflurane:0, sevoflurane:0,
                 wt_vol:0, wt_naoh:0, wt_alum:0, wt_sulfuric:0, wt_lime:0, wt_chlorine:0, wt_cod:282,
                 solar_internal_use:0, solar_kwh:0, solar_cap:0, solar_panels:0, solar_days:0, solar_mode:'meter',
-                // New Fields
                 trees_qty:0, med_amlo5:0, med_amlo10:0, med_deferiprone:0, med_gaba100:0, med_gaba300:0, med_omepra:0
             };
 
@@ -290,7 +295,7 @@
             return t;
         }
 
-        // --- 4. Main Carbon Calculation (The Magic) ---
+        // --- 4. Main Carbon Calculation (รวมทุกระบบ) ---
         function loadCharts() {
             let t = getFilteredData();
             
@@ -302,47 +307,62 @@
             let cAir   = (t.hfc134a * 1430) + (t.r22 * 1810) + (t.total_fire * 1.0);
             let cSup   = (t.paper_ream * 6.0) + (t.bags_kg * 2.5);
             
-            // ยาและเวชภัณฑ์ (สมมติฐาน Emission Factor เบื้องต้นที่ 2.5 kgCO2e/หน่วย กรณีไม่ระบุ EF เจาะจง)
+            // ยาและเวชภัณฑ์
             let totalMedsCount = t.med_amlo5 + t.med_amlo10 + t.med_deferiprone + t.med_gaba100 + t.med_gaba300 + t.med_omepra;
             let cMeds = totalMedsCount * 2.5;
 
+            // บวกรวมระบบทั้งหมด ไม่ได้มีแค่ไฟฟ้ากับน้ำมันแล้ว
             let cTotalGross = cElec + cFuel + cWater + cWaste + cAir + cSup + cMeds;
 
             // ♻️ Offsets (ลดการปล่อยมลพิษ)
-            // 1. Recycle (การรีไซเคิล ช่วยเลี่ยงการผลิตใหม่)
             let offsetRecycle = (t.rc_paper*3.5) + (t.rc_alum*9.0) + (t.rc_plastic*1.5) + (t.rc_iron*1.4) + (t.rc_metal*1.4) + (t.rc_glass*0.3);
-            
-            // 2. Solar Cell 
             let solarKwh = t.solar_kwh || ((t.solar_cap||0)*(t.solar_days||0)*4);
             let offsetSolar = solarKwh * 0.4999;
-
-            // 3. ต้นไม้ (Trees) 1 ต้นดูดซับคาร์บอนประมาณ 9.5 kgCO2e/ปี
             let offsetTrees = (t.trees_qty || 0) * 9.5;
 
-            // อัปเดตตัวเลขหน้า Dashboard - Gross
+            // อัปเดตตัวเลขหน้า Dashboard
             if(document.getElementById('kpi-co2-total')) document.getElementById('kpi-co2-total').innerText = cTotalGross.toLocaleString(undefined,{maximumFractionDigits:2});
             if(document.getElementById('kpi-co2-elec')) document.getElementById('kpi-co2-elec').innerText  = cElec.toLocaleString(undefined,{maximumFractionDigits:2});
             if(document.getElementById('kpi-co2-fuel')) document.getElementById('kpi-co2-fuel').innerText  = (cFuel + cAir).toLocaleString(undefined,{maximumFractionDigits:2});
 
-            // อัปเดตตัวเลขหน้า Dashboard - Offsets
             if(document.getElementById('offset-recycle')) document.getElementById('offset-recycle').innerText = offsetRecycle.toLocaleString(undefined,{maximumFractionDigits:2});
             if(document.getElementById('offset-solar')) document.getElementById('offset-solar').innerText = offsetSolar.toLocaleString(undefined,{maximumFractionDigits:2});
             if(document.getElementById('offset-trees')) document.getElementById('offset-trees').innerText = offsetTrees.toLocaleString(undefined,{maximumFractionDigits:2});
             if(document.getElementById('val-trees-count')) document.getElementById('val-trees-count').innerText = (t.trees_qty || 0).toLocaleString();
 
-            // พล็อตกราฟสัดส่วน Gross
+            // พล็อตกราฟสัดส่วน (Pie Chart) - รวมทรัพยากรทุกอย่าง
             if(charts.co2Pie) charts.co2Pie.destroy();
             let pieEl = document.getElementById('co2PieChart');
             if(pieEl) charts.co2Pie = new Chart(pieEl, { type: 'doughnut', data: {
                 labels: ['ไฟฟ้า', 'เชื้อเพลิง/แอร์', 'ขยะ', 'น้ำ/เวชภัณฑ์/ยา'],
                 datasets: [{ data: [cElec, (cFuel+cAir), cWaste, (cWater+cSup+cMeds)], backgroundColor: ['#ffc107', '#dc3545', '#475569', '#0dcaf0'] }]
             }, options: { responsive: true, plugins: { legend: { position: 'bottom' } } }});
+
+            // พล็อตกราฟแท่ง (Trend Chart) - แสดงข้อมูลคาร์บอนฟุตพริ้นท์แยกหมวดหมู่
+            if(charts.trend) charts.trend.destroy();
+            let trendEl = document.getElementById('electricityTrendChart');
+            if(trendEl) {
+                charts.trend = new Chart(trendEl, {
+                    type: 'bar',
+                    data: {
+                        labels: ['ไฟฟ้า', 'น้ำประปา', 'ยานพาหนะ/เชื้อเพลิง', 'แอร์/ดับเพลิง', 'ขยะ', 'วัสดุสิ้นเปลือง', 'ยาและเวชภัณฑ์'],
+                        datasets: [{
+                            label: 'ปริมาณการปล่อย (kgCO₂e)',
+                            data: [cElec, cWater, cFuel, cAir, cWaste, cSup, cMeds],
+                            backgroundColor: ['#ffc107', '#0d6efd', '#dc3545', '#0dcaf0', '#475569', '#6610f2', '#6f42c1'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
         }
 
-        // --- 5. Data Summaries with Historical Compare ---
+        // --- 5. Data Summaries with Historical Compare (ตัวเลขปีตั้งต้น เทียบกับ ปีย้อนหลัง) ---
         function loadCategorySummary() {
             let cySelect = document.getElementById('filter-year').value;
-            let cYear = cySelect !== 'all' ? parseInt(cySelect) : new Date().getFullYear();
+            // ถ้าเลือก 'all' ให้ใช้ปี 2026 เป็นปีปัจจุบัน (ตามข้อมูลระบบ) หรือตาม Date().getFullYear()
+            let cYear = cySelect !== 'all' ? parseInt(cySelect) : 2026; 
             let pYear = cYear - 1;
 
             let tCur = getFilteredData(cYear.toString());
@@ -351,7 +371,7 @@
             let container = document.getElementById('summary-cards-container');
             if(!container) return;
 
-            const listItem = (label, curVal, pastVal, unit) => `<li><span>${label}</span><div class="text-end"><span class="summary-value">${(curVal||0).toLocaleString()} ${unit}</span><span class="text-muted" style="font-size:0.75rem;">(ปีก่อน: ${(pastVal||0).toLocaleString()})</span></div></li>`;
+            const listItem = (label, curVal, pastVal, unit) => `<li><span>${label}</span><div class="text-end"><span class="summary-value">${(curVal||0).toLocaleString()} ${unit}</span><br><span class="text-muted" style="font-size:0.75rem;">(ปี ${pYear}: ${(pastVal||0).toLocaleString()})</span></div></li>`;
 
             container.innerHTML = `
             <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-bolt text-warning"></i> พลังงานและน้ำ</div><ul class="summary-list">
@@ -381,6 +401,7 @@
                 ${listItem('แก้วและโลหะรวม', tCur.rc_alum+tCur.rc_iron+tCur.rc_metal+tCur.rc_glass, tPast.rc_alum+tPast.rc_iron+tPast.rc_metal+tPast.rc_glass, 'kg')}
             </ul></div></div>
 
+            <!-- หมวดหมู่ยาเฉพาะ -->
             <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-pills text-purple" style="color:#7e22ce;"></i> กลุ่มยาเฉพาะ</div><ul class="summary-list">
                 ${listItem('Amlodipine 5 mg', tCur.med_amlo5, tPast.med_amlo5, 'กล่อง')}
                 ${listItem('Amlodipine 10 mg', tCur.med_amlo10, tPast.med_amlo10, 'กล่อง')}
@@ -418,8 +439,11 @@
                 else if(m==='water') { title='💧 น้ำประปา'; c.innerHTML=inputHTML('ปริมาณน้ำ','water-m3','m³'); }
                 else if(m==='waste-main') { title='🗑️ ขยะฝังกลบ/เผา'; c.innerHTML=inputHTML('ทั่วไป','waste-gen','kg')+inputHTML('ติดเชื้อ','waste-inf','kg')+inputHTML('อันตราย','waste-haz','kg'); }
                 else if(m==='waste-recycle') { title='♻️ ขยะรีไซเคิล'; c.innerHTML=inputHTML('กระดาษ','rc-paper','kg')+inputHTML('พลาสติก','rc-plastic','kg')+inputHTML('แก้ว','rc-glass','kg')+inputHTML('อะลูมิเนียม','rc-alum','kg'); }
-                // New Modes
+                
+                // Form จำนวนต้นไม้
                 else if(m==='trees') { title='🌳 จำนวนต้นไม้ฟอกอากาศ'; c.innerHTML=inputHTML('ต้นไม้ที่มีในพื้นที่โรงพยาบาล','trees-qty','ต้น'); }
+                
+                // Form ยาเฉพาะ
                 else if(m==='medications') {
                     title='💊 การใช้กลุ่มยาเฉพาะ';
                     c.innerHTML = 
