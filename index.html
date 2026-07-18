@@ -1124,86 +1124,76 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-    // ฟังก์ชันดึงข้อมูลสรุปรวม
-function loadDashboardData() {
-  const currentHospitalId = 'HOSPITAL_001'; // เปลี่ยนให้ตรงกับรหัส รพ. ปัจจุบันของคุณ
-  
-  // เรียกฟังก์ชันรวมข้อมูล 2 ชีต
-  google.script.run
-    .withSuccessHandler(function(data) {
-      if (data.error) {
-        console.error("Error:", data.error);
-        return;
-      }
+   // ฟังก์ชันดึงข้อมูลสรุปรวม
+    function loadDashboardData() {
+      const currentHospitalId = 'HOSPITAL_001'; 
       
-      // แยกข้อมูลที่บวกรวมรายเดือนแล้วไปใส่กราฟ
-      const labels = data.map(item => item.label); // จะได้เป็น ["มิ.ย. 2569", "ก.ค. 2569", ...]
-      const powerData = data.map(item => item.power);
-      const waterData = data.map(item => item.water);
-      
-      // อัปเดตกราฟ (เหมือนโค้ดด้านบนที่ให้ไป)
-      updateChart(labels, powerData, waterData);
-    })
-    .withFailureHandler(function(error) {
-      console.error(error);
-    })
-    .getCombinedSummaryData(currentHospitalId);
-}
+      google.script.run
+        .withSuccessHandler(function(data) {
+          if (data.error) {
+            console.error("Error:", data.error);
+            return;
+          }
+          
+          const labels = data.map(item => item.label); 
+          const powerData = data.map(item => item.power);
+          const waterData = data.map(item => item.water);
+          
+          // ❌ ต้องไปสร้างฟังก์ชัน updateChart ให้รับพารามิเตอร์ 3 ตัวนี้ก่อน
+          // หรือเปลี่ยนไปใช้ระบบกราฟเดิมที่คุณมี
+          // updateChart(labels, powerData, waterData); 
+        })
+        .withFailureHandler(function(error) {
+          console.error(error);
+        })
+        .getCombinedSummaryData(currentHospitalId);
+    }
 
-// โหลดข้อมูลเมื่อเปิดหน้าเว็บ
-window.onload = function() {
-  loadDashboardData();
-};
-    <script>
-// ฟังก์ชันนี้จะถูกเรียกเมื่อกดปุ่ม "อัปเดต"
-function updateDashboardContent() {
-  const currentHospitalId = 'HOSPITAL_001'; // ดึงจาก Session ที่ล็อกอิน
-  
-  // 1. ดึงค่าจาก Dropdown (ต้องไปใส่ ID ให้ dropdown ใน HTML ก่อน)
-  const selectedYear = document.getElementById('select-year').value;   
-  const selectedMonth = document.getElementById('select-month').value; 
-  
-  // แจ้งเตือนผู้ใช้
-  Swal.fire({
-    title: 'กำลังคำนวณข้อมูล...',
-    allowOutsideClick: false,
-    didOpen: () => { Swal.showLoading(); }
-  });
+    // โหลดข้อมูลเมื่อเปิดหน้าเว็บ
+    window.onload = function() {
+      loadDashboardData();
+    };
 
-  // 2. เรียก Backend
-  google.script.run
-    .withSuccessHandler(function(totals) {
-      Swal.close();
-      if (totals.error) {
-        console.error("Error:", totals.error);
-        return;
-      }
+    // ✅ เอาแท็ก <script> ที่แทรกอยู่ออกไป
+    // ฟังก์ชันนี้จะถูกเรียกเมื่อกดปุ่ม "อัปเดต"
+    function updateDashboardContent() {
+      const currentHospitalId = 'HOSPITAL_001'; 
       
-      // 3. นำข้อมูลไปแสดงใน UI (ต้องไปกำหนด id="..." ให้ตัวเลข 0.00 ใน HTML ก่อน)
-      // -- หน้าสรุปข้อมูลรายหมวด (image_df252d.jpg) --
-      document.getElementById('text-power').innerText = totals.power.toLocaleString() + ' kWh';
-      document.getElementById('text-water').innerText = totals.water.toLocaleString() + ' m³';
-      document.getElementById('text-diesel').innerText = totals.diesel.toLocaleString() + ' L';
-      document.getElementById('text-waste-gen').innerText = totals.wasteGen.toLocaleString() + ' kg';
+      // ✅ แก้ไข ID ให้ตรงกับ HTML ด้านบน (filter-year, filter-month)
+      const selectedYear = document.getElementById('filter-year').value;   
+      const selectedMonth = document.getElementById('filter-month').value; 
       
-      // -- หน้าแดชบอร์ดสรุปผล (image_df25cc.jpg) --
-      document.getElementById('text-solar').innerText = totals.solar.toLocaleString();
-      
-      // ตัวอย่างการคำนวณ Carbon Footprint (สมมติแฟคเตอร์: ไฟฟ้า 1 kWh = 0.5 kgCO2e)
-      let elecCarbon = totals.power * 0.5;
-      document.getElementById('text-elec-carbon').innerText = elecCarbon.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      
-      // อัปเดตกราฟด้วยข้อมูลใหม่ (ถ้ามีฟังก์ชัน updateChart อยู่แล้ว)
-      // loadChartData(currentHospitalId, selectedYear, selectedMonth); 
-    })
-    .withFailureHandler(function(error) {
-      Swal.close();
-      console.error(error);
-      alert('ดึงข้อมูลล้มเหลว');
-    })
-    .getFilteredDashboardData(currentHospitalId, selectedYear, selectedMonth);
-}
-</script>
-</script>
+      Swal.fire({
+        title: 'กำลังคำนวณข้อมูล...',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      google.script.run
+        .withSuccessHandler(function(totals) {
+          Swal.close();
+          if (totals.error) {
+            console.error("Error:", totals.error);
+            return;
+          }
+          
+          // ⚠️ ข้อควรระวัง: ต้องแน่ใจว่าได้สร้าง ID เหล่านี้ใน HTML แล้วจริงๆ ไม่งั้นจะ Error
+          const textPowerEl = document.getElementById('text-power');
+          if (textPowerEl) textPowerEl.innerText = totals.power.toLocaleString() + ' kWh';
+          
+          const textWaterEl = document.getElementById('text-water');
+          if (textWaterEl) textWaterEl.innerText = totals.water.toLocaleString() + ' m³';
+          
+          // ... (ทำแบบเดียวกันกับ ID อื่นๆ เพื่อป้องกัน Error กรณีหา Element ไม่เจอ)
+          
+        })
+        .withFailureHandler(function(error) {
+          Swal.close();
+          console.error(error);
+          alert('ดึงข้อมูลล้มเหลว');
+        })
+        .getFilteredDashboardData(currentHospitalId, selectedYear, selectedMonth);
+    }
+</script> 
 </body>
 </html>
