@@ -1154,6 +1154,56 @@ function loadDashboardData() {
 window.onload = function() {
   loadDashboardData();
 };
+    <script>
+// ฟังก์ชันนี้จะถูกเรียกเมื่อกดปุ่ม "อัปเดต"
+function updateDashboardContent() {
+  const currentHospitalId = 'HOSPITAL_001'; // ดึงจาก Session ที่ล็อกอิน
+  
+  // 1. ดึงค่าจาก Dropdown (ต้องไปใส่ ID ให้ dropdown ใน HTML ก่อน)
+  const selectedYear = document.getElementById('select-year').value;   
+  const selectedMonth = document.getElementById('select-month').value; 
+  
+  // แจ้งเตือนผู้ใช้
+  Swal.fire({
+    title: 'กำลังคำนวณข้อมูล...',
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); }
+  });
+
+  // 2. เรียก Backend
+  google.script.run
+    .withSuccessHandler(function(totals) {
+      Swal.close();
+      if (totals.error) {
+        console.error("Error:", totals.error);
+        return;
+      }
+      
+      // 3. นำข้อมูลไปแสดงใน UI (ต้องไปกำหนด id="..." ให้ตัวเลข 0.00 ใน HTML ก่อน)
+      // -- หน้าสรุปข้อมูลรายหมวด (image_df252d.jpg) --
+      document.getElementById('text-power').innerText = totals.power.toLocaleString() + ' kWh';
+      document.getElementById('text-water').innerText = totals.water.toLocaleString() + ' m³';
+      document.getElementById('text-diesel').innerText = totals.diesel.toLocaleString() + ' L';
+      document.getElementById('text-waste-gen').innerText = totals.wasteGen.toLocaleString() + ' kg';
+      
+      // -- หน้าแดชบอร์ดสรุปผล (image_df25cc.jpg) --
+      document.getElementById('text-solar').innerText = totals.solar.toLocaleString();
+      
+      // ตัวอย่างการคำนวณ Carbon Footprint (สมมติแฟคเตอร์: ไฟฟ้า 1 kWh = 0.5 kgCO2e)
+      let elecCarbon = totals.power * 0.5;
+      document.getElementById('text-elec-carbon').innerText = elecCarbon.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      
+      // อัปเดตกราฟด้วยข้อมูลใหม่ (ถ้ามีฟังก์ชัน updateChart อยู่แล้ว)
+      // loadChartData(currentHospitalId, selectedYear, selectedMonth); 
+    })
+    .withFailureHandler(function(error) {
+      Swal.close();
+      console.error(error);
+      alert('ดึงข้อมูลล้มเหลว');
+    })
+    .getFilteredDashboardData(currentHospitalId, selectedYear, selectedMonth);
+}
+</script>
 </script>
 </body>
 </html>
