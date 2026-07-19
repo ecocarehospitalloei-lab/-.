@@ -83,7 +83,7 @@
         .star-rating i.active { color: #fbbf24; }
         @media (max-width: 400px) { .star-rating i { font-size: 1.5rem; } }
 
-        .summary-header { background-color: #f8fafc; padding: 10px 15px; border-radius: 10px; font-weight: bold; margin-bottom: 15px; border-left: 4px solid var(--primary); display: flex; align-items: center; gap: 10px; font-size: 1rem; }
+        .summary-header { background-color: #f8fafc; padding: 10px 15px; border-radius: 10px; font-weight: bold; margin-bottom: 15px; border-left: 4px solid var(--primary); display: flex; align-items: center; gap: 10px; font-size: 1rem; flex-wrap: wrap; }
         .summary-list { list-style: none; padding: 0; margin: 0; }
         .summary-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; font-size: 0.9rem; }
         .summary-value { font-weight: 700; color: var(--primary); }
@@ -133,7 +133,7 @@
                     <i class="fas fa-user login-input-icon"></i>
                     <input type="text" id="recorder-input" placeholder="ชื่อ-นามสกุล ผู้บันทึกข้อมูล" required autocomplete="name">
                 </div>
-                <div class="field-hint"><i class="fas fa-info-circle"></i> ชื่อนี้จะปรากฏใน Log การบันทึกข้อมูล และกระดานจัดอันดับ</div>
+                <div class="field-hint"><i class="fas fa-info-circle"></i> ชื่อนี้จะปรากฏใน Log และกระดานจัดอันดับของโรงพยาบาลนี้เท่านั้น (REQ-6)</div>
             </div>
             <button type="submit" class="btn-login-submit" id="login-btn"><i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ</button>
         </form>
@@ -165,6 +165,7 @@
             <a class="nav-link active" data-target="dashboard-view"><i class="fas fa-chart-pie"></i> สรุปผลภาพรวม</a>
             <div class="nav-item-group">
                 <a class="nav-link" id="main-entry-link"><i class="fas fa-edit"></i> บันทึกข้อมูลทรัพยากร <i class="fas fa-chevron-down ms-auto small"></i></a>
+                <!-- REQ-1: เมนู "ยาเฉพาะ" เพิ่มในรายการ submenu -->
                 <div class="submenu-container" id="entry-submenu">
                     <a class="sub-nav-link rbac-energy"    data-section="sec-energy">    <i class="fas fa-bolt"></i>       พลังงานและน้ำ</a>
                     <a class="sub-nav-link rbac-fuel"      data-section="sec-fuel">      <i class="fas fa-car"></i>        เชื้อเพลิงและแก๊ส</a>
@@ -194,6 +195,7 @@
             </div>
             <div>
                 <label class="text-muted small fw-bold">เลือกปี</label>
+                <!-- REQ-5: ตัวเลือกปีสร้างอัตโนมัติจากปีปัจจุบัน เรียงมากไปน้อย (ดู populateYearDropdown ใน JS) -->
                 <select id="filter-year" class="form-select"></select>
             </div>
             <div>
@@ -260,6 +262,7 @@
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-danger border-4 h-100"><div><span class="text-muted small fw-bold">ปล่อยจากเชื้อเพลิง/แก๊ส</span><h3 class="fw-bold text-danger m-0" id="kpi-co2-fuel">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-danger"><i class="fas fa-car"></i></div></div></div>
             </div>
 
+            <!-- REQ-3: Dashboard การลดและชดเชยคาร์บอน (Carbon Reduction & Offset) -->
             <div class="row g-3 mb-4">
                 <div class="col-12">
                     <div class="chart-card" style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5); border:2px solid #bbf7d0;">
@@ -293,6 +296,7 @@
             </div>
 
             <div class="row g-4">
+                <!-- REQ-5: กราฟแนวโน้มใช้คาร์บอนเต็มระบบ ไม่ใช่แค่ไฟฟ้า/น้ำมัน -->
                 <div class="col-12 col-xl-8"><div class="chart-card"><h5>แนวโน้มการปล่อย Carbon Footprint แบบเต็มระบบ (รายเดือน)</h5><div style="position: relative; height: 300px; width: 100%;"><canvas id="electricityTrendChart"></canvas></div></div></div>
                 <div class="col-12 col-xl-4">
                     <div class="chart-card mb-4"><h5>สัดส่วนแหล่งปล่อยคาร์บอน (เต็มระบบ)</h5><canvas id="co2PieChart"></canvas></div>
@@ -305,6 +309,7 @@
 
         <div id="summary-view" class="view-section">
             <h4 class="fw-bold text-dark mb-4"><i class="fas fa-file-invoice text-primary me-2"></i> สรุปข้อมูลแยกตามหมวด</h4>
+            <!-- REQ-4: กล่องแสดง "ปีตั้งต้น" vs "ปีย้อนหลัง" -->
             <div id="summary-year-note" class="alert alert-success py-2 px-3 mb-3" style="border-radius:12px; font-size:0.9rem;"></div>
             <div class="row g-3" id="summary-cards-container"></div>
         </div>
@@ -338,12 +343,12 @@
                 <div class="cat-btn cat-trigger" data-mode="water-treatment"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-water"></i></div><div class="cat-text-group"><h5>ระบบบำบัดน้ำเสีย</h5></div></div>
             </div></div>
 
-            <!-- ✅ หมวดใหม่: ยาเฉพาะ -->
+            <!-- REQ-1: หมวดใหม่ "ยาเฉพาะ" ในหน้าฟอร์มกรอกบันทึก -->
             <div class="form-section-wrapper rbac-medicines" id="sec-medicines"><div class="form-section-title">💊 ยาเฉพาะ (เวชภัณฑ์เฉพาะกลุ่ม)</div><div class="cat-grid">
                 <div class="cat-btn cat-trigger" data-mode="specific-medicines"><div class="cat-icon-box bg-ts-purple"><i class="fas fa-pills"></i></div><div class="cat-text-group"><h5>ยาเฉพาะ 4 ชนิด</h5><span>Amlodipine, GPO-L-ONE, Gabapentin, Omeprazole</span></div></div>
             </div></div>
 
-            <!-- ✅ ฟอร์ม "จำนวนต้นไม้" อยู่หมวดเดียวกับ Solar Cell -->
+            <!-- REQ-2: ฟอร์ม "จำนวนต้นไม้" อยู่หมวดเดียวกับ Solar Cell -->
             <div class="form-section-wrapper rbac-energy" id="sec-solar"><div class="form-section-title">☀️ พลังงานทดแทนและพื้นที่สีเขียว</div><div class="cat-grid">
                 <div class="cat-btn cat-trigger" data-mode="solar-system"><div class="cat-icon-box bg-ts-success"><i class="fas fa-solar-panel"></i></div><div class="cat-text-group"><h5>ระบบ Solar Cell</h5></div></div>
                 <div class="cat-btn cat-trigger" data-mode="tree-count"><div class="cat-icon-box bg-ts-teal"><i class="fas fa-tree"></i></div><div class="cat-text-group"><h5>จำนวนต้นไม้</h5></div></div>
@@ -354,6 +359,7 @@
             <h4 class="fw-bold mb-4">กระดานจัดอันดับผู้เข้าร่วม (Leaderboard)</h4>
             <div class="card bg-white p-4 rounded-4 border shadow-sm">
                 <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                    <!-- REQ-6: หัวข้อระบุชัดเจนว่าเป็นข้อมูลของโรงพยาบาลที่ล็อกอินเข้ามา -->
                     <h5 class="fw-bold m-0"><i class="fas fa-trophy text-warning me-2"></i>อันดับผู้เข้าร่วมสูงสุดของโรงพยาบาล: <span id="lb-hosp-name" class="text-primary"></span></h5>
                     <button class="btn btn-sm btn-outline-secondary" id="btn-refresh-lb"><i class="fas fa-sync-alt"></i> รีเฟรชข้อมูลล่าสุด</button>
                 </div>
@@ -514,13 +520,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // ============================================
     let SESSION = { hospName: '', recorderName: '', role: '' };
     let windowSurveyDone = false;
-    let localDB = { logs: [] };
+    let localDB = { logs: [] }; // REQ-6: เก็บ logs จริงจากระบบเท่านั้น ไม่มี mock data
     let surveyScores = { q1: 0, q2: 0, q3: 0 };
     let monthlyBarChart = null;
     let charts = { co2Pie:null, wastePie:null, trend:null, yearly:null, hospCompare:null };
 
     // ============================================
-    // ปัจจัยการปล่อยคาร์บอน (Emission Factors) - ครอบคลุมทุกหมวดของระบบ
+    // ปัจจัยการปล่อยคาร์บอน (Emission Factors) - REQ-5: ครอบคลุมทุกหมวดของระบบ
     // ============================================
     const EF = {
         elec: 0.4999, water: 0.344, diesel: 2.708, gasoline: 2.189, lpg: 3.111,
@@ -535,7 +541,8 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // ============================================
-    // ฟอร์มไดนามิก: นิยามฟิลด์ทุกหมวด (รวมหมวดใหม่ "ยาเฉพาะ" และ "จำนวนต้นไม้")
+    // ฟอร์มไดนามิก: นิยามฟิลด์ทุกหมวด
+    // REQ-1: เพิ่ม 'specific-medicines' | REQ-2: เพิ่ม 'tree-count'
     // ============================================
     const FORM_DEFS = {
         'elec': { title: '⚡ บันทึกไฟฟ้าหลัก', fields: [
@@ -611,7 +618,7 @@ document.addEventListener("DOMContentLoaded", function () {
             { id:'wt-lime', label:'ปูนขาว (kg)', type:'number' },
             { id:'wt-chlorine', label:'คลอรีน (kg)', type:'number' }
         ]},
-        // ✅ หมวดใหม่: ยาเฉพาะ
+        // ✅ REQ-1: หมวดใหม่ "ยาเฉพาะ" 4 ชนิด
         'specific-medicines': { title: '💊 ยาเฉพาะ 4 ชนิด', fields: [
             { id:'amlodipine', label:'Amlodipine (เม็ด)', type:'number' },
             { id:'gpo-l-one', label:'GPO-L-ONE (เม็ด)', type:'number' },
@@ -629,13 +636,13 @@ document.addEventListener("DOMContentLoaded", function () {
             { id:'solar-panels', label:'จำนวนแผงโซลาร์เซลล์ (แผง)', type:'number' },
             { id:'solar-internal-use', label:'พลังงานที่ใช้ภายใน (kWh)', type:'number' }
         ]},
-        // ✅ ฟอร์มใหม่: จำนวนต้นไม้ (อยู่หมวดเดียวกับ Solar Cell)
+        // ✅ REQ-2: ฟอร์มใหม่ "จำนวนต้นไม้" (อยู่หมวดเดียวกับ Solar Cell ใน UI)
         'tree-count': { title: '🌳 จำนวนต้นไม้', fields: [
             { id:'tree-count', label:'จำนวนต้นไม้ทั้งหมด (ต้น)', type:'number' }
         ]}
     };
 
-    // สร้างโครงสร้างข้อมูลเปล่าเริ่มต้น (ใช้ร่วมกันทุกฟังก์ชันเพื่อความสอดคล้อง)
+    // สร้างโครงสร้างข้อมูลเปล่าเริ่มต้น (ทุกฟิลด์เริ่มที่ 0 - REQ-6: ไม่มีข้อมูลจำลอง)
     function createEmptyTotals() {
         return {
             elec_kwh:0, water_m3:0, diesel_v:0, gasoline_v:0, diesel_m:0, gasoline_m:0, total_lpg:0, hfc134a:0, r22:0, total_fire:0,
@@ -647,7 +654,9 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-    // คำนวณคาร์บอนฟุตพริ้นท์แบบเต็มระบบ (รวมทุกหมวด) จากข้อมูลจริงเท่านั้น
+    // ============================================
+    // REQ-5: คำนวณคาร์บอนฟุตพริ้นท์แบบเต็มระบบ (รวมทุกหมวด: ไฟฟ้า, น้ำ, เชื้อเพลิง, แอร์, ขยะ, สิ้นเปลือง, เคมี, ยา)
+    // ============================================
     function calcCarbonBreakdown(t) {
         const elec   = (t.elec_kwh||0) * EF.elec;
         const water  = (t.water_m3||0) * EF.water;
@@ -667,6 +676,7 @@ document.addEventListener("DOMContentLoaded", function () {
                            + (t.isoflurane||0)*EF.isoflurane + (t.desflurane||0)*EF.desflurane + (t.sevoflurane||0)*EF.sevoflurane;
         const waterTreatment = (t.wt_naoh||0)*EF.wtNaoh + (t.wt_alum||0)*EF.wtAlum + (t.wt_sulfuric||0)*EF.wtSulfuric
                            + (t.wt_lime||0)*EF.wtLime + (t.wt_chlorine||0)*EF.wtChlorine;
+        // REQ-1: ยาเฉพาะ ก็ถูกรวมเข้าคาร์บอนฟุตพริ้นท์เต็มระบบด้วย
         const medicines = ((t.amlodipine||0)+(t.gpo_l_one||0)+(t.gabapentin||0)+(t.omeprazole||0)) * EF.medTablet;
 
         const total = elec+water+fuelV+fuelM+lpg+refrig+fireExt+wasteGen+wasteInf+wasteOrg+wasteHaz+consumables+chemicals+waterTreatment+medicines;
@@ -678,7 +688,9 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-    // คำนวณการลด/ชดเชยคาร์บอนจากรีไซเคิล, โซลาร์เซลล์ และต้นไม้ (ข้อมูลจริงจากระบบ)
+    // ============================================
+    // REQ-3: คำนวณการลด/ชดเชยคาร์บอนจากรีไซเคิล, โซลาร์เซลล์ และต้นไม้ (ข้อมูลจริงจากระบบ)
+    // ============================================
     function calcCarbonOffset(t) {
         const recycling = (t.rc_paper||0)*EF.recycle.paper + (t.rc_alum||0)*EF.recycle.alum + (t.rc_plastic||0)*EF.recycle.plastic
                          + (t.rc_iron||0)*EF.recycle.iron + (t.rc_metal||0)*EF.recycle.metal + (t.rc_glass||0)*EF.recycle.glass;
@@ -688,7 +700,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return { recycling, solar, solarKwh, trees, total: recycling+solar+trees };
     }
 
-    // สร้างตัวเลือกปี พ.ศ./ค.ศ. อัตโนมัติ โดยยึดปีปัจจุบันเป็น default เรียงจากมากไปน้อย
+    // ============================================
+    // REQ-5: สร้างตัวเลือกปี พ.ศ./ค.ศ. อัตโนมัติ ยึดปีปัจจุบันเป็น default เรียงมากไปน้อย
+    // ============================================
     function populateYearDropdown() {
         const sel = document.getElementById('filter-year');
         if (!sel) return;
@@ -794,6 +808,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         applyRBAC(SESSION.role);
                         document.getElementById('loading-text').innerText = 'ดึงข้อมูลล่าสุด...';
 
+                        // REQ-6: ดึง logs จริงของโรงพยาบาลนี้จาก Backend เท่านั้น
                         google.script.run
                             .withSuccessHandler(function (logsData) {
                                 localDB.logs = logsData || [];
@@ -806,7 +821,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 loadLeaderboard();
                             })
                             .withFailureHandler(function (err) {
-                                // ไม่มีข้อมูล -> ยังคงเข้าระบบได้ แสดงข้อมูลว่างทั้งหมด (ไม่ใช่ข้อมูลจำลอง)
+                                // ไม่มีข้อมูล -> เข้าระบบได้ปกติ แสดงข้อมูลว่าง/0 ทั้งหมด (ไม่ใช้ข้อมูลจำลอง)
                                 localDB.logs = [];
                                 loadingEl.style.display = 'none';
                                 document.getElementById('login-screen').style.display = 'none';
@@ -985,7 +1000,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 })
                 .withFailureHandler(function (err) {
-                    // แม้ backend ล้มเหลว ก็ยัง merge เข้า local เพื่อไม่ให้ผู้ใช้เสียข้อมูลที่กรอก (แสดงผลได้ระหว่าง session)
+                    // แม้ backend ล้มเหลว ก็ยัง merge เข้า local เพื่อไม่ให้ผู้ใช้เสียข้อมูลที่กรอก
                     localDB.logs = localDB.logs.concat(payload.logs);
                     loadingEl.style.display = 'none';
                     const formModal = bootstrap.Modal.getInstance(document.getElementById('formModal'));
@@ -1038,7 +1053,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ============================================
-    // การกรองและรวมข้อมูลจริงจากระบบ (ไม่มีข้อมูลจำลอง)
+    // REQ-6: การกรองและรวมข้อมูลจริงจากระบบเท่านั้น (ไม่มีข้อมูลจำลอง)
     // ============================================
     function getFilteredData(specificYear, specificHosp, specificMonth) {
         let year  = specificYear !== undefined ? specificYear : (document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all');
@@ -1108,7 +1123,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ============================================
-    // กราฟรายเดือน (SuperAdmin) - ใช้ข้อมูลจริงเต็มระบบ
+    // กราฟรายเดือน (SuperAdmin) - REQ-5: ใช้ข้อมูลจริงเต็มระบบ
     // ============================================
     function updateMonthlyChart() {
         const ctx = document.getElementById('monthlyComparisonChart');
@@ -1141,7 +1156,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (chartCategorySelector) chartCategorySelector.addEventListener('change', updateMonthlyChart);
 
     // ============================================
-    // Dashboard หลัก: KPI, Offset, Pie, Trend, Yearly Compare, Top3
+    // Dashboard หลัก: KPI, Offset (REQ-3), Pie, Trend (REQ-5), Yearly Compare, Top3
     // ============================================
     function loadCharts() {
         let t = getFilteredData();
@@ -1152,6 +1167,7 @@ document.addEventListener("DOMContentLoaded", function () {
         setText('kpi-co2-elec',  breakdown.elec.toFixed(2));
         setText('kpi-co2-fuel',  breakdown.fuel.toFixed(2));
 
+        // REQ-3: การลด/ชดเชยคาร์บอนจากรีไซเคิล, โซลาร์เซลล์, ต้นไม้
         setText('kpi-offset-recycle', offset.recycling.toFixed(2));
         setText('kpi-offset-solar',   offset.solar.toFixed(2));
         setText('kpi-solar-kwh',      offset.solarKwh.toFixed(0));
@@ -1159,7 +1175,7 @@ document.addEventListener("DOMContentLoaded", function () {
         setText('kpi-trees-count',    (t.tree_count||0).toLocaleString());
         setText('kpi-offset-total',   offset.total.toFixed(2) + ' kgCO₂e');
 
-        // Pie: สัดส่วนแหล่งปล่อยคาร์บอนเต็มระบบ
+        // Pie: สัดส่วนแหล่งปล่อยคาร์บอนเต็มระบบ (REQ-5)
         renderPieChart('co2Pie', 'co2PieChart',
             ['ไฟฟ้า','น้ำประปา','เชื้อเพลิง','แอร์/ดับเพลิง','ขยะ','วัสดุสิ้นเปลือง','เคมี/น้ำเสีย','ยาเฉพาะ'],
             [breakdown.elec, breakdown.water, breakdown.fuel, breakdown.air, breakdown.wasteTotal, breakdown.consumables, breakdown.chemicals+breakdown.waterTreatment, breakdown.medicines],
@@ -1173,7 +1189,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ['#94a3b8','#dc2626','#16a34a','#f59e0b']
         );
 
-        // Trend: คาร์บอนฟุตพริ้นท์รายเดือน (เต็มระบบ)
+        // REQ-5: Trend คาร์บอนฟุตพริ้นท์เต็มระบบรายเดือน (ไม่ใช่แค่ไฟฟ้า/น้ำมัน)
         const yearFilter = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
         const hospFilter = SESSION.role === 'superadmin' ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
         let monthlyTotals = buildMonthlyTotals(yearFilter, hospFilter);
@@ -1184,7 +1200,7 @@ document.addEventListener("DOMContentLoaded", function () {
             'คาร์บอนฟุตพริ้นท์รวม (kgCO₂e)', monthlyCarbon, '#15b371'
         );
 
-        // Yearly Compare: 3 ปีย้อนหลัง เทียบกับปีตั้งต้น (real data, 0 หากไม่มี)
+        // Yearly Compare: 3 ปีย้อนหลัง เทียบกับปีตั้งต้นที่เลือกไว้ (REQ-4/5, real data, 0 หากไม่มี)
         const curY = new Date().getFullYear();
         const baseYear = (yearFilter === 'all') ? curY : parseInt(yearFilter,10);
         let yLabels = [], yData = [];
@@ -1195,7 +1211,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         renderBarChartSingle('yearly', 'yearlyCompareChart', yLabels, 'คาร์บอนฟุตพริ้นท์รวม (kgCO₂e)', yData, '#0284c7');
 
-        // Top 3 แหล่งปล่อยคาร์บอน
+        // Top 3 แหล่งปล่อยคาร์บอน (รวมยาเฉพาะเข้าไปด้วยตาม REQ-5)
         let sources = [
             { name:'ไฟฟ้า', val: breakdown.elec },
             { name:'น้ำประปา', val: breakdown.water },
@@ -1253,7 +1269,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ============================================
-    // สรุปข้อมูลรายหมวด (พร้อมแก้ปมปีตั้งต้น vs ปีย้อนหลัง)
+    // REQ-1/4: สรุปข้อมูลรายหมวด (รวมหมวด "ยาเฉพาะ") พร้อมแก้ไข "ปีตั้งต้น vs ปีย้อนหลัง"
     // ============================================
     const CATEGORY_DEFS = [
         { key:'energy',   icon:'fa-bolt',           color:'warning',  title:'พลังงานและน้ำ',
@@ -1269,8 +1285,10 @@ document.addEventListener("DOMContentLoaded", function () {
           items:[ {label:'ผงซักฟอก', field:'clean_pow', unit:'kg'}, {label:'กระดาษ A4', field:'paper_ream', unit:'รีม'}, {label:'หน้ากากอนามัย', field:'mask_box', unit:'กล่อง'} ] },
         { key:'chemical',  icon:'fa-flask',          color:'pink',     title:'สารเคมีและน้ำเสีย',
           items:[ {label:'แอลกอฮอล์', field:'alc_liq', unit:'ml'}, {label:'Isoflurane', field:'isoflurane', unit:'ขวด'}, {label:'น้ำเสียบำบัด', field:'wt_vol', unit:'m³'} ] },
+        // ✅ REQ-1: หมวดสรุป "ยาเฉพาะ"
         { key:'medicines', icon:'fa-pills',          color:'purple',   title:'ยาเฉพาะ',
           items:[ {label:'Amlodipine', field:'amlodipine', unit:'เม็ด'}, {label:'GPO-L-ONE', field:'gpo_l_one', unit:'เม็ด'}, {label:'Gabapentin', field:'gabapentin', unit:'เม็ด'}, {label:'Omeprazole', field:'omeprazole', unit:'เม็ด'} ] },
+        // ✅ REQ-2: หมวดสรุป "Solar Cell & ต้นไม้" (รวมจำนวนต้นไม้)
         { key:'solar',     icon:'fa-solar-panel',    color:'success',  title:'Solar Cell & ต้นไม้',
           items:[ {label:'พลังงานที่ผลิตได้', field:'solar_kwh', unit:'kWh'}, {label:'จำนวนแผงโซลาร์', field:'solar_panels', unit:'แผง'}, {label:'จำนวนต้นไม้', field:'tree_count', unit:'ต้น'} ] }
     ];
@@ -1282,7 +1300,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const baseYear = (yearFilter === 'all') ? curY : parseInt(yearFilter,10);
         const compareYear = baseYear - 1;
 
-        // ✅ แก้ไข: แสดงชัดเจนว่า "ปีตั้งต้น" (Baseline) คือปีที่เลือกกรอง ไม่ใช่ปีปัจจุบันเสมอไป
+        // ✅ REQ-4: แสดงชัดเจนว่า "ปีตั้งต้น" (Baseline) คือปีที่เลือกกรอง เทียบกับ "ปีย้อนหลัง"
         const noteEl = document.getElementById('summary-year-note');
         if (noteEl) {
             noteEl.innerHTML = `<i class="fas fa-info-circle me-2"></i>
@@ -1358,12 +1376,10 @@ document.addEventListener("DOMContentLoaded", function () {
         setText('sa-kpi-elec', (orgTotal.elec_kwh||0).toLocaleString());
         setText('sa-kpi-waste', ((orgTotal.waste_gen||0)+(orgTotal.waste_inf||0)+(orgTotal.waste_org||0)+(orgTotal.waste_haz||0)).toLocaleString());
 
-        // เปรียบเทียบคาร์บอนแต่ละโรงพยาบาล
         let hospLabels = hospitals;
         let hospData = hospitals.map(h => calcCarbonBreakdown(hospTotals[h]).total);
         renderBarChartSingle('hospCompare', 'hospitalsCompareChart', hospLabels, 'คาร์บอนฟุตพริ้นท์รวม (kgCO₂e)', hospData, '#0284c7');
 
-        // ตารางหมวดที่ปล่อย CO2 สูงสุดต่อโรงพยาบาล
         let topResourceRows = '';
         hospitals.forEach(h => {
             let b = calcCarbonBreakdown(hospTotals[h]);
@@ -1378,7 +1394,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const topResTbody = document.getElementById('top-resource-tbody');
         if (topResTbody) topResTbody.innerHTML = topResourceRows || '<tr><td colspan="3" class="text-muted">ยังไม่มีข้อมูล</td></tr>';
 
-        // Compliance table: ตรวจว่าโรงพยาบาลมีบันทึกในแต่ละหมวดหรือไม่ (ข้อมูลจริง)
+        // Compliance table: ตรวจว่าโรงพยาบาลมีบันทึกในแต่ละหมวดหรือไม่ (ข้อมูลจริง - รวม "ยาเฉพาะ")
         let complianceRows = '';
         hospitals.forEach(h => {
             let t = hospTotals[h];
@@ -1405,7 +1421,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ============================================
-    // Leaderboard: ใช้ข้อมูลจริงของ "โรงพยาบาลที่ล็อกอินเข้ามาเท่านั้น"
+    // REQ-6: Leaderboard ใช้ข้อมูลจริงของ "โรงพยาบาลที่ล็อกอินเข้ามาเท่านั้น"
     // ============================================
     function loadLeaderboard() {
         const loadingEl = document.getElementById('leaderboard-loading');
@@ -1419,10 +1435,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (emptyEl) emptyEl.style.display = 'none';
 
         setTimeout(() => {
-            // ✅ กรองเฉพาะข้อมูลของโรงพยาบาลที่ผู้ใช้ล็อกอินเข้ามาเท่านั้น (ไม่ปนโรงพยาบาลอื่น)
+            // ✅ REQ-6: กรองเฉพาะข้อมูลของโรงพยาบาลที่ผู้ใช้ล็อกอินเข้ามาเท่านั้น (ไม่ปนโรงพยาบาลอื่น)
             let filtered = (localDB.logs || []).filter(log => log.hospName === SESSION.hospName && log.recorderName);
 
-            // นับจำนวน "ครั้งที่บันทึก" แบบไม่ซ้ำ (นับตาม date+recorderName เพื่อไม่ให้นับซ้ำจากหลาย field ในฟอร์มเดียว)
+            // นับจำนวน "ครั้งที่บันทึก" แบบไม่ซ้ำ (นับตาม date+recorderName+cat เพื่อไม่นับซ้ำจากหลายฟิลด์ในฟอร์มเดียว)
             let uniqueEntries = new Set();
             let countMap = {};
             filtered.forEach(log => {
