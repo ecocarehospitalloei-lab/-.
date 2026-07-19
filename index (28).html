@@ -642,10 +642,10 @@ document.addEventListener("DOMContentLoaded", function () {
         ]},
         // ✅ REQ-1: หมวดใหม่ "ยาเฉพาะ" 4 ชนิด
         'specific-medicines': { title: '💊 ยาเฉพาะ 4 ชนิด', fields: [
-            { id:'amlodipine', label:'Amlodipine (เม็ด)', type:'number' },
-            { id:'gpo-l-one', label:'GPO-L-ONE (เม็ด)', type:'number' },
-            { id:'gabapentin', label:'Gabapentin (เม็ด)', type:'number' },
-            { id:'omeprazole', label:'Omeprazole (เม็ด)', type:'number' }
+            { id:'amlodipine', label:'Amlodipine (กล่อง)', type:'number' },
+            { id:'gpo-l-one', label:'GPO-L-ONE (กล่อง)', type:'number' },
+            { id:'gabapentin', label:'Gabapentin (กล่อง)', type:'number' },
+            { id:'omeprazole', label:'Omeprazole (กล่อง)', type:'number' }
         ]},
         'solar-system': { title: '☀️ ระบบ Solar Cell', fields: [
             { id:'solar-mode', label:'วิธีบันทึกข้อมูล', type:'select', options:[
@@ -1055,9 +1055,9 @@ document.addEventListener("DOMContentLoaded", function () {
             else if (mode==='med-chemicals')   { title='🧪 สารเคมี & ยาสลบ';
                 container.innerHTML=`<div class="text-success fw-bold mb-2 small">กลุ่มสารเคมี:</div>${inputHTML('Alcohol ชนิดน้ำ','alc-liq','ml')}${inputHTML('Ammonia','ammonia','ml')}<div class="text-danger fw-bold mt-3 mb-2 small">กลุ่มยาสลบ:</div>${inputHTML('ก๊าซไนตรัสออกไซด์','nitrous-kg','kg')}${inputHTML('Isoflurane','isoflurane','กล่อง')}${inputHTML('Desflurane','desflurane','กล่อง')}${inputHTML('Sevoflurane','sevoflurane','กล่อง')}`; }
             else if (mode==='water-treatment') { title='🌊 ระบบบำบัดน้ำเสีย';
-                container.innerHTML=`<div class="text-primary fw-bold mb-2 small">1. ปริมาณน้ำเสีย:</div>${inputHTML('น้ำเสียที่เข้าสู่ระบบ','wt-vol','m³')}<div class="text-primary fw-bold mt-3 mb-2 small">2. ประเภทบ่อ:</div><div class="mb-3"><select id="wt-type" data-label="ประเภทบ่อ" class="form-select border-success"><option value="บ่อลึก (ลึกกว่า 2 เมตร)">บ่อลึก (ลึกกว่า 2 เมตร)</option><option value="บ่อตื้น (ลึกไม่เกิน 2 เมตร)">บ่อตื้น (ลึกไม่เกิน 2 เมตร)</option></select></div><div class="text-primary fw-bold mt-3 mb-2 small">3. ข้อมูลเคมีและ COD:</div>${inputHTML('ค่า COD','wt-cod','mg/l','number',282)}${inputHTML('โซเดียมไฮดรอกไซด์','wt-naoh','kg')}${inputHTML('สารส้ม','wt-alum','kg')}${inputHTML('กรดซัลฟุริค','wt-sulfuric','kg')}${inputHTML('ปูนขาว','wt-lime','kg')}${inputHTML('คลอรีน','wt-chlorine','kg')}`; }
+                container.innerHTML=`<div class="text-primary fw-bold mb-2 small">1. ปริมาณน้ำเสีย:</div>${inputHTML('น้ำเสียที่เข้าสู่ระบบ','wt-vol','m³')}<div class="text-primary fw-bold mt-3 mb-2 small">2. ประเภทบ่อ:</div><div class="mb-3"><select id="wt-type" data-label="ประเภทบ่อ" class="form-select border-success"><option value="บ่อลึก (ลึกกว่า 2 เมตร)">บ่อลึก (ลึกกว่า 2 เมตร)</option><option value="บ่อตื้น (ลึกไม่เกิน 2 เมตร)">บ่อตื้น (ลึกไม่เกิน 2 เมตร)</option></select></div><div class="text-primary fw-bold mt-3 mb-2 small">3. ข้อมูลเคมีและ COD:</div>${inputHTML('ค่า COD'ถ้าไม่ทราบค่า ให้กรอก 282 mg/l,'wt-cod','mg/l','number',282)}${inputHTML('โซเดียมไฮดรอกไซด์','wt-naoh','kg')}${inputHTML('สารส้ม','wt-alum','kg')}${inputHTML('กรดซัลฟุริค','wt-sulfuric','kg')}${inputHTML('ปูนขาว','wt-lime','kg')}${inputHTML('คลอรีน','wt-chlorine','kg')}`; }
             else if (mode==='specific-medicines') { title='💊 ยาเฉพาะ 4 ชนิด';
-                container.innerHTML=`<div class="text-success fw-bold mb-2 small">เวชภัณฑ์เฉพาะกลุ่ม (หน่วย: เม็ด):</div>${inputHTML('Amlodipine','amlodipine','เม็ด')}${inputHTML('GPO-L-ONE','gpo-l-one','เม็ด')}${inputHTML('Gabapentin','gabapentin','เม็ด')}${inputHTML('Omeprazole','omeprazole','เม็ด')}`; }
+                container.innerHTML=`<div class="text-success fw-bold mb-2 small">เวชภัณฑ์เฉพาะกลุ่ม (หน่วย: กล่อง):</div>${inputHTML('Amlodipine','amlodipine','กล่อง')}${inputHTML('GPO-L-ONE','gpo-l-one','กล่อง')}${inputHTML('Gabapentin','gabapentin','กล่อง')}${inputHTML('Omeprazole','omeprazole','กล่อง')}`; }
             else if (mode==='solar-system')    { title='☀️ พลังงานทดแทน Solar Cell';
                 container.innerHTML=`<div class="p-3 mb-3 rounded-3 border bg-white"><h6 class="fw-bold text-success mb-2 small"><i class="fas fa-info-circle me-2"></i>1. ข้อมูลทั่วไป</h6>${inputHTML('ไฟที่ใช้ผลิต','solar-internal-use','kWh')}</div><div class="p-3 rounded-3 border bg-white"><h6 class="fw-bold text-success mb-2 small"><i class="fas fa-solar-panel me-2"></i>2. ข้อมูลโซลาเซลล์</h6><div class="mb-3"><select id="solar-mode" data-label="รูปแบบมิเตอร์" class="form-select border-success"><option value="meter">กรณีมีมิเตอร์</option><option value="nometer">กรณีไม่มีมิเตอร์</option></select></div><div id="solar-meter-field" class="p-3 rounded bg-light border border-warning">${inputHTML('ไฟที่ผลิตได้','solar-kwh','kWh')}</div><div id="solar-nometer-fields" class="p-3 rounded bg-light border border-info" style="display:none;">${inputHTML('กำลังผลิต','solar-cap','kW')}${inputHTML('จำนวนแผง','solar-panels','แผง')}${inputHTML('จำนวนวัน','solar-days','วัน')}</div></div>`;
 
@@ -1428,7 +1428,7 @@ document.addEventListener("DOMContentLoaded", function () {
           items:[ {label:'แอลกอฮอล์', field:'alc_liq', unit:'ml'}, {label:'Isoflurane', field:'isoflurane', unit:'ขวด'}, {label:'น้ำเสียบำบัด', field:'wt_vol', unit:'m³'} ] },
         // ✅ REQ-1: หมวดสรุป "ยาเฉพาะ"
         { key:'medicines', icon:'fa-pills',          color:'purple',   title:'ยาเฉพาะ',
-          items:[ {label:'Amlodipine', field:'amlodipine', unit:'เม็ด'}, {label:'GPO-L-ONE', field:'gpo_l_one', unit:'เม็ด'}, {label:'Gabapentin', field:'gabapentin', unit:'เม็ด'}, {label:'Omeprazole', field:'omeprazole', unit:'เม็ด'} ] },
+          items:[ {label:'Amlodipine', field:'amlodipine', unit:'กล่อง'}, {label:'GPO-L-ONE', field:'gpo_l_one', unit:'กล่อง'}, {label:'Gabapentin', field:'gabapentin', unit:'กล่อง'}, {label:'Omeprazole', field:'omeprazole', unit:'กล่อง'} ] },
         // ✅ REQ-2: หมวดสรุป "Solar Cell & ต้นไม้" (รวมจำนวนต้นไม้)
         { key:'solar',     icon:'fa-solar-panel',    color:'success',  title:'Solar Cell & ต้นไม้',
           items:[ {label:'พลังงานที่ผลิตได้', field:'solar_kwh', unit:'kWh'}, {label:'จำนวนแผงโซลาร์', field:'solar_panels', unit:'แผง'}, {label:'จำนวนต้นไม้', field:'tree_count', unit:'ต้น'} ] }
