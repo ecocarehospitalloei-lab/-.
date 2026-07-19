@@ -9,48 +9,89 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
 
     <style>
-        :root { --primary: #15b371; --dark-bg: #1a2332; --sidebar-hover: #243145; --bg-body: #f4f6f9; }
-        body { font-family: 'Sarabun', sans-serif; background: var(--bg-body); color: #2c3e50; margin: 0; font-size: 1rem; }
-        .sidebar { width: 280px; background: var(--dark-bg); height: 100vh; position: fixed; display: flex; flex-direction: column; z-index: 1040; overflow-y: auto; transition: transform 0.3s ease; }
-        .sidebar-header { padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-link { color: #d1d5db; padding: 15px 20px; font-size: 1.1rem; text-decoration: none; display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .nav-link:hover { color: white; background: var(--sidebar-hover); }
-        .nav-link.active { color: white; background: var(--primary); font-weight: bold; }
-        .submenu-container { display: none; flex-direction: column; background: #111827; padding: 5px 0; }
+        :root {
+            --primary: #15b371; --primary-dark: #0d9a5e; --primary-light: #e8f8f1;
+            --dark-bg: #142032; --sidebar-hover: #223148; --bg-body: #f2f7f5;
+            --accent-blue: #0ea5e9; --accent-amber: #f59e0b; --accent-red: #ef4444;
+            --radius-lg: 18px; --radius-md: 14px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Sarabun', sans-serif; color: #2c3e50; margin: 0; font-size: 1rem;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(21,179,113,0.07) 0%, transparent 45%),
+                radial-gradient(circle at 100% 0%, rgba(14,165,233,0.05) 0%, transparent 40%),
+                var(--bg-body);
+            background-attachment: fixed;
+        }
+        ::-webkit-scrollbar { width: 9px; height: 9px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd8d2; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        h1,h2,h3,h4,h5,h6 { letter-spacing: -0.01em; }
+        .sidebar { width: 280px; background: linear-gradient(180deg, var(--dark-bg) 0%, #0f1826 100%); height: 100vh; position: fixed; display: flex; flex-direction: column; z-index: 1040; overflow-y: auto; transition: transform 0.3s ease; box-shadow: 4px 0 24px rgba(0,0,0,0.12); }
+        .sidebar-header { padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .nav-link { color: #cbd5e1; padding: 14px 20px; font-size: 1.05rem; text-decoration: none; display: flex; align-items: center; gap: 12px; cursor: pointer; margin: 2px 10px; border-radius: 12px; transition: all 0.2s ease; }
+        .nav-link:hover { color: white; background: var(--sidebar-hover); transform: translateX(2px); }
+        .nav-link.active { color: white; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); font-weight: bold; box-shadow: 0 6px 16px -4px rgba(21,179,113,0.5); }
+        .submenu-container { display: none; flex-direction: column; background: rgba(0,0,0,0.18); padding: 5px 0; margin: 0 10px; border-radius: 10px; }
         .submenu-container.open { display: flex; }
-        .sub-nav-link { color: #9ca3af; padding: 10px 20px 10px 45px; font-size: 0.95rem; text-decoration: none; display: flex; align-items: center; gap: 10px; cursor: pointer; border-left: 4px solid transparent; transition: all 0.2s; }
+        .sub-nav-link { color: #9ca3af; padding: 10px 20px 10px 45px; font-size: 0.92rem; text-decoration: none; display: flex; align-items: center; gap: 10px; cursor: pointer; border-left: 3px solid transparent; transition: all 0.2s; border-radius: 8px; }
         .sub-nav-link:hover { color: white; background: var(--sidebar-hover); }
-        .sub-nav-link.active { color: var(--primary); font-weight: bold; border-left-color: var(--primary); background: rgba(21, 179, 113, 0.05); }
-        .main-content { margin-left: 280px; padding: 1.5rem; scroll-behavior: smooth; transition: margin-left 0.3s ease; }
-        .mobile-header { display: none; background: var(--dark-bg); color: white; padding: 15px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1050; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1030; }
+        .sub-nav-link.active { color: var(--primary); font-weight: bold; border-left-color: var(--primary); background: rgba(21, 179, 113, 0.1); }
+        .main-content { margin-left: 280px; padding: 1.75rem; scroll-behavior: smooth; transition: margin-left 0.3s ease; }
+        .mobile-header { display: none; background: linear-gradient(135deg, var(--dark-bg), #1e2c42); color: white; padding: 14px 16px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1050; box-shadow: 0 2px 14px rgba(0,0,0,0.15); }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(10,15,25,0.55); backdrop-filter: blur(2px); z-index: 1030; }
 
         @media (max-width: 991px) {
             .mobile-header { display: flex; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
             .sidebar-overlay.active { display: block; }
-            .main-content { margin-left: 0; padding: 1rem; }
+            .main-content { margin-left: 0; padding: 0.9rem; }
             .filter-panel { flex-wrap: wrap; justify-content: space-between; gap: 10px; padding: 1rem; }
             .filter-panel > div { max-width: 100% !important; flex-grow: 1; }
             .filter-panel > button { width: 100%; margin-top: 10px; }
+            .chart-card, .summary-card { padding: 1.1rem; border-radius: 14px; }
+            .kpi-card { padding: 1.1rem; border-radius: 14px; }
+            .kpi-card h3 { font-size: 1.35rem; }
+            h5 { font-size: 1rem; }
+            .cat-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .main-content { padding: 0.6rem; }
+            .kpi-card { flex-wrap: wrap; gap: 10px; }
+            .form-select-sm, select.form-select-sm { width: 100% !important; }
         }
 
-        .filter-panel { display: flex; gap: 15px; background: white; padding: 1.5rem; border-radius: 16px; border: 1px solid #eef2f5; margin-bottom: 1.5rem; align-items: flex-end; box-shadow: 0 4px 12px rgba(0,0,0,0.01); }
-        .chart-card, .summary-card { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 1px solid #eef2f5; margin-bottom: 1.5rem; height: 100%; }
+        .filter-panel { display: flex; gap: 15px; background: white; padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid #eef2f5; margin-bottom: 1.5rem; align-items: flex-end; box-shadow: 0 4px 16px rgba(21,179,113,0.04); }
+        .chart-card, .summary-card {
+            background: white; border-radius: var(--radius-lg); padding: 1.5rem;
+            box-shadow: 0 4px 14px rgba(15,40,30,0.04); border: 1px solid #eef2f5; margin-bottom: 1.5rem; height: 100%;
+            transition: box-shadow 0.25s ease, transform 0.25s ease; position: relative; overflow: hidden;
+        }
+        .chart-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--primary), var(--accent-blue)); opacity: 0.9; }
+        .chart-card:hover, .summary-card:hover { box-shadow: 0 10px 26px rgba(15,40,30,0.09); transform: translateY(-2px); }
         .form-control, .btn, .form-select { font-size: 1rem; padding: 0.6rem 1rem; border-radius: 10px; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(21,179,113,0.14); }
         label { font-weight: 700; margin-bottom: 6px; color: #334155; font-size: 0.95rem; }
-        .kpi-card { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid #eef2f5; box-shadow: 0 4px 10px rgba(0,0,0,0.01); display: flex; align-items: center; justify-content: space-between; }
-        .kpi-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .kpi-card {
+            background: white; border-radius: var(--radius-lg); padding: 1.5rem; border: 1px solid #eef2f5;
+            box-shadow: 0 4px 14px rgba(15,40,30,0.03); display: flex; align-items: center; justify-content: space-between;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(15,40,30,0.08); }
+        .kpi-icon { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03); }
         .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
-        .cat-btn { background: white; border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; border: 1px solid #e2e8f0; transition: all 0.2s ease; }
-        .cat-btn:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 12px -3px rgba(0,0,0,0.05); }
+        .cat-btn { background: white; border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; border: 1px solid #e2e8f0; transition: all 0.2s ease; }
+        .cat-btn:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 10px 18px -6px rgba(21,179,113,0.18); }
         .cat-icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
         .cat-text-group { display: flex; flex-direction: column; text-align: left; }
         .cat-text-group h5 { font-size: 1.05rem; font-weight: 700; margin: 0; color: #0f172a; }
         .cat-text-group span { font-size: 0.8rem; color: #64748b; font-weight: 500; }
         .bg-ts-warning{background:#fef3c7;color:#d97706}.bg-ts-primary{background:#e0f2fe;color:#0284c7}.bg-ts-danger{background:#fee2e2;color:#dc2626}.bg-ts-secondary{background:#f1f5f9;color:#475569}.bg-ts-orange{background:#ffedd5;color:#ea580c}.bg-ts-info{background:#ecfeff;color:#0891b2}.bg-ts-rose{background:#fff1f2;color:#e11d48}.bg-ts-dark{background:#f1f5f9;color:#1e293b}.bg-ts-success{background:#dcfce7;color:#16a34a}.bg-ts-indigo{background:#e0e7ff;color:#4f46e5}.bg-ts-teal{background:#ccfbf1;color:#0d9488}.bg-ts-pink{background:#fce7f3;color:#db2777}.bg-ts-purple{background:#f3e8ff;color:#9333ea}
-        .btn-logout { background: transparent; border: 2px solid #ef4444; color: #ef4444; border-radius: 12px; padding: 10px; font-weight: bold; width: 100%; cursor: pointer; }
+        .btn-logout { background: transparent; border: 2px solid #ef4444; color: #ef4444; border-radius: 12px; padding: 10px; font-weight: bold; width: 100%; cursor: pointer; transition: all 0.2s ease; }
+        .btn-logout:hover { background: #ef4444; color: white; }
 
         #login-screen { position: fixed; inset: 0; z-index: 1000; background: var(--dark-bg); display: flex; align-items: center; justify-content: center; padding: 1rem; }
         .login-box { background: white; border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.45); animation: slideUp 0.4s ease; }
@@ -301,7 +342,7 @@
                 <div class="col-12">
                     <div class="chart-card" style="border:2px solid #d1fae5;">
                         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                            <h5 class="mb-0"><i class="fas fa-chart-column text-success me-2"></i> กราฟเปรียบเทียบข้อมูลรายเดือน (ทุกพารามิเตอร์ที่กรอก)</h5>
+                            <h5 class="mb-0"><i class="fas fa-chart-column text-success me-2"></i> กราฟเปรียบเทียบข้อมูลรายเดือน (ทุกพารามิเตอร์ที่กรอก) <span id="paramChartColorDot" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#15b371;margin-left:6px;vertical-align:middle;box-shadow:0 0 0 3px rgba(0,0,0,0.04);"></span></h5>
                             <div class="d-flex gap-2 flex-wrap">
                                 <select id="paramChartYear" class="form-select form-select-sm border-success" style="width:auto; cursor:pointer;"></select>
                                 <select id="paramChartParam" class="form-select form-select-sm border-success" style="width:auto; cursor:pointer;"></select>
@@ -753,6 +794,10 @@ document.addEventListener("DOMContentLoaded", function () {
         { title: '☀️ พลังงานทดแทนและพื้นที่สีเขียว',  modes: ['solar-system','tree-count'] }
     ];
 
+    // ✅ ชุดสีธีมสิ่งแวดล้อม ใช้ไล่ให้แต่ละพารามิเตอร์มีสีของตัวเอง (สลับตัวเลือกแล้วสีเปลี่ยนตามพารามิเตอร์)
+    const PARAM_COLOR_PALETTE = ['#0ea5e9','#f59e0b','#22c55e','#ef4444','#a855f7','#14b8a6','#f43f5e','#eab308','#3b82f6','#84cc16','#ec4899','#06b6d4','#f97316','#8b5cf6','#10b981','#6366f1'];
+    let PARAM_KEY_COLORS = {};
+
     // สร้างตัวเลือกปีของกราฟนี้ (แยกอิสระจากฟิลเตอร์หลัก ไม่กระทบฟีเจอร์เดิม)
     function populateParamChartYear() {
         const sel = document.getElementById('paramChartYear');
@@ -772,6 +817,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!sel) return;
         let html = '';
         let firstKey = null;
+        let colorIdx = 0;
+        PARAM_KEY_COLORS = {};
         PARAM_SECTIONS.forEach(sec => {
             let optHtml = '';
             sec.modes.forEach(mode => {
@@ -781,7 +828,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (f.type === 'select') return; // ข้ามฟิลด์ประเภทตัวเลือก (ไม่ใช่ค่าตัวเลขสะสม)
                     const key = f.id.replace(/-/g, '_');
                     if (!firstKey) firstKey = key;
-                    optHtml += `<option value="${key}">${f.label}</option>`;
+                    const optColor = PARAM_COLOR_PALETTE[colorIdx % PARAM_COLOR_PALETTE.length];
+                    PARAM_KEY_COLORS[key] = optColor;
+                    colorIdx++;
+                    optHtml += `<option value="${key}" style="color:${optColor};font-weight:600;">● ${f.label}</option>`;
                 });
             });
             if (optHtml) html += `<optgroup label="${sec.title}">${optHtml}</optgroup>`;
@@ -811,17 +861,42 @@ document.addEventListener("DOMContentLoaded", function () {
         let dataArr = monthlyTotals.map(t => (typeof t[paramKey] === 'number') ? t[paramKey] : 0);
         let paramLabelText = (paramSel.selectedIndex >= 0 && paramSel.options[paramSel.selectedIndex]) ? paramSel.options[paramSel.selectedIndex].text : paramKey;
 
+        // ✅ สีของแท่งกราฟจะเปลี่ยนไปตามพารามิเตอร์ที่เลือก (ไม่ใช่สีเขียวเดียวทุกครั้งแบบเดิม)
+        const barColor = PARAM_KEY_COLORS[paramKey] || '#15b371';
+        const dotEl = document.getElementById('paramChartColorDot');
+        if (dotEl) dotEl.style.background = barColor;
+        const ctx2d = canvas.getContext('2d');
+        const barGradient = ctx2d.createLinearGradient(0, 0, 0, 300);
+        barGradient.addColorStop(0, barColor);
+        barGradient.addColorStop(1, barColor + '99');
+
         if (charts.paramMonthly) charts.paramMonthly.destroy();
         charts.paramMonthly = new Chart(canvas, {
             type: 'bar',
             data: {
                 labels: ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'],
-                datasets: [{ label: paramLabelText, data: dataArr, backgroundColor: '#15b371', borderRadius: 6 }]
+                datasets: [{
+                    label: paramLabelText, data: dataArr,
+                    backgroundColor: barGradient, hoverBackgroundColor: barColor,
+                    borderColor: barColor, borderWidth: 1.5,
+                    borderRadius: 8, borderSkipped: false, maxBarThickness: 42
+                }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true } },
-                plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } }
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#eef2f5' }, ticks: { font: { family: 'Sarabun' } } },
+                    x: { grid: { display: false }, ticks: { font: { family: 'Sarabun' } } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        mode: 'index', intersect: false, backgroundColor: '#1a2332',
+                        titleFont: { family: 'Sarabun' }, bodyFont: { family: 'Sarabun' },
+                        padding: 10, cornerRadius: 8
+                    }
+                },
+                animation: { duration: 600, easing: 'easeOutQuart' }
             }
         });
     }
@@ -872,8 +947,29 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // ✅ รายชื่อโรงพยาบาล/หน่วยงานหลักในจังหวัดเลย (แสดงเป็นตัวเลือกเสมอ แม้ยังไม่มีข้อมูลบันทึก)
+    const MASTER_HOSPITAL_LIST = [
+        'โรงพยาบาลเลย',
+        'โรงพยาบาลนาด้วง',
+        'โรงพยาบาลท่าลี่',
+        'โรงพยาบาลภูกระดึง',
+        'โรงพยาบาลเอราวัณ',
+        'โรงพยาบาลนาแห้ว',
+        'โรงพยาบาลจิตเวชเลยราชนครินทร์',
+        'โรงพยาบาลปากชม',
+        'โรงพยาบาลภูหลวง',
+        'โรงพยาบาลผาขาว',
+        'โรงพยาบาลหนองหิน',
+        'โรงพยาบาลภูเรือ',
+        'โรงพยาบาลเชียงคาน',
+        'โรงพยาบาลสมเด็จพระยุพราชด่านซ้าย',
+        'สำนักงานสาธารณสุขจังหวัดเลย'
+    ];
+
     function populateHospitalDropdown() {
-        let hospSet = new Set();
+        // เริ่มจากรายชื่อหลักที่กำหนดไว้ตายตัวก่อน (คงลำดับตามที่กำหนด)
+        let hospSet = new Set(MASTER_HOSPITAL_LIST);
+        // แล้วรวมชื่อโรงพยาบาลที่มีอยู่จริงในข้อมูล log (เผื่อมีชื่ออื่นที่ไม่อยู่ในรายชื่อหลัก ก็จะถูกเพิ่มต่อท้ายโดยไม่ซ้ำ)
         localDB.logs.forEach(log => { if (log.hospName) hospSet.add(log.hospName); });
         let sel = document.getElementById('filter-hospital');
         if (!sel) return;
