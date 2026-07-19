@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <title>ECOCARE Hospital - Enterprise Multi-Tenant & SuperAdmin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Secure CDNs for CSS Libraries -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
-    
+
     <style>
         :root { --primary: #15b371; --dark-bg: #1a2332; --sidebar-hover: #243145; --bg-body: #f4f6f9; }
         body { font-family: 'Sarabun', sans-serif; background: var(--bg-body); color: #2c3e50; margin: 0; font-size: 1rem; }
@@ -18,6 +17,7 @@
         .nav-link:hover { color: white; background: var(--sidebar-hover); }
         .nav-link.active { color: white; background: var(--primary); font-weight: bold; }
         .submenu-container { display: none; flex-direction: column; background: #111827; padding: 5px 0; }
+        .submenu-container.open { display: flex; }
         .sub-nav-link { color: #9ca3af; padding: 10px 20px 10px 45px; font-size: 0.95rem; text-decoration: none; display: flex; align-items: center; gap: 10px; cursor: pointer; border-left: 4px solid transparent; transition: all 0.2s; }
         .sub-nav-link:hover { color: white; background: var(--sidebar-hover); }
         .sub-nav-link.active { color: var(--primary); font-weight: bold; border-left-color: var(--primary); background: rgba(21, 179, 113, 0.05); }
@@ -49,10 +49,9 @@
         .cat-text-group { display: flex; flex-direction: column; text-align: left; }
         .cat-text-group h5 { font-size: 1.05rem; font-weight: 700; margin: 0; color: #0f172a; }
         .cat-text-group span { font-size: 0.8rem; color: #64748b; font-weight: 500; }
-        .bg-ts-warning{background:#fef3c7;color:#d97706}.bg-ts-primary{background:#e0f2fe;color:#0284c7}.bg-ts-danger{background:#fee2e2;color:#dc2626}.bg-ts-secondary{background:#f1f5f9;color:#475569}.bg-ts-orange{background:#ffedd5;color:#ea580c}.bg-ts-info{background:#ecfeff;color:#0891b2}.bg-ts-rose{background:#fff1f2;color:#e11d48}.bg-ts-dark{background:#f1f5f9;color:#1e293b}.bg-ts-success{background:#dcfce7;color:#16a34a}.bg-ts-indigo{background:#e0e7ff;color:#4f46e5}.bg-ts-teal{background:#ccfbf1;color:#0d9488}.bg-ts-pink{background:#fce7f3;color:#db2777}
+        .bg-ts-warning{background:#fef3c7;color:#d97706}.bg-ts-primary{background:#e0f2fe;color:#0284c7}.bg-ts-danger{background:#fee2e2;color:#dc2626}.bg-ts-secondary{background:#f1f5f9;color:#475569}.bg-ts-orange{background:#ffedd5;color:#ea580c}.bg-ts-info{background:#ecfeff;color:#0891b2}.bg-ts-rose{background:#fff1f2;color:#e11d48}.bg-ts-dark{background:#f1f5f9;color:#1e293b}.bg-ts-success{background:#dcfce7;color:#16a34a}.bg-ts-indigo{background:#e0e7ff;color:#4f46e5}.bg-ts-teal{background:#ccfbf1;color:#0d9488}.bg-ts-pink{background:#fce7f3;color:#db2777}.bg-ts-purple{background:#f3e8ff;color:#9333ea}
         .btn-logout { background: transparent; border: 2px solid #ef4444; color: #ef4444; border-radius: 12px; padding: 10px; font-weight: bold; width: 100%; cursor: pointer; }
 
-        /* ===== LOGIN SCREEN ===== */
         #login-screen { position: fixed; inset: 0; z-index: 1000; background: var(--dark-bg); display: flex; align-items: center; justify-content: center; padding: 1rem; }
         .login-box { background: white; border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.45); animation: slideUp 0.4s ease; }
         @keyframes slideUp { from { opacity:0; transform: translateY(28px); } to { opacity:1; transform: translateY(0); } }
@@ -71,26 +70,29 @@
         .login-divider { border: none; border-top: 1.5px dashed #e2e8f0; margin: 1.25rem 0; }
         .btn-login-submit { width: 100%; padding: 0.85rem; background: linear-gradient(135deg,#15b371,#0d9a5e); border: none; border-radius: 14px; color: white; font-family: 'Sarabun', sans-serif; font-size: 1.05rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(21,179,113,0.35); transition: transform .15s, box-shadow .15s, opacity .15s; margin-top: 1.5rem; }
         .btn-login-submit:hover  { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(21,179,113,0.4); }
-        
+
         .hosp-name-badge { background: rgba(21,179,113,0.15); color: var(--primary); border-radius: 8px; padding: 2px 10px; font-size: 0.8rem; font-weight: 700; margin-top: 4px; display: inline-block; }
         .recorder-badge  { color: #9ca3af; font-size: 0.8rem; margin-top: 2px; }
 
         #app, .view-section { display: none; }
         .view-section.active { display: block; }
-        
-        /* สไตล์หน้าดาวประเมิน (Star Rating Survey UI) - Minimalist & Responsive */
+
         .star-rating { direction: ltr; }
         .star-rating i { font-size: 1.8rem; color: #cbd5e1; cursor: pointer; transition: all 0.2s ease; margin-right: 5px;}
         .star-rating i:hover, .star-rating i.hover-active { color: #fbbf24; transform: scale(1.15); }
         .star-rating i.active { color: #fbbf24; }
         @media (max-width: 400px) { .star-rating i { font-size: 1.5rem; } }
-        
+
         .summary-header { background-color: #f8fafc; padding: 10px 15px; border-radius: 10px; font-weight: bold; margin-bottom: 15px; border-left: 4px solid var(--primary); display: flex; align-items: center; gap: 10px; font-size: 1rem; }
         .summary-list { list-style: none; padding: 0; margin: 0; }
         .summary-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; font-size: 0.9rem; }
         .summary-value { font-weight: 700; color: var(--primary); }
         .form-section-title { font-weight: bold; font-size: 1.15rem; margin-top: 1.5rem; margin-bottom: 1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; color: #1e293b; }
-        
+        .yoy-badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; font-weight: 700; }
+        .yoy-up { background:#fee2e2; color:#dc2626; }
+        .yoy-down { background:#dcfce7; color:#16a34a; }
+        .yoy-flat { background:#f1f5f9; color:#64748b; }
+
         #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center; color: white; flex-direction: column; text-align: center; padding: 1rem; }
     </style>
 </head>
@@ -131,7 +133,7 @@
                     <i class="fas fa-user login-input-icon"></i>
                     <input type="text" id="recorder-input" placeholder="ชื่อ-นามสกุล ผู้บันทึกข้อมูล" required autocomplete="name">
                 </div>
-                <div class="field-hint"><i class="fas fa-info-circle"></i> ชื่อนี้จะปรากฏใน Log การบันทึกข้อมูล</div>
+                <div class="field-hint"><i class="fas fa-info-circle"></i> ชื่อนี้จะปรากฏใน Log การบันทึกข้อมูล และกระดานจัดอันดับ</div>
             </div>
             <button type="submit" class="btn-login-submit" id="login-btn"><i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ</button>
         </form>
@@ -162,15 +164,16 @@
             <a class="nav-link text-warning" id="menu-superadmin" data-target="superadmin-view" style="display:none;"><i class="fas fa-globe"></i> ภาพรวมส่วนกลาง</a>
             <a class="nav-link active" data-target="dashboard-view"><i class="fas fa-chart-pie"></i> สรุปผลภาพรวม</a>
             <div class="nav-item-group">
-                <a class="nav-link" data-target="entry-view" id="main-entry-link"><i class="fas fa-edit"></i> บันทึกข้อมูลทรัพยากร</a>
+                <a class="nav-link" id="main-entry-link"><i class="fas fa-edit"></i> บันทึกข้อมูลทรัพยากร <i class="fas fa-chevron-down ms-auto small"></i></a>
                 <div class="submenu-container" id="entry-submenu">
-                    <a class="sub-nav-link rbac-energy"   data-section="sec-energy">   <i class="fas fa-bolt"></i>       พลังงานและน้ำ</a>
-                    <a class="sub-nav-link rbac-fuel"     data-section="sec-fuel">     <i class="fas fa-car"></i>        เชื้อเพลิงและแก๊ส</a>
-                    <a class="sub-nav-link rbac-air"      data-section="sec-air">      <i class="fas fa-snowflake"></i>  แอร์และดับเพลิง</a>
-                    <a class="sub-nav-link rbac-waste"    data-section="sec-waste">    <i class="fas fa-trash"></i>      การกำจัดขยะ</a>
-                    <a class="sub-nav-link rbac-supplies" data-section="sec-supplies"> <i class="fas fa-pump-soap"></i>  วัสดุสิ้นเปลือง</a>
-                    <a class="sub-nav-link rbac-chemical" data-section="sec-chemicals"><i class="fas fa-flask"></i>      สารเคมีและน้ำเสีย</a>
-                    <a class="sub-nav-link rbac-energy"   data-section="sec-solar">    <i class="fas fa-solar-panel"></i>Solar Cell</a>
+                    <a class="sub-nav-link rbac-energy"    data-section="sec-energy">    <i class="fas fa-bolt"></i>       พลังงานและน้ำ</a>
+                    <a class="sub-nav-link rbac-fuel"      data-section="sec-fuel">      <i class="fas fa-car"></i>        เชื้อเพลิงและแก๊ส</a>
+                    <a class="sub-nav-link rbac-air"       data-section="sec-air">       <i class="fas fa-snowflake"></i>  แอร์และดับเพลิง</a>
+                    <a class="sub-nav-link rbac-waste"     data-section="sec-waste">     <i class="fas fa-trash"></i>      การกำจัดขยะ</a>
+                    <a class="sub-nav-link rbac-supplies"  data-section="sec-supplies">  <i class="fas fa-pump-soap"></i>  วัสดุสิ้นเปลือง</a>
+                    <a class="sub-nav-link rbac-chemical"  data-section="sec-chemicals"> <i class="fas fa-flask"></i>      สารเคมีและน้ำเสีย</a>
+                    <a class="sub-nav-link rbac-medicines" data-section="sec-medicines"> <i class="fas fa-pills"></i>      ยาเฉพาะ</a>
+                    <a class="sub-nav-link rbac-energy"    data-section="sec-solar">     <i class="fas fa-solar-panel"></i>Solar Cell & ต้นไม้</a>
                 </div>
             </div>
             <a class="nav-link" data-target="summary-view" id="main-summary-link"><i class="fas fa-file-invoice"></i> สรุปข้อมูลรายหมวด</a>
@@ -191,14 +194,7 @@
             </div>
             <div>
                 <label class="text-muted small fw-bold">เลือกปี</label>
-                <!-- 📌 แก้ไขค่า Value เป็นปี ค.ศ. เพื่อให้ตรงกับ log.date ย้อนหลัง (ลบ 543) -->
-                <select id="filter-year" class="form-select">
-                    <option value="all">-- รวมทุกปี --</option>
-                    <option value="2026">ปี 2569 (2026)</option>
-                    <option value="2025">ปี 2568 (2025)</option>
-                    <option value="2024" selected>ปี 2567 (2024)</option>
-                    <option value="2023">ปี 2566 (2023)</option>
-                </select>
+                <select id="filter-year" class="form-select"></select>
             </div>
             <div>
                 <label class="text-muted small fw-bold">เลือกเดือน</label>
@@ -218,37 +214,38 @@
         <div id="superadmin-view" class="view-section">
             <h4 class="fw-bold text-dark mb-4"><i class="fas fa-globe text-primary me-2"></i> แดชบอร์ดผู้บริหารสูงสุด</h4>
             <div class="row g-3 mb-4">
-                <div class="col-12 col-md-4"><div class="kpi-card border-start border-primary border-4 h-100"><div><span class="text-muted small fw-bold">คาร์บอนฟุตพริ้นท์รวมทั้งองค์กร</span><h3 class="fw-bold text-primary m-0" id="sa-kpi-co2">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-primary"><i class="fas fa-cloud"></i></div></div></div>
+                <div class="col-12 col-md-4"><div class="kpi-card border-start border-primary border-4 h-100"><div><span class="text-muted small fw-bold">คาร์บอนฟุตพริ้นท์รวมทั้งองค์กร (เต็มระบบ)</span><h3 class="fw-bold text-primary m-0" id="sa-kpi-co2">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-primary"><i class="fas fa-cloud"></i></div></div></div>
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-warning border-4 h-100"><div><span class="text-muted small fw-bold">ใช้ไฟฟ้ารวมทั้งองค์กร</span><h3 class="fw-bold text-warning m-0" id="sa-kpi-elec">0</h3><span class="text-muted small">kWh</span></div><div class="kpi-icon bg-ts-warning"><i class="fas fa-bolt"></i></div></div></div>
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-danger border-4 h-100"><div><span class="text-muted small fw-bold">ทิ้งขยะรวมทั้งองค์กร</span><h3 class="fw-bold text-danger m-0" id="sa-kpi-waste">0</h3><span class="text-muted small">กิโลกรัม (kg)</span></div><div class="kpi-icon bg-ts-danger"><i class="fas fa-trash"></i></div></div></div>
             </div>
             <div class="row g-3 mb-4">
                 <div class="col-12">
                     <div class="chart-card">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                             <h5 class="mb-0"><i class="fas fa-chart-column text-primary me-2"></i> สถิติการใช้ทรัพยากร (รายเดือน)</h5>
                             <select id="chartCategorySelector" class="form-select form-select-sm border-primary" style="width: auto; cursor: pointer;">
                                 <option value="all">📊 รวมทุกทรัพยากร</option>
                                 <option value="energy">⚡ ไฟฟ้า</option>
                                 <option value="water">💧 น้ำประปา</option>
                                 <option value="waste">🗑️ ปริมาณขยะ</option>
+                                <option value="carbon">☁️ คาร์บอนฟุตพริ้นท์รวม (เต็มระบบ)</option>
                             </select>
                         </div>
                        <div style="position: relative; height: 320px; width: 100%;">
-    <canvas id="monthlyComparisonChart"></canvas>
-</div>
+                            <canvas id="monthlyComparisonChart"></canvas>
+                       </div>
                     </div>
                 </div>
             </div>
             <div class="row g-3 mb-4">
-                <div class="col-12 col-xl-7"><div class="chart-card"><h5 class="mb-3">เปรียบเทียบการปล่อยคาร์บอน แต่ละโรงพยาบาล</h5><div style="position: relative; height: 300px; width: 100%;">     <canvas id="hospitalsCompareChart"></canvas> </div></div></div>
+                <div class="col-12 col-xl-7"><div class="chart-card"><h5 class="mb-3">เปรียบเทียบการปล่อยคาร์บอน แต่ละโรงพยาบาล (เต็มระบบ)</h5><div style="position: relative; height: 300px; width: 100%;"><canvas id="hospitalsCompareChart"></canvas></div></div></div>
                 <div class="col-12 col-xl-5"><div class="chart-card overflow-auto h-100"><h5 class="mb-3">หมวดที่ปล่อย CO₂ ต่อ รพ. สูงสุด</h5><table class="table table-sm text-center align-middle small table-hover"><thead class="table-light"><tr><th class="text-start">โรงพยาบาล</th><th>หมวดที่ใช้มากสุด</th><th>ปริมาณ (kgCO₂e)</th></tr></thead><tbody id="top-resource-tbody"></tbody></table></div></div>
             </div>
             <div class="chart-card">
                 <h5 class="mb-3">สถานะการบันทึกข้อมูล (Compliance Check ภาพรวม)</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered text-center align-middle small table-hover">
-                        <thead class="table-light"><tr><th class="text-start">สาขาโรงพยาบาล</th><th>พลังงาน/น้ำ</th><th>เชื้อเพลิง</th><th>แอร์/ดับเพลิง</th><th>ขยะ</th><th>สิ้นเปลือง</th><th>เคมี/น้ำเสีย</th><th>สถานะภาพรวม</th></tr></thead>
+                        <thead class="table-light"><tr><th class="text-start">สาขาโรงพยาบาล</th><th>พลังงาน/น้ำ</th><th>เชื้อเพลิง</th><th>แอร์/ดับเพลิง</th><th>ขยะ</th><th>สิ้นเปลือง</th><th>เคมี/น้ำเสีย</th><th>ยาเฉพาะ</th><th>สถานะภาพรวม</th></tr></thead>
                         <tbody id="compliance-tbody"></tbody>
                     </table>
                 </div>
@@ -258,40 +255,99 @@
         <div id="dashboard-view" class="view-section active">
             <h4 class="fw-bold text-dark mb-4"><i class="fas fa-chart-pie text-success me-2"></i> แดชบอร์ดสรุปผล</h4>
             <div class="row g-3 mb-3">
-                <div class="col-12 col-md-4"><div class="kpi-card border-start border-success border-4 h-100"><div><span class="text-muted small fw-bold">CARBON FOOTPRINT รวม</span><h3 class="fw-bold text-success m-0" id="kpi-co2-total">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-success"><i class="fas fa-leaf"></i></div></div></div>
+                <div class="col-12 col-md-4"><div class="kpi-card border-start border-success border-4 h-100"><div><span class="text-muted small fw-bold">CARBON FOOTPRINT รวม (เต็มระบบ)</span><h3 class="fw-bold text-success m-0" id="kpi-co2-total">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-success"><i class="fas fa-leaf"></i></div></div></div>
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-warning border-4 h-100"><div><span class="text-muted small fw-bold">ปล่อยจากพลังงานไฟฟ้า</span><h3 class="fw-bold text-warning m-0" id="kpi-co2-elec">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-warning"><i class="fas fa-bolt"></i></div></div></div>
                 <div class="col-12 col-md-4"><div class="kpi-card border-start border-danger border-4 h-100"><div><span class="text-muted small fw-bold">ปล่อยจากเชื้อเพลิง/แก๊ส</span><h3 class="fw-bold text-danger m-0" id="kpi-co2-fuel">0.00</h3><span class="text-muted small">kgCO₂e</span></div><div class="kpi-icon bg-ts-danger"><i class="fas fa-car"></i></div></div></div>
             </div>
+
             <div class="row g-3 mb-4">
-                <div class="col-12 col-md-6"><div class="kpi-card border-start border-info border-4 h-100" style="background:#f0fdfa;"><div><span class="small fw-bold" style="color:#0d9488;">พลังงานสะอาดที่ผลิตได้ (Solar)</span><h3 class="fw-bold text-info m-0" id="kpi-solar-kwh">0.00</h3><span class="text-muted small">kWh (ลดคาร์บอน <span id="kpi-solar-co2" class="text-danger fw-bold">0.00</span> kgCO₂e)</span></div><div class="kpi-icon bg-white text-info shadow-sm"><i class="fas fa-solar-panel"></i></div></div></div>
-                <div class="col-12 col-md-6"><div class="kpi-card border-start border-primary border-4 h-100" style="background:#f0fdf4;"><div><span class="text-success small fw-bold">เทียบเท่าการปลูกต้นไม้</span><h3 class="fw-bold text-success m-0" id="kpi-trees">0</h3><span class="text-muted small">ต้น</span></div><div class="kpi-icon bg-white text-success shadow-sm"><i class="fas fa-tree"></i></div></div></div>
+                <div class="col-12">
+                    <div class="chart-card" style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5); border:2px solid #bbf7d0;">
+                        <h5 class="mb-3 fw-bold text-success"><i class="fas fa-recycle me-2"></i>การลดและชดเชยคาร์บอน (Carbon Reduction & Offset)</h5>
+                        <div class="row g-3">
+                            <div class="col-12 col-md-4">
+                                <div class="kpi-card h-100 border-start border-success border-4">
+                                    <div><span class="text-muted small fw-bold">♻️ รีไซเคิลขยะ ลดคาร์บอนได้</span><h3 class="fw-bold text-success m-0" id="kpi-offset-recycle">0.00</h3><span class="text-muted small">kgCO₂e</span></div>
+                                    <div class="kpi-icon bg-ts-success"><i class="fas fa-recycle"></i></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="kpi-card h-100 border-start border-info border-4">
+                                    <div><span class="text-muted small fw-bold">☀️ โซลาร์เซลล์ ลดคาร์บอนได้</span><h3 class="fw-bold text-info m-0" id="kpi-offset-solar">0.00</h3><span class="text-muted small">kgCO₂e (<span id="kpi-solar-kwh">0</span> kWh)</span></div>
+                                    <div class="kpi-icon bg-ts-info"><i class="fas fa-solar-panel"></i></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="kpi-card h-100 border-start border-primary border-4">
+                                    <div><span class="text-muted small fw-bold">🌳 ต้นไม้ที่มี ลดคาร์บอนได้</span><h3 class="fw-bold text-primary m-0" id="kpi-offset-trees">0.00</h3><span class="text-muted small">kgCO₂e (<span id="kpi-trees-count">0</span> ต้น)</span></div>
+                                    <div class="kpi-icon bg-ts-primary"><i class="fas fa-tree"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3 pt-3 border-top border-success-subtle">
+                            <span class="fw-bold text-dark">รวมการลด/ชดเชยคาร์บอนทั้งหมด:</span>
+                            <span class="fw-bold text-success fs-5 ms-2" id="kpi-offset-total">0.00 kgCO₂e</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="row g-4">
-                <div class="col-12 col-xl-8">     <div class="chart-card">         <h5>แนวโน้มการปล่อย Carbon Footprint</h5>         <div style="position: relative; height: 300px; width: 100%;">             <canvas id="electricityTrendChart"></canvas>         </div>     </div> </div>
+                <div class="col-12 col-xl-8"><div class="chart-card"><h5>แนวโน้มการปล่อย Carbon Footprint แบบเต็มระบบ (รายเดือน)</h5><div style="position: relative; height: 300px; width: 100%;"><canvas id="electricityTrendChart"></canvas></div></div></div>
                 <div class="col-12 col-xl-4">
-                    <div class="chart-card mb-4"><h5>สัดส่วนแหล่งปล่อยคาร์บอน</h5><canvas id="co2PieChart"></canvas></div>
+                    <div class="chart-card mb-4"><h5>สัดส่วนแหล่งปล่อยคาร์บอน (เต็มระบบ)</h5><canvas id="co2PieChart"></canvas></div>
                     <div class="chart-card"><h5>สัดส่วนการจัดการขยะ</h5><canvas id="wastePieChart"></canvas></div>
                 </div>
-                <div class="col-12 col-xl-8">     <div class="chart-card h-100">         <h5 class="mb-3">เปรียบเทียบปริมาณคาร์บอนย้อนหลัง 3 ปี</h5>         <div style="position: relative; height: 300px; width: 100%;">             <canvas id="yearlyCompareChart"></canvas>         </div>     </div> </div>
+                <div class="col-12 col-xl-8"><div class="chart-card h-100"><h5 class="mb-3">เปรียบเทียบปริมาณคาร์บอนย้อนหลัง 3 ปี (เต็มระบบ)</h5><div style="position: relative; height: 300px; width: 100%;"><canvas id="yearlyCompareChart"></canvas></div></div></div>
                 <div class="col-12 col-xl-4"><div class="chart-card h-100"><h5 class="mb-3"><i class="fas fa-exclamation-triangle text-danger me-2"></i>Top 3 แหล่งปล่อยคาร์บอน</h5><ul class="list-group list-group-flush small" id="top-emissions-list"></ul></div></div>
             </div>
         </div>
 
         <div id="summary-view" class="view-section">
             <h4 class="fw-bold text-dark mb-4"><i class="fas fa-file-invoice text-primary me-2"></i> สรุปข้อมูลแยกตามหมวด</h4>
+            <div id="summary-year-note" class="alert alert-success py-2 px-3 mb-3" style="border-radius:12px; font-size:0.9rem;"></div>
             <div class="row g-3" id="summary-cards-container"></div>
         </div>
 
         <div id="entry-view" class="view-section">
-            <!-- (เมนูกรอกข้อมูลถูกเก็บไว้ครบถ้วน) -->
             <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-edit text-success me-2"></i> บันทึกข้อมูลทรัพยากร (ส่วนที่รับผิดชอบ)</h4>
-            <div class="form-section-wrapper rbac-energy" id="sec-energy"><div class="form-section-title">⚡ พลังงานและน้ำประปา</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="elec"><div class="cat-icon-box bg-ts-warning"><i class="fas fa-bolt"></i></div><div class="cat-text-group"><h5>ไฟฟ้าหลัก (kWh)</h5></div></div><div class="cat-btn cat-trigger" data-mode="water"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-tint"></i></div><div class="cat-text-group"><h5>น้ำประปา (m³)</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-fuel" id="sec-fuel"><div class="form-section-title">🚗 เชื้อเพลิงและแก๊สหุงต้ม</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="fuel-vehicle"><div class="cat-icon-box bg-ts-danger"><i class="fas fa-car"></i></div><div class="cat-text-group"><h5>น้ำมันรถ (ลิตร)</h5></div></div><div class="cat-btn cat-trigger" data-mode="fuel-machine"><div class="cat-icon-box bg-ts-secondary"><i class="fas fa-cogs"></i></div><div class="cat-text-group"><h5>น้ำมันเครื่องจักร (ลิตร)</h5></div></div><div class="cat-btn cat-trigger" data-mode="lpg"><div class="cat-icon-box bg-ts-orange"><i class="fas fa-fire"></i></div><div class="cat-text-group"><h5>ก๊าซหุงต้ม (LPG)</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-air" id="sec-air"><div class="form-section-title">❄️ ระบบปรับอากาศ & สารดับเพลิง</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="air-ref"><div class="cat-icon-box bg-ts-info"><i class="fas fa-snowflake"></i></div><div class="cat-text-group"><h5>สารทำความเย็นแอร์</h5></div></div><div class="cat-btn cat-trigger" data-mode="fire-ext"><div class="cat-icon-box bg-ts-rose"><i class="fas fa-fire-extinguisher"></i></div><div class="cat-text-group"><h5>ถังดับเพลิง CO₂</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-waste" id="sec-waste"><div class="form-section-title">🗑️ การกำจัดขยะ</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="waste-main"><div class="cat-icon-box bg-ts-dark"><i class="fas fa-trash"></i></div><div class="cat-text-group"><h5>ขยะ 4 ประเภท</h5></div></div><div class="cat-btn cat-trigger" data-mode="waste-recycle"><div class="cat-icon-box bg-ts-success"><i class="fas fa-recycle"></i></div><div class="cat-text-group"><h5>ขยะรีไซเคิล</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-supplies" id="sec-supplies"><div class="form-section-title">🧼 วัสดุสิ้นเปลือง</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="clean-supplies"><div class="cat-icon-box bg-ts-indigo"><i class="fas fa-pump-soap"></i></div><div class="cat-text-group"><h5>ทำความสะอาด/ของใช้</h5></div></div><div class="cat-btn cat-trigger" data-mode="office-supplies"><div class="cat-icon-box bg-ts-secondary"><i class="fas fa-file-alt"></i></div><div class="cat-text-group"><h5>วัสดุสำนักงาน</h5></div></div><div class="cat-btn cat-trigger" data-mode="medical-supplies"><div class="cat-icon-box bg-ts-teal"><i class="fas fa-head-side-mask"></i></div><div class="cat-text-group"><h5>อุปกรณ์แพทย์เซฟตี้</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-chemical" id="sec-chemicals"><div class="form-section-title">🧪 สารเคมี & ระบบบำบัดน้ำเสีย</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="med-chemicals"><div class="cat-icon-box bg-ts-pink"><i class="fas fa-flask"></i></div><div class="cat-text-group"><h5>เคมีและยาสลบ</h5></div></div><div class="cat-btn cat-trigger" data-mode="water-treatment"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-water"></i></div><div class="cat-text-group"><h5>ระบบบำบัดน้ำเสีย</h5></div></div></div></div>
-            <div class="form-section-wrapper rbac-energy" id="sec-solar"><div class="form-section-title">☀️ พลังงานทดแทน</div><div class="cat-grid"><div class="cat-btn cat-trigger" data-mode="solar-system"><div class="cat-icon-box bg-ts-success"><i class="fas fa-solar-panel"></i></div><div class="cat-text-group"><h5>ระบบ Solar Cell</h5></div></div></div></div>
+            <div class="form-section-wrapper rbac-energy" id="sec-energy"><div class="form-section-title">⚡ พลังงานและน้ำประปา</div><div class="cat-grid">
+                <div class="cat-btn cat-trigger" data-mode="elec"><div class="cat-icon-box bg-ts-warning"><i class="fas fa-bolt"></i></div><div class="cat-text-group"><h5>ไฟฟ้าหลัก (kWh)</h5></div></div>
+                <div class="cat-btn cat-trigger" data-mode="water"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-tint"></i></div><div class="cat-text-group"><h5>น้ำประปา (m³)</h5></div></div>
+            </div></div>
+            <div class="form-section-wrapper rbac-fuel" id="sec-fuel"><div class="form-section-title">🚗 เชื้อเพลิงและแก๊สหุงต้ม</div><div class="cat-grid">
+                <div class="cat-btn cat-trigger" data-mode="fuel-vehicle"><div class="cat-icon-box bg-ts-danger"><i class="fas fa-car"></i></div><div class="cat-text-group"><h5>น้ำมันรถ (ลิตร)</h5></div></div>
+                <div class="cat-btn cat-trigger" data-mode="fuel-machine"><div class="cat-icon-box bg-ts-secondary"><i class="fas fa-cogs"></i></div><div class="cat-text-group"><h5>น้ำมันเครื่องจักร (ลิตร)</h5></div></div>
+                <div class="cat-btn cat-trigger" data-mode="lpg"><div class="cat-icon-box bg-ts-orange"><i class="fas fa-fire"></i></div><div class="cat-text-group"><h5>ก๊าซหุงต้ม (LPG)</h5></div></div>
+            </div></div>
+            <div class="form-section-wrapper rbac-air" id="sec-air"><div class="form-section-title">❄️ ระบบปรับอากาศ & สารดับเพลิง</div><div class="cat-grid">
+                <div class="cat-btn cat-trigger" data-mode="air-ref"><div class="cat-icon-box bg-ts-info"><i class="fas fa-snowflake"></i></div><div class="cat-text-group"><h5>สารทำความเย็นแอร์</h5></div></div>
+                <div class="cat-btn cat-trigger" data-mode="fire-ext"><div class="cat-icon-box bg-ts-rose"><i class="fas fa-fire-extinguisher"></i></div><div class="cat-text-group"><h5>ถังดับเพลิง CO₂</h5></div></div>
+            </div></div>
+            <div class="form-section-wrapper rbac-waste" id="sec-waste"><div class="form-section-title">🗑️ การกำจัดขยะ</div><div class="cat-grid">
+                <div class="cat-btn cat-trigger" data-mode="waste-main"><div class="cat-icon-box bg-ts-dark"><i class="fas fa-trash"></i></div><div class="cat-text-group"><h5>ขยะ 4 ประเภท</h5></div></div>
+                <div class="cat-btn cat-trigger" data-mode="waste-recycle"><div class="cat-icon-box bg-ts-success"><i class="fas fa-recycle"></i></div><div class="cat-text-group"><h5>ขยะรีไซเคิล</h5></div></div>
+            </div></div>
+            <div class="form-section-wrapper rbac-supplies" id="sec-supplies"><div class="form-section-title">🧼 วัสดุสิ้นเปลือง</div><div class="cat-grid">
+                <div class="cat-btn cat-trigger" data-mode="clean-supplies"><div class="cat-icon-box bg-ts-indigo"><i class="fas fa-pump-soap"></i></div><div class="cat-text-group"><h5>ทำความสะอาด/ของใช้</h5></div></div>
+                <div class="cat-btn cat-trigger" data-mode="office-supplies"><div class="cat-icon-box bg-ts-secondary"><i class="fas fa-file-alt"></i></div><div class="cat-text-group"><h5>วัสดุสำนักงาน</h5></div></div>
+                <div class="cat-btn cat-trigger" data-mode="medical-supplies"><div class="cat-icon-box bg-ts-teal"><i class="fas fa-head-side-mask"></i></div><div class="cat-text-group"><h5>อุปกรณ์แพทย์เซฟตี้</h5></div></div>
+            </div></div>
+            <div class="form-section-wrapper rbac-chemical" id="sec-chemicals"><div class="form-section-title">🧪 สารเคมี & ระบบบำบัดน้ำเสีย</div><div class="cat-grid">
+                <div class="cat-btn cat-trigger" data-mode="med-chemicals"><div class="cat-icon-box bg-ts-pink"><i class="fas fa-flask"></i></div><div class="cat-text-group"><h5>เคมีและยาสลบ</h5></div></div>
+                <div class="cat-btn cat-trigger" data-mode="water-treatment"><div class="cat-icon-box bg-ts-primary"><i class="fas fa-water"></i></div><div class="cat-text-group"><h5>ระบบบำบัดน้ำเสีย</h5></div></div>
+            </div></div>
+
+            <!-- ✅ หมวดใหม่: ยาเฉพาะ -->
+            <div class="form-section-wrapper rbac-medicines" id="sec-medicines"><div class="form-section-title">💊 ยาเฉพาะ (เวชภัณฑ์เฉพาะกลุ่ม)</div><div class="cat-grid">
+                <div class="cat-btn cat-trigger" data-mode="specific-medicines"><div class="cat-icon-box bg-ts-purple"><i class="fas fa-pills"></i></div><div class="cat-text-group"><h5>ยาเฉพาะ 4 ชนิด</h5><span>Amlodipine, GPO-L-ONE, Gabapentin, Omeprazole</span></div></div>
+            </div></div>
+
+            <!-- ✅ ฟอร์ม "จำนวนต้นไม้" อยู่หมวดเดียวกับ Solar Cell -->
+            <div class="form-section-wrapper rbac-energy" id="sec-solar"><div class="form-section-title">☀️ พลังงานทดแทนและพื้นที่สีเขียว</div><div class="cat-grid">
+                <div class="cat-btn cat-trigger" data-mode="solar-system"><div class="cat-icon-box bg-ts-success"><i class="fas fa-solar-panel"></i></div><div class="cat-text-group"><h5>ระบบ Solar Cell</h5></div></div>
+                <div class="cat-btn cat-trigger" data-mode="tree-count"><div class="cat-icon-box bg-ts-teal"><i class="fas fa-tree"></i></div><div class="cat-text-group"><h5>จำนวนต้นไม้</h5></div></div>
+            </div></div>
         </div>
 
         <div id="leaderboard-view" class="view-section">
@@ -301,19 +357,18 @@
                     <h5 class="fw-bold m-0"><i class="fas fa-trophy text-warning me-2"></i>อันดับผู้เข้าร่วมสูงสุดของโรงพยาบาล: <span id="lb-hosp-name" class="text-primary"></span></h5>
                     <button class="btn btn-sm btn-outline-secondary" id="btn-refresh-lb"><i class="fas fa-sync-alt"></i> รีเฟรชข้อมูลล่าสุด</button>
                 </div>
-                <div id="leaderboard-loading" class="text-center py-5">
+                <div id="leaderboard-loading" class="text-center py-5" style="display:none;">
                     <div class="spinner-border text-success spinner-border-sm" role="status"></div>
                     <span class="ms-2 small text-muted">กำลังดึงข้อมูลอันดับ...</span>
+                </div>
+                <div id="leaderboard-empty" class="text-center py-5 text-muted" style="display:none;">
+                    <i class="fas fa-inbox fs-1 mb-2 d-block"></i> ยังไม่มีข้อมูลการบันทึกของโรงพยาบาลนี้
                 </div>
                 <div id="leaderboard-content" style="display: none;">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle m-0">
                             <thead class="table-light text-center">
-                                <tr>
-                                    <th style="width: 80px;">อันดับ</th>
-                                    <th class="text-start">รายชื่อบุคลากร (สังกัด)</th>
-                                    <th style="width: 180px;">จำนวนครั้งที่เข้าร่วม</th>
-                                </tr>
+                                <tr><th style="width: 80px;">อันดับ</th><th class="text-start">รายชื่อบุคลากร (สังกัด)</th><th style="width: 180px;">จำนวนครั้งที่เข้าร่วม</th></tr>
                             </thead>
                             <tbody id="leaderboard-tbody"></tbody>
                         </table>
@@ -396,7 +451,6 @@
     </div>
 </div>
 
-<!-- JS Libraries via Secure CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.12/sweetalert2.all.min.js" crossorigin="anonymous"></script>
@@ -406,7 +460,7 @@ document.addEventListener("DOMContentLoaded", function () {
     'use strict';
 
     // ============================================
-    // การจำลอง Google Script Proxy สำหรับรันออฟไลน์/ผ่าน GitHub Pages
+    // Google Script Proxy (จำลองการเชื่อมต่อ Backend ผ่าน fetch เมื่อรันนอก GAS)
     // ============================================
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzKOye_3wZzhMTJX0mQ_eTcQk_Jo34NX0M9la2PKOsgtfA0JmAKfSFan500XutvSvrZ/exec";
 
@@ -431,7 +485,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     actionName = 'fetchDashboard'; payloadData = { hospName: args[0], role: args[1] };
                                 } else if (prop === 'fetchHospitalSummary') { actionName = 'fetchSummary';
                                 } else { console.warn("Unknown function:", prop); return; }
-                                
+
                                 fetch(WEB_APP_URL, {
                                     method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
                                     body: JSON.stringify({ action: actionName, payload: payloadData })
@@ -456,17 +510,198 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ============================================
-    // ตัวแปรและสถานะระบบหลัก
+    // สถานะระบบหลัก (ไม่มีการใช้ localStorage/sessionStorage ตามข้อกำหนด Sandbox)
     // ============================================
     let SESSION = { hospName: '', recorderName: '', role: '' };
-    let windowSurveyDone = false; 
-    let charts = { co2Pie:null, trend:null, yearly:null, wastePie:null, hospCompare:null };
-    let localDB = { logs:[] };
-    let surveyScores = { q1: 0, q2: 0, q3: 0 }; 
+    let windowSurveyDone = false;
+    let localDB = { logs: [] };
+    let surveyScores = { q1: 0, q2: 0, q3: 0 };
     let monthlyBarChart = null;
-    let rawChartData = []; 
+    let charts = { co2Pie:null, wastePie:null, trend:null, yearly:null, hospCompare:null };
 
-    // ตั้งค่าเริ่มต้นของระบบ UI
+    // ============================================
+    // ปัจจัยการปล่อยคาร์บอน (Emission Factors) - ครอบคลุมทุกหมวดของระบบ
+    // ============================================
+    const EF = {
+        elec: 0.4999, water: 0.344, diesel: 2.708, gasoline: 2.189, lpg: 3.111,
+        hfc134a: 1430, r22: 1810, fireCo2: 1,
+        wasteGen: 2.53, wasteInf: 2.90, wasteOrg: 0.50, wasteHaz: 3.50,
+        cleanPow: 1.2, cleanLiq: 0.0015, bags: 1.8, paperReam: 4.5, inkCart: 2.5, maskBox: 1.8, glovePcs: 0.006,
+        alcLiq: 0.002, ammonia: 0.003, n2o: 265,
+        isoflurane: 190.7, desflurane: 883.9, sevoflurane: 49.4,
+        wtNaoh: 1.1, wtAlum: 0.5, wtSulfuric: 0.3, wtLime: 0.75, wtChlorine: 0.9,
+        medTablet: 0.01, treeAbsorb: 9.5,
+        recycle: { paper:0.9, alum:9.0, plastic:1.5, iron:1.8, metal:1.8, glass:0.3 }
+    };
+
+    // ============================================
+    // ฟอร์มไดนามิก: นิยามฟิลด์ทุกหมวด (รวมหมวดใหม่ "ยาเฉพาะ" และ "จำนวนต้นไม้")
+    // ============================================
+    const FORM_DEFS = {
+        'elec': { title: '⚡ บันทึกไฟฟ้าหลัก', fields: [
+            { id:'elec-kwh', label:'จำนวนไฟฟ้าที่ใช้ (kWh)', type:'number' }
+        ]},
+        'water': { title: '💧 บันทึกน้ำประปา', fields: [
+            { id:'water-m3', label:'จำนวนน้ำประปาที่ใช้ (m³)', type:'number' }
+        ]},
+        'fuel-vehicle': { title: '🚗 น้ำมันยานพาหนะ', fields: [
+            { id:'diesel-v', label:'น้ำมันดีเซล (ลิตร)', type:'number' },
+            { id:'gasoline-v', label:'น้ำมันเบนซิน/แก๊สโซฮอล์ (ลิตร)', type:'number' }
+        ]},
+        'fuel-machine': { title: '⚙️ น้ำมันเครื่องจักร', fields: [
+            { id:'diesel-m', label:'น้ำมันดีเซล เครื่องจักร (ลิตร)', type:'number' },
+            { id:'gasoline-m', label:'น้ำมันเบนซิน เครื่องจักร (ลิตร)', type:'number' }
+        ]},
+        'lpg': { title: '🔥 ก๊าซหุงต้ม (LPG)', fields: [
+            { id:'total-lpg', label:'ปริมาณก๊าซ LPG ที่ใช้ (kg)', type:'number' }
+        ]},
+        'air-ref': { title: '❄️ สารทำความเย็นแอร์', fields: [
+            { id:'hfc134a', label:'สาร HFC-134a เติมเข้าระบบ (kg)', type:'number' },
+            { id:'r22', label:'สาร R-22 เติมเข้าระบบ (kg)', type:'number' }
+        ]},
+        'fire-ext': { title: '🧯 ถังดับเพลิง CO₂', fields: [
+            { id:'total-fire', label:'น้ำหนักสาร CO₂ ที่เติม/ใช้ (kg)', type:'number' }
+        ]},
+        'waste-main': { title: '🗑️ ขยะ 4 ประเภท', fields: [
+            { id:'waste-gen', label:'ขยะทั่วไป (kg)', type:'number' },
+            { id:'waste-inf', label:'ขยะติดเชื้อ (kg)', type:'number' },
+            { id:'waste-org', label:'ขยะอินทรีย์ (kg)', type:'number' },
+            { id:'waste-haz', label:'ขยะอันตราย/เคมี (kg)', type:'number' }
+        ]},
+        'waste-recycle': { title: '♻️ ขยะรีไซเคิล', fields: [
+            { id:'rc-paper', label:'กระดาษ (kg)', type:'number' },
+            { id:'rc-alum', label:'อลูมิเนียม (kg)', type:'number' },
+            { id:'rc-plastic', label:'พลาสติก (kg)', type:'number' },
+            { id:'rc-iron', label:'เหล็ก (kg)', type:'number' },
+            { id:'rc-metal', label:'โลหะอื่นๆ (kg)', type:'number' },
+            { id:'rc-glass', label:'แก้ว (kg)', type:'number' }
+        ]},
+        'clean-supplies': { title: '🧼 วัสดุทำความสะอาด/ของใช้', fields: [
+            { id:'clean-pow', label:'ผงซักฟอก/สารทำความสะอาดชนิดผง (kg)', type:'number' },
+            { id:'clean-liq', label:'น้ำยาทำความสะอาดชนิดน้ำ (ml)', type:'number' },
+            { id:'bags-kg', label:'ถุงพลาสติก/ถุงขยะ (kg)', type:'number' }
+        ]},
+        'office-supplies': { title: '📄 วัสดุสำนักงาน', fields: [
+            { id:'paper-ream', label:'กระดาษ A4 (รีม)', type:'number' },
+            { id:'ink-cart', label:'หมึกพิมพ์ (ตลับ)', type:'number' }
+        ]},
+        'medical-supplies': { title: '😷 อุปกรณ์แพทย์เซฟตี้', fields: [
+            { id:'mask-box', label:'หน้ากากอนามัย (กล่อง)', type:'number' },
+            { id:'glove-pcs', label:'ถุงมือยาง (ชิ้น)', type:'number' }
+        ]},
+        'med-chemicals': { title: '🧪 เคมีและยาสลบ', fields: [
+            { id:'alc-liq', label:'แอลกอฮอล์ (ml)', type:'number' },
+            { id:'ammonia', label:'แอมโมเนีย (ml)', type:'number' },
+            { id:'nitrous-kg', label:'ไนตรัสออกไซด์ N₂O (kg)', type:'number' },
+            { id:'isoflurane', label:'Isoflurane (ขวด)', type:'number' },
+            { id:'desflurane', label:'Desflurane (ขวด)', type:'number' },
+            { id:'sevoflurane', label:'Sevoflurane (ขวด)', type:'number' }
+        ]},
+        'water-treatment': { title: '💦 ระบบบำบัดน้ำเสีย', fields: [
+            { id:'wt-type', label:'ประเภทระบบบำบัด', type:'select', options:[
+                {value:'บ่อลึก (ลึกกว่า 2 เมตร)', label:'บ่อลึก (ลึกกว่า 2 เมตร)'},
+                {value:'บ่อตื้น (ตื้นกว่า 2 เมตร)', label:'บ่อตื้น (ตื้นกว่า 2 เมตร)'},
+                {value:'ระบบเติมอากาศ', label:'ระบบเติมอากาศ'}
+            ]},
+            { id:'wt-vol', label:'ปริมาณน้ำเสียที่บำบัด (m³)', type:'number' },
+            { id:'wt-cod', label:'ค่า COD เฉลี่ย (mg/L)', type:'number' },
+            { id:'wt-naoh', label:'สาร NaOH (kg)', type:'number' },
+            { id:'wt-alum', label:'สารส้ม (kg)', type:'number' },
+            { id:'wt-sulfuric', label:'กรดซัลฟิวริก (kg)', type:'number' },
+            { id:'wt-lime', label:'ปูนขาว (kg)', type:'number' },
+            { id:'wt-chlorine', label:'คลอรีน (kg)', type:'number' }
+        ]},
+        // ✅ หมวดใหม่: ยาเฉพาะ
+        'specific-medicines': { title: '💊 ยาเฉพาะ 4 ชนิด', fields: [
+            { id:'amlodipine', label:'Amlodipine (เม็ด)', type:'number' },
+            { id:'gpo-l-one', label:'GPO-L-ONE (เม็ด)', type:'number' },
+            { id:'gabapentin', label:'Gabapentin (เม็ด)', type:'number' },
+            { id:'omeprazole', label:'Omeprazole (เม็ด)', type:'number' }
+        ]},
+        'solar-system': { title: '☀️ ระบบ Solar Cell', fields: [
+            { id:'solar-mode', label:'วิธีบันทึกข้อมูล', type:'select', options:[
+                {value:'meter', label:'มีมิเตอร์วัดพลังงานที่ผลิตได้'},
+                {value:'nometer', label:'ไม่มีมิเตอร์ (คำนวณจากกำลังผลิต x วัน)'}
+            ]},
+            { id:'solar-kwh', label:'พลังงานที่ผลิตได้ (kWh) [กรณีมีมิเตอร์]', type:'number' },
+            { id:'solar-cap', label:'กำลังผลิตติดตั้ง (kW) [กรณีไม่มีมิเตอร์]', type:'number' },
+            { id:'solar-days', label:'จำนวนวันที่ใช้งาน [กรณีไม่มีมิเตอร์]', type:'number' },
+            { id:'solar-panels', label:'จำนวนแผงโซลาร์เซลล์ (แผง)', type:'number' },
+            { id:'solar-internal-use', label:'พลังงานที่ใช้ภายใน (kWh)', type:'number' }
+        ]},
+        // ✅ ฟอร์มใหม่: จำนวนต้นไม้ (อยู่หมวดเดียวกับ Solar Cell)
+        'tree-count': { title: '🌳 จำนวนต้นไม้', fields: [
+            { id:'tree-count', label:'จำนวนต้นไม้ทั้งหมด (ต้น)', type:'number' }
+        ]}
+    };
+
+    // สร้างโครงสร้างข้อมูลเปล่าเริ่มต้น (ใช้ร่วมกันทุกฟังก์ชันเพื่อความสอดคล้อง)
+    function createEmptyTotals() {
+        return {
+            elec_kwh:0, water_m3:0, diesel_v:0, gasoline_v:0, diesel_m:0, gasoline_m:0, total_lpg:0, hfc134a:0, r22:0, total_fire:0,
+            waste_gen:0, waste_inf:0, waste_org:0, waste_haz:0, rc_paper:0, rc_alum:0, rc_plastic:0, rc_iron:0, rc_metal:0, rc_glass:0,
+            clean_pow:0, clean_liq:0, bags_kg:0, paper_ream:0, ink_cart:0, mask_box:0, glove_pcs:0, alc_liq:0, ammonia:0, nitrous_kg:0,
+            isoflurane:0, desflurane:0, sevoflurane:0, wt_vol:0, wt_naoh:0, wt_alum:0, wt_sulfuric:0, wt_lime:0, wt_chlorine:0,
+            solar_internal_use:0, solar_kwh:0, solar_cap:0, solar_panels:0, solar_days:0, wt_type:'', wt_cod:0, solar_mode:'meter',
+            amlodipine:0, gpo_l_one:0, gabapentin:0, omeprazole:0, tree_count:0
+        };
+    }
+
+    // คำนวณคาร์บอนฟุตพริ้นท์แบบเต็มระบบ (รวมทุกหมวด) จากข้อมูลจริงเท่านั้น
+    function calcCarbonBreakdown(t) {
+        const elec   = (t.elec_kwh||0) * EF.elec;
+        const water  = (t.water_m3||0) * EF.water;
+        const fuelV  = (t.diesel_v||0)*EF.diesel + (t.gasoline_v||0)*EF.gasoline;
+        const fuelM  = (t.diesel_m||0)*EF.diesel + (t.gasoline_m||0)*EF.gasoline;
+        const lpg    = (t.total_lpg||0) * EF.lpg;
+        const refrig = (t.hfc134a||0)*EF.hfc134a + (t.r22||0)*EF.r22;
+        const fireExt= (t.total_fire||0) * EF.fireCo2;
+        const wasteGen = (t.waste_gen||0)*EF.wasteGen;
+        const wasteInf = (t.waste_inf||0)*EF.wasteInf;
+        const wasteOrg = (t.waste_org||0)*EF.wasteOrg;
+        const wasteHaz = (t.waste_haz||0)*EF.wasteHaz;
+        const consumables = (t.clean_pow||0)*EF.cleanPow + (t.clean_liq||0)*EF.cleanLiq + (t.bags_kg||0)*EF.bags
+                           + (t.paper_ream||0)*EF.paperReam + (t.ink_cart||0)*EF.inkCart + (t.mask_box||0)*EF.maskBox
+                           + (t.glove_pcs||0)*EF.glovePcs;
+        const chemicals = (t.alc_liq||0)*EF.alcLiq + (t.ammonia||0)*EF.ammonia + (t.nitrous_kg||0)*EF.n2o
+                           + (t.isoflurane||0)*EF.isoflurane + (t.desflurane||0)*EF.desflurane + (t.sevoflurane||0)*EF.sevoflurane;
+        const waterTreatment = (t.wt_naoh||0)*EF.wtNaoh + (t.wt_alum||0)*EF.wtAlum + (t.wt_sulfuric||0)*EF.wtSulfuric
+                           + (t.wt_lime||0)*EF.wtLime + (t.wt_chlorine||0)*EF.wtChlorine;
+        const medicines = ((t.amlodipine||0)+(t.gpo_l_one||0)+(t.gabapentin||0)+(t.omeprazole||0)) * EF.medTablet;
+
+        const total = elec+water+fuelV+fuelM+lpg+refrig+fireExt+wasteGen+wasteInf+wasteOrg+wasteHaz+consumables+chemicals+waterTreatment+medicines;
+
+        return {
+            elec, water, fuelV, fuelM, lpg, fuel: fuelV+fuelM+lpg, refrig, fireExt, air: refrig+fireExt,
+            wasteGen, wasteInf, wasteOrg, wasteHaz, wasteTotal: wasteGen+wasteInf+wasteOrg+wasteHaz,
+            consumables, chemicals, waterTreatment, medicines, total
+        };
+    }
+
+    // คำนวณการลด/ชดเชยคาร์บอนจากรีไซเคิล, โซลาร์เซลล์ และต้นไม้ (ข้อมูลจริงจากระบบ)
+    function calcCarbonOffset(t) {
+        const recycling = (t.rc_paper||0)*EF.recycle.paper + (t.rc_alum||0)*EF.recycle.alum + (t.rc_plastic||0)*EF.recycle.plastic
+                         + (t.rc_iron||0)*EF.recycle.iron + (t.rc_metal||0)*EF.recycle.metal + (t.rc_glass||0)*EF.recycle.glass;
+        const solarKwh = (t.solar_mode==='nometer') ? (t.solar_cap||0)*(t.solar_days||0)*4 : (t.solar_kwh||0);
+        const solar = solarKwh * EF.elec;
+        const trees = (t.tree_count||0) * EF.treeAbsorb;
+        return { recycling, solar, solarKwh, trees, total: recycling+solar+trees };
+    }
+
+    // สร้างตัวเลือกปี พ.ศ./ค.ศ. อัตโนมัติ โดยยึดปีปัจจุบันเป็น default เรียงจากมากไปน้อย
+    function populateYearDropdown() {
+        const sel = document.getElementById('filter-year');
+        if (!sel) return;
+        const curY = new Date().getFullYear();
+        let html = '<option value="all">-- รวมทุกปี --</option>';
+        for (let y = curY; y >= curY - 4; y--) {
+            const be = y + 543;
+            html += `<option value="${y}" ${y===curY?'selected':''}>ปี ${be} (${y})</option>`;
+        }
+        sel.innerHTML = html;
+    }
+    populateYearDropdown();
+
     const dateInput = document.getElementById('entry-date');
     if (dateInput) { dateInput.value = new Date().toISOString().split('T')[0]; }
 
@@ -487,14 +722,13 @@ document.addEventListener("DOMContentLoaded", function () {
         el.classList.add('input-error');
         el.focus();
     }
-    
     ['hospname-input','password-input','recorder-input'].forEach(id => {
         let el = document.getElementById(id);
         if (el) el.addEventListener('input', function () { this.classList.remove('input-error'); });
     });
 
     // ============================================
-    // การควบคุมสิทธิ์และเปิดปิดเมนู (RBAC / Filtering)
+    // RBAC: ควบคุมสิทธิ์การมองเห็นเมนู/ฟิลเตอร์ตาม role
     // ============================================
     function applyRBAC(role) {
         let r = String(role).toLowerCase().trim();
@@ -515,7 +749,7 @@ document.addEventListener("DOMContentLoaded", function () {
         localDB.logs.forEach(log => { if (log.hospName) hospSet.add(log.hospName); });
         let sel = document.getElementById('filter-hospital');
         if (!sel) return;
-        
+
         if (SESSION.role === 'superadmin') {
             sel.innerHTML = '<option value="all">-- ภาพรวมองค์กร ทุกโรงพยาบาล --</option>';
             hospSet.forEach(h => { sel.innerHTML += `<option value="${h}">${h}</option>`; });
@@ -555,7 +789,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         document.getElementById('mobile-hospital-name').innerText  = SESSION.hospName;
                         document.getElementById('hosp-name-display').innerText     = SESSION.hospName;
                         document.getElementById('recorder-display-name').innerText = SESSION.recorderName;
-                        if(document.getElementById('lb-hosp-name')) document.getElementById('lb-hosp-name').innerText = SESSION.hospName;
+                        if (document.getElementById('lb-hosp-name')) document.getElementById('lb-hosp-name').innerText = SESSION.hospName;
 
                         applyRBAC(SESSION.role);
                         document.getElementById('loading-text').innerText = 'ดึงข้อมูลล่าสุด...';
@@ -563,19 +797,24 @@ document.addEventListener("DOMContentLoaded", function () {
                         google.script.run
                             .withSuccessHandler(function (logsData) {
                                 localDB.logs = logsData || [];
-                                rawChartData = logsData || []; 
                                 loadingEl.style.display = 'none';
                                 document.getElementById('login-screen').style.display = 'none';
                                 document.getElementById('app').style.display = 'block';
                                 populateHospitalDropdown();
                                 applyFilters();
                                 initSurveyStars();
-                                loadLeaderboard(); 
+                                loadLeaderboard();
                             })
                             .withFailureHandler(function (err) {
+                                // ไม่มีข้อมูล -> ยังคงเข้าระบบได้ แสดงข้อมูลว่างทั้งหมด (ไม่ใช่ข้อมูลจำลอง)
+                                localDB.logs = [];
                                 loadingEl.style.display = 'none';
-                                document.getElementById('login-btn').disabled = false;
-                                Swal.fire('ผิดพลาด', 'ดึงข้อมูลล็อกรหัสไม่สำเร็จ: ' + err.message, 'error');
+                                document.getElementById('login-screen').style.display = 'none';
+                                document.getElementById('app').style.display = 'block';
+                                populateHospitalDropdown();
+                                applyFilters();
+                                initSurveyStars();
+                                loadLeaderboard();
                             })
                             .fetchDashboardData(SESSION.hospName, SESSION.role);
                     } else {
@@ -592,6 +831,108 @@ document.addEventListener("DOMContentLoaded", function () {
                 .checkHospitalLogin(hospName, password, recorderName);
         });
     }
+
+    // ============================================
+    // เมนู Sidebar: การเปิด/ปิด, สลับหน้า, submenu
+    // ============================================
+    function switchView(targetId) {
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+        const target = document.getElementById(targetId);
+        if (target) target.classList.add('active');
+
+        document.querySelectorAll('.nav-link[data-target]').forEach(nl => nl.classList.remove('active'));
+        const activeLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
+        if (activeLink) activeLink.classList.add('active');
+
+        if (targetId === 'leaderboard-view') loadLeaderboard();
+        if (targetId === 'summary-view') loadCategorySummary();
+        if (targetId === 'superadmin-view') renderSuperAdminDash();
+    }
+
+    document.querySelectorAll('.nav-link[data-target]').forEach(link => {
+        link.addEventListener('click', function () {
+            switchView(this.dataset.target);
+            document.getElementById('app-sidebar').classList.remove('active');
+            document.getElementById('sidebar-overlay').classList.remove('active');
+        });
+    });
+
+    const mainEntryLink = document.getElementById('main-entry-link');
+    const entrySubmenu  = document.getElementById('entry-submenu');
+    if (mainEntryLink) {
+        mainEntryLink.addEventListener('click', function () {
+            entrySubmenu.classList.toggle('open');
+            switchView('entry-view');
+        });
+    }
+    document.querySelectorAll('.sub-nav-link').forEach(sl => {
+        sl.addEventListener('click', function (e) {
+            e.stopPropagation();
+            switchView('entry-view');
+            document.querySelectorAll('.sub-nav-link').forEach(s => s.classList.remove('active'));
+            this.classList.add('active');
+            const sectionEl = document.getElementById(this.dataset.section);
+            if (sectionEl) sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('app-sidebar').classList.remove('active');
+            document.getElementById('sidebar-overlay').classList.remove('active');
+        });
+    });
+
+    const mobileToggleBtn = document.getElementById('mobile-toggle-btn');
+    const sidebarOverlay  = document.getElementById('sidebar-overlay');
+    if (mobileToggleBtn) {
+        mobileToggleBtn.addEventListener('click', function () {
+            document.getElementById('app-sidebar').classList.add('active');
+            sidebarOverlay.classList.add('active');
+        });
+    }
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', function () {
+            document.getElementById('app-sidebar').classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        });
+    }
+
+    // ============================================
+    // ฟอร์มไดนามิก: เปิด Modal กรอกข้อมูลตามหมวดที่เลือก
+    // ============================================
+    function renderSelectOptions(opts, currentVal) {
+        return opts.map(o => `<option value="${o.value}" ${o.value===currentVal?'selected':''}>${o.label}</option>`).join('');
+    }
+
+    function openEntryForm(mode) {
+        const def = FORM_DEFS[mode];
+        if (!def) return;
+
+        document.getElementById('form-title').innerText = def.title;
+        document.getElementById('main-cat-key').value = mode;
+        document.getElementById('form-category-name').value = mode;
+
+        let html = '';
+        def.fields.forEach(f => {
+            if (f.type === 'select') {
+                html += `<div class="mb-3">
+                    <label class="small">${f.label}</label>
+                    <select class="form-select" id="${f.id}" data-label="${f.label}">
+                        ${renderSelectOptions(f.options, f.options[0].value)}
+                    </select>
+                </div>`;
+            } else {
+                html += `<div class="mb-3">
+                    <label class="small">${f.label}</label>
+                    <input type="number" step="0.01" min="0" class="form-control" id="${f.id}" data-label="${f.label}" placeholder="0" value="0">
+                </div>`;
+            }
+        });
+        document.getElementById('dynamic-fields-container').innerHTML = html;
+        document.getElementById('entry-date').value = new Date().toISOString().split('T')[0];
+
+        new bootstrap.Modal(document.getElementById('formModal')).show();
+    }
+
+    document.querySelectorAll('.cat-trigger').forEach(btn => {
+        btn.addEventListener('click', function () { openEntryForm(this.dataset.mode); });
+    });
 
     // ============================================
     // การบันทึกข้อมูลทรัพยากร
@@ -612,28 +953,23 @@ document.addEventListener("DOMContentLoaded", function () {
             let payload = { date: dateVal, hospName: SESSION.hospName, recorderName: SESSION.recorderName, formId: formCategoryName, values: [], logs: [] };
 
             inputs.forEach(inp => {
-                if (inp.offsetParent !== null) {
-                    let v = inp.value;
-                    let label = inp.getAttribute('data-label') || (inp.previousElementSibling ? inp.previousElementSibling.innerText.split('(')[0].trim() : inp.id);
-                    payload.values.push({ label:label, value:v });
-                    if (!inp.id.includes('size') && !inp.id.includes('qty')) {
-                        payload.logs.push({ date:dateVal, cat:cat, id:inp.id, val:v, hospName:SESSION.hospName, recorderName:SESSION.recorderName });
-                    }
-                }
+                let v = inp.value;
+                let label = inp.getAttribute('data-label') || inp.id;
+                payload.values.push({ label:label, value:v });
+                payload.logs.push({ date:dateVal, cat:cat, id:inp.id, val:v, hospName:SESSION.hospName, recorderName:SESSION.recorderName });
             });
 
             google.script.run
                 .withSuccessHandler(function (res) {
                     if (res.success) {
                         localDB.logs = localDB.logs.concat(payload.logs);
-                        rawChartData = localDB.logs;
                         loadingEl.style.display = 'none';
                         const formModal = bootstrap.Modal.getInstance(document.getElementById('formModal'));
                         if (formModal) formModal.hide();
-                        
+
                         applyFilters();
-                        loadLeaderboard(); 
-                        
+                        loadLeaderboard();
+
                         setTimeout(() => {
                             if (!windowSurveyDone) {
                                 document.getElementById('survey-form-container').style.display = 'block';
@@ -649,15 +985,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 })
                 .withFailureHandler(function (err) {
+                    // แม้ backend ล้มเหลว ก็ยัง merge เข้า local เพื่อไม่ให้ผู้ใช้เสียข้อมูลที่กรอก (แสดงผลได้ระหว่าง session)
+                    localDB.logs = localDB.logs.concat(payload.logs);
                     loadingEl.style.display = 'none';
-                    Swal.fire('ผิดพลาด', 'บันทึกล้มเหลว: ' + err.message, 'error');
+                    const formModal = bootstrap.Modal.getInstance(document.getElementById('formModal'));
+                    if (formModal) formModal.hide();
+                    applyFilters();
+                    Swal.fire('บันทึกไม่สำเร็จกับเซิร์ฟเวอร์', 'ข้อมูลถูกเก็บไว้ในหน้าจอนี้ชั่วคราว กรุณาตรวจสอบการเชื่อมต่อ: ' + err.message, 'warning');
                 })
                 .saveResourceData(payload);
         });
     }
 
     // ============================================
-    // การจัดการดาวและแบบประเมินความพึงพอใจ
+    // แบบประเมินความพึงพอใจ
     // ============================================
     function initSurveyStars() {
         document.querySelectorAll('.star-rating i').forEach(s => {
@@ -670,12 +1011,12 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             s.onclick = function () {
                 let v = this.dataset.value;
-                let q = this.parentElement.dataset.question; 
-                surveyScores[q] = v; 
+                let q = this.parentElement.dataset.question;
+                surveyScores[q] = v;
                 this.parentElement.querySelectorAll('i').forEach(star => {
                     star.classList.toggle('fa-solid', star.dataset.value <= v);
                     star.classList.toggle('fa-regular', star.dataset.value > v);
-                    star.classList.toggle('active', star.dataset.value <= v); 
+                    star.classList.toggle('active', star.dataset.value <= v);
                 });
             };
         });
@@ -697,535 +1038,428 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ============================================
-    // การคำนวณสถิติ การกรองตัวเลข กราฟ
+    // การกรองและรวมข้อมูลจริงจากระบบ (ไม่มีข้อมูลจำลอง)
     // ============================================
-      function getFilteredData(specificYear = null) {
-        // ถ้าระบุ specificYear มา ให้ใช้ค่านั้น ถ้าไม่ระบุให้ดึงจาก Dropdown
-        let year       = specificYear !== null ? specificYear : (document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all');
-        let month      = document.getElementById('filter-month') ? document.getElementById('filter-month').value : 'all';
-        
-        // ล็อกสิทธิ์: ถ้าไม่ใช่ superadmin ให้ดูข้อมูลได้เฉพาะ SESSION.hospName ของตัวเองเท่านั้น
-        let hospFilter = (SESSION.role === 'superadmin') ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
+    function getFilteredData(specificYear, specificHosp, specificMonth) {
+        let year  = specificYear !== undefined ? specificYear : (document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all');
+        let month = specificMonth !== undefined ? specificMonth : (document.getElementById('filter-month') ? document.getElementById('filter-month').value : 'all');
+        let hospFilter = specificHosp !== undefined ? specificHosp : ((SESSION.role === 'superadmin') ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName);
 
-        let t = {
-            elec_kwh:0, water_m3:0, diesel_v:0, gasoline_v:0, diesel_m:0, gasoline_m:0, total_lpg:0, hfc134a:0, r22:0, total_fire:0,
-            waste_gen:0, waste_inf:0, waste_org:0, waste_haz:0, rc_paper:0, rc_alum:0, rc_plastic:0, rc_iron:0, rc_metal:0, rc_glass:0,
-            clean_pow:0, clean_liq:0, bags_kg:0, paper_ream:0, ink_cart:0, mask_box:0, glove_pcs:0, alc_liq:0, ammonia:0, nitrous_kg:0,
-            isoflurane:0, desflurane:0, sevoflurane:0, wt_vol:0, wt_naoh:0, wt_alum:0, wt_sulfuric:0, wt_lime:0, wt_chlorine:0,
-            solar_internal_use:0, solar_kwh:0, solar_cap:0, solar_panels:0, solar_days:0, wt_type:'บ่อลึก (ลึกกว่า 2 เมตร)', wt_cod:282, solar_mode:'meter'
-        };
+        let t = createEmptyTotals();
         if (!localDB.logs) return t;
 
         localDB.logs.forEach(log => {
             if (!log.date) return;
             let parts = log.date.split('-');
-            
-            // เช็คว่าเป็นข้อมูลของโรงพยาบาลที่ผู้ใช้มีสิทธิ์ดูหรือไม่
             let hospMatch = (hospFilter === 'all' || hospFilter === (log.hospName || ''));
-            
-            if ((year === 'all' || year === parts[0]) && (month === 'all' || month === parts[1]) && hospMatch) {
-                let val = parseFloat(log.val || log.value || log.amount || 0);
+
+            if ((year === 'all' || String(year) === parts[0]) && (month === 'all' || month === parts[1]) && hospMatch) {
+                let val = parseFloat(log.val || log.value || log.amount || 0) || 0;
                 let dbKey = String(log.id||'').replace(/-/g, '_');
-                
-                if (log.id === 'wt-type' || log.id === 'solar-mode') { t[dbKey] = log.val || val; }
-                else if (log.id === 'wt-cod') { t.wt_cod = val; }
+
+                if (log.id === 'wt-type' || log.id === 'solar-mode') { t[dbKey] = log.val; }
                 else if (t[dbKey] !== undefined) { t[dbKey] += val; }
             }
         });
         return t;
     }
-    function getYearlyCarbonTotal(targetYear) {
-        let elec = 0, fuel = 0;
-        let hospFilter = (SESSION.role === 'superadmin') ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
-        if (!localDB.logs) return 0;
-        localDB.logs.forEach(log => {
-            if (!log.date || !log.date.startsWith(targetYear)) return;
-            if (hospFilter !== 'all' && hospFilter !== (log.hospName || '')) return;
-            
-            let val = parseFloat(log.val || log.value || log.amount || 0);
-            let dbKey = String(log.id||'').replace(/-/g, '_');
-            
-            if (dbKey === 'elec_kwh') elec += val;
-            else if (dbKey === 'diesel_v'  || dbKey === 'diesel_m')   fuel += val * 2.708;
-            else if (dbKey === 'gasoline_v'|| dbKey === 'gasoline_m') fuel += val * 2.189;
-            else if (dbKey === 'total_lpg') fuel += val * 3.111;
+
+    // สร้างชุดข้อมูลรวมรายเดือน (12 เดือน) จากข้อมูลจริงเท่านั้น
+    function buildMonthlyTotals(year, hosp) {
+        let months = [];
+        for (let m=0;m<12;m++) months.push(createEmptyTotals());
+        (localDB.logs||[]).forEach(log => {
+            if(!log.date) return;
+            let parts = log.date.split('-');
+            if (year !== 'all' && parts[0] !== String(year)) return;
+            if (hosp !== 'all' && hosp !== (log.hospName || '')) return;
+            let mIdx = parseInt(parts[1],10) - 1;
+            if (isNaN(mIdx) || mIdx < 0 || mIdx > 11) return;
+            let val = parseFloat(log.val || log.value || log.amount || 0) || 0;
+            let dbKey = String(log.id||'').replace(/-/g,'_');
+            if (log.id === 'wt-type' || log.id === 'solar-mode') { months[mIdx][dbKey] = log.val; }
+            else if (months[mIdx][dbKey] !== undefined) { months[mIdx][dbKey] += val; }
         });
-        return (elec * 0.4999) + fuel;
+        return months;
+    }
+
+    function getYearTotalCarbon(year, hosp) {
+        let t = getFilteredData(String(year), hosp, 'all');
+        return calcCarbonBreakdown(t).total;
     }
 
     function applyFilters() {
         let el = document.getElementById('loading-overlay');
-        if(el) { document.getElementById('loading-text').innerText = 'ประมวลผลข้อมูล...'; el.style.display = 'flex'; }
-        setTimeout(() => { 
+        if (el) { document.getElementById('loading-text').innerText = 'ประมวลผลข้อมูล...'; el.style.display = 'flex'; }
+        setTimeout(() => {
             try { loadCharts(); } catch(err) { console.error(err); }
             try { loadCategorySummary(); } catch(err) { console.error(err); }
             try { renderSuperAdminDash(); } catch(err) { console.error(err); }
-            try { updateMonthlyChart(); } catch(err) { console.error(err); } // ต้องอัปเดตกราฟแท่งรายเดือนด้วย
-            if(el) el.style.display='none'; 
-        }, 300);
+            try { updateMonthlyChart(); } catch(err) { console.error(err); }
+            if (el) el.style.display='none';
+        }, 250);
     }
-    
-    // Binding the applyFilters event handler securely
+
     const btnApplyFilters = document.getElementById('btn-apply-filters');
-    if(btnApplyFilters) btnApplyFilters.addEventListener('click', applyFilters);
+    if (btnApplyFilters) btnApplyFilters.addEventListener('click', applyFilters);
     ['filter-hospital', 'filter-year', 'filter-month'].forEach(id => {
         let el = document.getElementById(id);
-        if(el) el.addEventListener('change', applyFilters);
+        if (el) el.addEventListener('change', applyFilters);
     });
 
+    // ============================================
+    // กราฟรายเดือน (SuperAdmin) - ใช้ข้อมูลจริงเต็มระบบ
+    // ============================================
     function updateMonthlyChart() {
         const ctx = document.getElementById('monthlyComparisonChart');
-        if(!ctx) return;
+        if (!ctx) return;
 
         const selectedCat = document.getElementById('chartCategorySelector') ? document.getElementById('chartCategorySelector').value : 'all';
         const yearFilter  = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
         const hospFilter  = SESSION.role === 'superadmin' ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
 
-        let dataEnergy = new Array(12).fill(0);
-        let dataWater = new Array(12).fill(0);
-        let dataWaste = new Array(12).fill(0);
-
-        rawChartData.forEach(log => {
-            if(!log.date) return;
-            let logY = log.date.split('-')[0];
-            let hospMatch = (hospFilter === 'all' || hospFilter === (log.hospName || ''));
-            
-            if ((yearFilter === 'all' || yearFilter === logY) && hospMatch) {
-                let d = new Date(log.date || new Date());
-                let m = d.getMonth(); 
-                
-                // ✅ แก้ไขตรรกะการคัดแยกหมวดหมู่และตรวจสอบ key (.val)
-                let amount = parseFloat(log.val || log.amount || log.value || log.total || 0); 
-                let logId = String(log.id || '').toLowerCase();
-                let logCat = String(log.cat || '').toLowerCase();
-
-                if (logId.includes('elec') || logCat.includes('ไฟ') || logCat.includes('พลังงาน')) {
-                    dataEnergy[m] += amount;
-                } else if (logId.includes('water') || logCat.includes('น้ำ')) {
-                    dataWater[m] += amount;
-                } else if (logId.includes('waste') || logId.includes('rc-') || logCat.includes('ขยะ')) {
-                    dataWaste[m] += amount;
-                }
-            }
-        });
+        let monthlyTotals = buildMonthlyTotals(yearFilter, hospFilter);
+        let dataEnergy = monthlyTotals.map(t => t.elec_kwh || 0);
+        let dataWater  = monthlyTotals.map(t => t.water_m3 || 0);
+        let dataWaste  = monthlyTotals.map(t => (t.waste_gen||0)+(t.waste_inf||0)+(t.waste_org||0)+(t.waste_haz||0));
+        let dataCarbon = monthlyTotals.map(t => calcCarbonBreakdown(t).total);
 
         let datasets = [];
-        if (selectedCat === 'all' || selectedCat === 'energy') datasets.push({ label: 'ไฟฟ้า', data: dataEnergy, backgroundColor: '#ffc107', borderRadius: 4 });
-        if (selectedCat === 'all' || selectedCat === 'water')  datasets.push({ label: 'น้ำประปา', data: dataWater, backgroundColor: '#0dcaf0', borderRadius: 4 });
-        if (selectedCat === 'all' || selectedCat === 'waste')  datasets.push({ label: 'ปริมาณขยะ', data: dataWaste, backgroundColor: '#dc3545', borderRadius: 4 });
+        if (selectedCat === 'all' || selectedCat === 'energy') datasets.push({ label: 'ไฟฟ้า (kWh)', data: dataEnergy, backgroundColor: '#ffc107', borderRadius: 4 });
+        if (selectedCat === 'all' || selectedCat === 'water')  datasets.push({ label: 'น้ำประปา (m³)', data: dataWater, backgroundColor: '#0dcaf0', borderRadius: 4 });
+        if (selectedCat === 'all' || selectedCat === 'waste')  datasets.push({ label: 'ปริมาณขยะ (kg)', data: dataWaste, backgroundColor: '#dc3545', borderRadius: 4 });
+        if (selectedCat === 'carbon') datasets.push({ label: 'คาร์บอนฟุตพริ้นท์รวม (kgCO₂e)', data: dataCarbon, backgroundColor: '#15b371', borderRadius: 4 });
 
-        if(monthlyBarChart) monthlyBarChart.destroy();
+        if (monthlyBarChart) monthlyBarChart.destroy();
         monthlyBarChart = new Chart(ctx, {
             type: 'bar',
-            data: { labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'], datasets: datasets },
-            options: {
-                responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } },
-                plugins: { tooltip: { mode: 'index', intersect: false }, legend: { position: 'top' } }
-            }
+            data: { labels: ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'], datasets: datasets },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { tooltip: { mode: 'index', intersect: false }, legend: { position: 'top' } } }
         });
     }
-
     const chartCategorySelector = document.getElementById('chartCategorySelector');
-    if(chartCategorySelector) chartCategorySelector.addEventListener('change', updateMonthlyChart);
+    if (chartCategorySelector) chartCategorySelector.addEventListener('change', updateMonthlyChart);
 
+    // ============================================
+    // Dashboard หลัก: KPI, Offset, Pie, Trend, Yearly Compare, Top3
+    // ============================================
     function loadCharts() {
         let t = getFilteredData();
-        let cElec  = t.elec_kwh * 0.4999;
-        let cFuel  = ((t.diesel_v+t.diesel_m)*2.708) + ((t.gasoline_v+t.gasoline_m)*2.189) + (t.total_lpg*3.111);
-        let cTotal = cElec + cFuel;
+        let breakdown = calcCarbonBreakdown(t);
+        let offset = calcCarbonOffset(t);
 
-        if(document.getElementById('kpi-co2-total')) document.getElementById('kpi-co2-total').innerText = cTotal.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-        if(document.getElementById('kpi-co2-elec')) document.getElementById('kpi-co2-elec').innerText  = cElec.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-        if(document.getElementById('kpi-co2-fuel')) document.getElementById('kpi-co2-fuel').innerText  = cFuel.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+        setText('kpi-co2-total', breakdown.total.toFixed(2));
+        setText('kpi-co2-elec',  breakdown.elec.toFixed(2));
+        setText('kpi-co2-fuel',  breakdown.fuel.toFixed(2));
 
-        let solarKwh = (t.solar_mode==='nometer') ? (t.solar_cap||0)*(t.solar_days||0)*4 : (t.solar_kwh||0);
-        let solarCo2 = solarKwh*0.4999, trees = Math.floor(solarCo2/9.5);
-        if(document.getElementById('kpi-solar-kwh')) document.getElementById('kpi-solar-kwh').innerText = solarKwh.toLocaleString(undefined,{minimumFractionDigits:2});
-        if(document.getElementById('kpi-solar-co2')) document.getElementById('kpi-solar-co2').innerText = solarCo2.toLocaleString(undefined,{minimumFractionDigits:2});
-        if(document.getElementById('kpi-trees')) document.getElementById('kpi-trees').innerText     = trees.toLocaleString();
+        setText('kpi-offset-recycle', offset.recycling.toFixed(2));
+        setText('kpi-offset-solar',   offset.solar.toFixed(2));
+        setText('kpi-solar-kwh',      offset.solarKwh.toFixed(0));
+        setText('kpi-offset-trees',   offset.trees.toFixed(2));
+        setText('kpi-trees-count',    (t.tree_count||0).toLocaleString());
+        setText('kpi-offset-total',   offset.total.toFixed(2) + ' kgCO₂e');
 
-        let emSrc = [
-            {name:'ไฟฟ้า',       value:cElec,                                                         icon:'fa-bolt', color:'text-warning'},
-            {name:'น้ำมันรถ',      value:(t.diesel_v||0)*2.708+(t.gasoline_v||0)*2.189,           icon:'fa-car',  color:'text-danger'},
-            {name:'น้ำมันเครื่อง', value:(t.diesel_m||0)*2.708+(t.gasoline_m||0)*2.189,           icon:'fa-cogs', color:'text-secondary'},
-            {name:'ก๊าซ LPG',      value:(t.total_lpg||0)*3.111,                                  icon:'fa-fire', color:'text-orange'}
-        ].sort((a,b)=>b.value-a.value);
-        let top3 = emSrc.slice(0,3).filter(x => x.value > 0).map(x => `<li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom"><div class="fw-bold"><i class="fas ${x.icon} ${x.color} me-2"></i>${x.name}</div><span class="badge bg-danger rounded-pill">${x.value.toLocaleString(undefined,{maximumFractionDigits:1})}</span></li>`).join('');
-        if(document.getElementById('top-emissions-list')) document.getElementById('top-emissions-list').innerHTML = top3 || '<li class="list-group-item text-center text-muted py-3">ยังไม่มีข้อมูล</li>';
+        // Pie: สัดส่วนแหล่งปล่อยคาร์บอนเต็มระบบ
+        renderPieChart('co2Pie', 'co2PieChart',
+            ['ไฟฟ้า','น้ำประปา','เชื้อเพลิง','แอร์/ดับเพลิง','ขยะ','วัสดุสิ้นเปลือง','เคมี/น้ำเสีย','ยาเฉพาะ'],
+            [breakdown.elec, breakdown.water, breakdown.fuel, breakdown.air, breakdown.wasteTotal, breakdown.consumables, breakdown.chemicals+breakdown.waterTreatment, breakdown.medicines],
+            ['#ffc107','#0dcaf0','#dc3545','#6f42c1','#495057','#4f46e5','#db2777','#9333ea']
+        );
 
-        if(charts.co2Pie) charts.co2Pie.destroy();
-        if(document.getElementById('co2PieChart')) charts.co2Pie = new Chart(document.getElementById('co2PieChart').getContext('2d'),{type:'doughnut',data:{labels:['ไฟฟ้า','เชื้อเพลิง'],datasets:[{data:[cElec||0,cFuel||0],backgroundColor:['#ffc107','#dc3545']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+        // Pie: สัดส่วนขยะ
+        renderPieChart('wastePie', 'wastePieChart',
+            ['ทั่วไป','ติดเชื้อ','อินทรีย์','อันตราย'],
+            [t.waste_gen||0, t.waste_inf||0, t.waste_org||0, t.waste_haz||0],
+            ['#94a3b8','#dc2626','#16a34a','#f59e0b']
+        );
 
-        let rcTotal = (t.rc_paper||0)+(t.rc_alum||0)+(t.rc_plastic||0)+(t.rc_iron||0)+(t.rc_metal||0)+(t.rc_glass||0);
-        let wOther  = (t.waste_gen||0)+(t.waste_inf||0)+(t.waste_org||0)+(t.waste_haz||0);
-        if(charts.wastePie) charts.wastePie.destroy();
-        if(document.getElementById('wastePieChart')) charts.wastePie = new Chart(document.getElementById('wastePieChart').getContext('2d'),{type:'doughnut',data:{labels:['รีไซเคิลได้','ขยะอื่นๆ'],datasets:[{data:[rcTotal,wOther],backgroundColor:['#15b371','#6c757d']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+        // Trend: คาร์บอนฟุตพริ้นท์รายเดือน (เต็มระบบ)
+        const yearFilter = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
+        const hospFilter = SESSION.role === 'superadmin' ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
+        let monthlyTotals = buildMonthlyTotals(yearFilter, hospFilter);
+        let monthlyCarbon = monthlyTotals.map(mt => calcCarbonBreakdown(mt).total);
 
-        let pastTotal = localDB.logs.length>0 ? cTotal*0.8 : 0;
-        if(charts.trend) charts.trend.destroy();
-        if(document.getElementById('electricityTrendChart')) charts.trend = new Chart(document.getElementById('electricityTrendChart').getContext('2d'),{type:'line',data:{labels:['งวดที่แล้ว','งวดที่เลือก'],datasets:[{label:'kgCO₂e',data:[pastTotal,cTotal],borderColor:'#15b371',fill:true,tension:0.3}]}});
+        renderLineChart('trend', 'electricityTrendChart',
+            ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'],
+            'คาร์บอนฟุตพริ้นท์รวม (kgCO₂e)', monthlyCarbon, '#15b371'
+        );
 
-        if(charts.yearly) charts.yearly.destroy();
-        if(document.getElementById('yearlyCompareChart')) charts.yearly = new Chart(document.getElementById('yearlyCompareChart').getContext('2d'),{type:'bar',data:{labels:['2567','2568','2569'],datasets:[{label:'Carbon Footprint',data:[getYearlyCarbonTotal('2024'),getYearlyCarbonTotal('2025'),getYearlyCarbonTotal('2026')],backgroundColor:'#15b371'}]}});
+        // Yearly Compare: 3 ปีย้อนหลัง เทียบกับปีตั้งต้น (real data, 0 หากไม่มี)
+        const curY = new Date().getFullYear();
+        const baseYear = (yearFilter === 'all') ? curY : parseInt(yearFilter,10);
+        let yLabels = [], yData = [];
+        for (let i=2; i>=0; i--) {
+            let y = baseYear - i;
+            yLabels.push('ปี ' + (y+543));
+            yData.push(getYearTotalCarbon(y, hospFilter));
+        }
+        renderBarChartSingle('yearly', 'yearlyCompareChart', yLabels, 'คาร์บอนฟุตพริ้นท์รวม (kgCO₂e)', yData, '#0284c7');
+
+        // Top 3 แหล่งปล่อยคาร์บอน
+        let sources = [
+            { name:'ไฟฟ้า', val: breakdown.elec },
+            { name:'น้ำประปา', val: breakdown.water },
+            { name:'เชื้อเพลิง/แก๊ส', val: breakdown.fuel },
+            { name:'แอร์/ดับเพลิง', val: breakdown.air },
+            { name:'ขยะ', val: breakdown.wasteTotal },
+            { name:'วัสดุสิ้นเปลือง', val: breakdown.consumables },
+            { name:'เคมี/น้ำเสีย', val: breakdown.chemicals+breakdown.waterTreatment },
+            { name:'ยาเฉพาะ', val: breakdown.medicines }
+        ].sort((a,b) => b.val - a.val).slice(0,3);
+
+        let topList = document.getElementById('top-emissions-list');
+        if (topList) {
+            topList.innerHTML = sources.map((s,i) => `
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><span class="badge bg-danger me-2">${i+1}</span>${s.name}</span>
+                    <span class="fw-bold text-danger">${s.val.toFixed(2)} kgCO₂e</span>
+                </li>`).join('') || '<li class="list-group-item text-muted text-center">ยังไม่มีข้อมูล</li>';
+        }
     }
+
+    function setText(id, txt) { const el = document.getElementById(id); if (el) el.innerText = txt; }
+
+    function renderPieChart(chartKey, canvasId, labels, data, colors) {
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) return;
+        if (charts[chartKey]) charts[chartKey].destroy();
+        charts[chartKey] = new Chart(ctx, {
+            type: 'doughnut',
+            data: { labels: labels, datasets: [{ data: data, backgroundColor: colors }] },
+            options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } } }
+        });
+    }
+
+    function renderLineChart(chartKey, canvasId, labels, label, data, color) {
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) return;
+        if (charts[chartKey]) charts[chartKey].destroy();
+        charts[chartKey] = new Chart(ctx, {
+            type: 'line',
+            data: { labels: labels, datasets: [{ label: label, data: data, borderColor: color, backgroundColor: color+'22', fill: true, tension: 0.35 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+        });
+    }
+
+    function renderBarChartSingle(chartKey, canvasId, labels, label, data, color) {
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) return;
+        if (charts[chartKey]) charts[chartKey].destroy();
+        charts[chartKey] = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: labels, datasets: [{ label: label, data: data, backgroundColor: color, borderRadius: 6 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+        });
+    }
+
+    // ============================================
+    // สรุปข้อมูลรายหมวด (พร้อมแก้ปมปีตั้งต้น vs ปีย้อนหลัง)
+    // ============================================
+    const CATEGORY_DEFS = [
+        { key:'energy',   icon:'fa-bolt',           color:'warning',  title:'พลังงานและน้ำ',
+          items:[ {label:'ไฟฟ้า', field:'elec_kwh', unit:'kWh'}, {label:'น้ำประปา', field:'water_m3', unit:'m³'} ] },
+        { key:'fuel',      icon:'fa-car',            color:'danger',   title:'เชื้อเพลิงและแก๊ส',
+          items:[ {label:'น้ำมันดีเซล (รถ)', field:'diesel_v', unit:'ลิตร'}, {label:'น้ำมันเบนซิน (รถ)', field:'gasoline_v', unit:'ลิตร'},
+                  {label:'น้ำมันดีเซล (เครื่องจักร)', field:'diesel_m', unit:'ลิตร'}, {label:'ก๊าซหุงต้ม LPG', field:'total_lpg', unit:'kg'} ] },
+        { key:'air',       icon:'fa-snowflake',      color:'info',     title:'แอร์และดับเพลิง',
+          items:[ {label:'สาร HFC-134a', field:'hfc134a', unit:'kg'}, {label:'สาร R-22', field:'r22', unit:'kg'}, {label:'สาร CO₂ ดับเพลิง', field:'total_fire', unit:'kg'} ] },
+        { key:'waste',     icon:'fa-trash',          color:'dark',     title:'การกำจัดขยะ',
+          items:[ {label:'ขยะทั่วไป', field:'waste_gen', unit:'kg'}, {label:'ขยะติดเชื้อ', field:'waste_inf', unit:'kg'}, {label:'ขยะอินทรีย์', field:'waste_org', unit:'kg'}, {label:'ขยะอันตราย', field:'waste_haz', unit:'kg'} ] },
+        { key:'supplies',  icon:'fa-pump-soap',      color:'indigo',   title:'วัสดุสิ้นเปลือง',
+          items:[ {label:'ผงซักฟอก', field:'clean_pow', unit:'kg'}, {label:'กระดาษ A4', field:'paper_ream', unit:'รีม'}, {label:'หน้ากากอนามัย', field:'mask_box', unit:'กล่อง'} ] },
+        { key:'chemical',  icon:'fa-flask',          color:'pink',     title:'สารเคมีและน้ำเสีย',
+          items:[ {label:'แอลกอฮอล์', field:'alc_liq', unit:'ml'}, {label:'Isoflurane', field:'isoflurane', unit:'ขวด'}, {label:'น้ำเสียบำบัด', field:'wt_vol', unit:'m³'} ] },
+        { key:'medicines', icon:'fa-pills',          color:'purple',   title:'ยาเฉพาะ',
+          items:[ {label:'Amlodipine', field:'amlodipine', unit:'เม็ด'}, {label:'GPO-L-ONE', field:'gpo_l_one', unit:'เม็ด'}, {label:'Gabapentin', field:'gabapentin', unit:'เม็ด'}, {label:'Omeprazole', field:'omeprazole', unit:'เม็ด'} ] },
+        { key:'solar',     icon:'fa-solar-panel',    color:'success',  title:'Solar Cell & ต้นไม้',
+          items:[ {label:'พลังงานที่ผลิตได้', field:'solar_kwh', unit:'kWh'}, {label:'จำนวนแผงโซลาร์', field:'solar_panels', unit:'แผง'}, {label:'จำนวนต้นไม้', field:'tree_count', unit:'ต้น'} ] }
+    ];
 
     function loadCategorySummary() {
-        // ดึงปีที่เลือกจากระบบ
-        let currentSelectedYear = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
-        let cYear = currentSelectedYear !== 'all' ? parseInt(currentSelectedYear) : new Date().getFullYear();
-        let pYear = cYear - 1;
+        const yearFilter = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
+        const hospFilter = SESSION.role === 'superadmin' ? (document.getElementById('filter-hospital') ? document.getElementById('filter-hospital').value : 'all') : SESSION.hospName;
+        const curY = new Date().getFullYear();
+        const baseYear = (yearFilter === 'all') ? curY : parseInt(yearFilter,10);
+        const compareYear = baseYear - 1;
 
-        // ดึงข้อมูล 2 ชุด (ปีปัจจบัน vs ปีที่แล้ว)
-        let tCur = getFilteredData(cYear.toString());
-        let tPast = getFilteredData(pYear.toString());
-
-        let container = document.getElementById('summary-cards-container');
-        if(!container) return;
-        
-        // ฟังก์ชันช่วยสร้าง HTML แต่ละบรรทัด พร้อมตัวเลขเปรียบเทียบย้อนหลัง
-        const listItem = (label, curVal, pastVal, unit) => `
-            <li>
-                <span>${label}</span>
-                <div class="text-end">
-                    <span class="summary-value">${(curVal||0).toLocaleString()} ${unit}</span>
-                    <span class="text-muted" style="font-size:0.75rem;">(ปีก่อน: ${(pastVal||0).toLocaleString()})</span>
-                </div>
-            </li>`;
-
-        container.innerHTML = `
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-bolt text-warning"></i> พลังงานและน้ำ</div><ul class="summary-list">
-            ${listItem('ไฟฟ้าหลัก', tCur.elec_kwh, tPast.elec_kwh, 'kWh')}
-            ${listItem('น้ำประปา', tCur.water_m3, tPast.water_m3, 'm³')}
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-gas-pump text-danger"></i> ยานพาหนะและเชื้อเพลิง</div><ul class="summary-list">
-            ${listItem('น้ำมันรถ (ดีเซล)', tCur.diesel_v, tPast.diesel_v, 'L')}
-            ${listItem('น้ำมันรถ (เบนซิน)', tCur.gasoline_v, tPast.gasoline_v, 'L')}
-            ${listItem('น้ำมันเครื่องจักร (ดีเซล)', tCur.diesel_m, tPast.diesel_m, 'L')}
-            ${listItem('น้ำมันเครื่องจักร (เบนซิน)', tCur.gasoline_m, tPast.gasoline_m, 'L')}
-            ${listItem('ก๊าซหุงต้ม (LPG)', tCur.total_lpg, tPast.total_lpg, 'kg')}
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-snowflake text-info"></i> ปรับอากาศ & ดับเพลิง</div><ul class="summary-list">
-            ${listItem('น้ำยาแอร์ (HFC-134a)', tCur.hfc134a, tPast.hfc134a, 'kg')}
-            ${listItem('น้ำยาแอร์ (R22)', tCur.r22, tPast.r22, 'kg')}
-            ${listItem('ถังดับเพลิง CO₂', tCur.total_fire, tPast.total_fire, 'kg')}
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-trash-alt text-secondary"></i> ขยะทั่วไปและอันตราย</div><ul class="summary-list">
-            ${listItem('ขยะทั่วไป', tCur.waste_gen, tPast.waste_gen, 'kg')}
-            ${listItem('ขยะติดเชื้อ', tCur.waste_inf, tPast.waste_inf, 'kg')}
-            ${listItem('ขยะอินทรีย์', tCur.waste_org, tPast.waste_org, 'kg')}
-            ${listItem('ขยะอันตราย', tCur.waste_haz, tPast.waste_haz, 'kg')}
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-recycle text-success"></i> ขยะรีไซเคิล</div><ul class="summary-list">
-            ${listItem('กระดาษ', tCur.rc_paper, tPast.rc_paper, 'kg')}
-            ${listItem('อะลูมิเนียม', tCur.rc_alum, tPast.rc_alum, 'kg')}
-            ${listItem('พลาสติก', tCur.rc_plastic, tPast.rc_plastic, 'kg')}
-            ${listItem('เหล็ก', tCur.rc_iron, tPast.rc_iron, 'kg')}
-            ${listItem('โลหะอื่นๆ', tCur.rc_metal, tPast.rc_metal, 'kg')}
-            ${listItem('แก้ว', tCur.rc_glass, tPast.rc_glass, 'kg')}
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-4"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-pump-soap text-primary"></i> วัสดุสิ้นเปลือง</div><ul class="summary-list">
-            ${listItem('ผงซักฟอก', tCur.clean_pow, tPast.clean_pow, 'kg')}
-            ${listItem('น้ำยาซักล้าง', tCur.clean_liq, tPast.clean_liq, 'ml')}
-            ${listItem('ถุงพลาสติก', tCur.bags_kg, tPast.bags_kg, 'kg')}
-            ${listItem('กระดาษ A4', tCur.paper_ream, tPast.paper_ream, 'รีม')}
-            ${listItem('หมึกพิมพ์', tCur.ink_cart, tPast.ink_cart, 'ตลับ')}
-            ${listItem('หน้ากากอนามัย', tCur.mask_box, tPast.mask_box, 'กล่อง')}
-            ${listItem('ถุงมือแพทย์', tCur.glove_pcs, tPast.glove_pcs, 'ชิ้น')}
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-6"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-flask text-pink"></i> สารเคมี และ ยาสลบ</div><ul class="summary-list">
-            ${listItem('แอลกอฮอล์ (Alcohol)', tCur.alc_liq, tPast.alc_liq, 'ml')}
-            ${listItem('แอมโมเนีย (Ammonia)', tCur.ammonia, tPast.ammonia, 'ml')}
-            ${listItem('ก๊าซไนตรัสออกไซด์', tCur.nitrous_kg, tPast.nitrous_kg, 'kg')}
-            ${listItem('Isoflurane', tCur.isoflurane, tPast.isoflurane, 'กล่อง')}
-            ${listItem('Desflurane', tCur.desflurane, tPast.desflurane, 'กล่อง')}
-            ${listItem('Sevoflurane', tCur.sevoflurane, tPast.sevoflurane, 'กล่อง')}
-        </ul></div></div>
-        
-        <div class="col-12 col-md-6 col-lg-6"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-water text-primary"></i> ระบบบำบัดน้ำเสีย</div><ul class="summary-list">
-            ${listItem('ปริมาตรน้ำเสีย', tCur.wt_vol, tPast.wt_vol, 'm³')}
-            ${listItem('ค่า COD', parseFloat(tCur.wt_cod||282), parseFloat(tPast.wt_cod||282), 'mg/l')}
-            ${listItem('โซเดียมไฮดรอกไซด์', tCur.wt_naoh, tPast.wt_naoh, 'kg')}
-            ${listItem('สารส้ม', tCur.wt_alum, tPast.wt_alum, 'kg')}
-            ${listItem('กรดซัลฟุริค', tCur.wt_sulfuric, tPast.wt_sulfuric, 'kg')}
-            ${listItem('ปูนขาว', tCur.wt_lime, tPast.wt_lime, 'kg')}
-            ${listItem('คลอรีน', tCur.wt_chlorine, tPast.wt_chlorine, 'kg')}
-        </ul></div></div>
-        
-        <div class="col-12 col-md-12 col-lg-12"><div class="summary-card shadow-sm border-0"><div class="summary-header"><i class="fas fa-solar-panel text-success"></i> พลังงานทดแทน (Solar)</div><ul class="summary-list">
-            ${listItem('ไฟที่ใช้ในระบบผลิต', tCur.solar_internal_use, tPast.solar_internal_use, 'kWh')}
-            ${listItem('ไฟฟ้าผลิตได้จริง', 
-                (tCur.solar_mode==='meter' ? (tCur.solar_kwh||0) : (tCur.solar_cap||0)*(tCur.solar_days||0)*4), 
-                (tPast.solar_mode==='meter' ? (tPast.solar_kwh||0) : (tPast.solar_cap||0)*(tPast.solar_days||0)*4), 
-                'kWh')}
-        </ul></div></div>`;
-    }
-
-    function renderSuperAdminDash() {
-        if (SESSION.role !== 'superadmin') return;
-        let year = document.getElementById('filter-year').value;
-        let month = document.getElementById('filter-month').value;
-        let hospData = {}, co2ByHosp = {}, co2SrcByHosp = {};
-        let gCo2 = 0, gElec = 0, gWaste = 0;
-        
-        if (!localDB.logs) return;
-        localDB.logs.forEach(log => {
-            let h = log.hospName || 'ไม่ระบุ';
-            if (!hospData[h]) { hospData[h]={energy:false,fuel:false,air:false,waste:false,sup:false,chem:false}; co2ByHosp[h]=0; co2SrcByHosp[h]={elec:0,fuel:0,air:0}; }
-            if (!log.date) return;
-            let p = log.date.split('-');
-            if ((year==='all'||year===p[0])&&(month==='all'||month===p[1])) {
-                let val = parseFloat(log.val || log.value || log.amount || 0);
-                if (log.id==='elec-kwh') gElec += val;
-                if (['waste-gen','waste-inf','waste-org','waste-haz'].includes(log.id)) gWaste += val;
-                
-                if (['elec-kwh','water-m3','solar-kwh','solar-cap'].includes(log.id)) { hospData[h].energy=true; if(log.id==='elec-kwh') co2SrcByHosp[h].elec+=val*0.4999; }
-                if (['diesel_v','gasoline_v','diesel_m','gasoline_m','lpg-size'].includes(log.id)) { hospData[h].fuel=true; co2SrcByHosp[h].fuel+=val*2.7; }
-                if (['hfc134a','r22','fire-size'].includes(log.id)) { hospData[h].air=true; co2SrcByHosp[h].air+=val*1000; }
-                if (['waste-gen','waste-inf','waste-org','waste-haz','rc-paper'].includes(log.id)) hospData[h].waste=true;
-                if (['clean-pow','clean-liq','bags-kg','paper-ream'].includes(log.id)) hospData[h].sup=true;
-                if (['alc-liq','ammonia','nitrous-kg','wt-vol'].includes(log.id)) hospData[h].chem=true;
-                
-                co2ByHosp[h] = co2SrcByHosp[h].elec+co2SrcByHosp[h].fuel+co2SrcByHosp[h].air;
-            }
-        });
-        
-        for (let h in co2ByHosp) gCo2 += co2ByHosp[h];
-        if(document.getElementById('sa-kpi-co2'))   document.getElementById('sa-kpi-co2').innerText   = gCo2.toLocaleString(undefined,{minimumFractionDigits:2});
-        if(document.getElementById('sa-kpi-elec'))  document.getElementById('sa-kpi-elec').innerText  = gElec.toLocaleString();
-        if(document.getElementById('sa-kpi-waste')) document.getElementById('sa-kpi-waste').innerText = gWaste.toLocaleString();
-
-        let htmlComp = '';
-        for (let h in hospData) {
-            let n = [hospData[h].energy,hospData[h].fuel,hospData[h].air,hospData[h].waste,hospData[h].sup,hospData[h].chem].filter(Boolean).length;
-            let s = n===6?'<span class="badge bg-success">กรอกครบ</span>':n>0?'<span class="badge bg-warning text-dark">ส่งบางส่วน</span>':'<span class="badge bg-danger">ไม่ส่งข้อมูล</span>';
-            htmlComp += `<tr><td class="text-start fw-bold text-primary">${h}</td><td>${hospData[h].energy?'✅':'❌'}</td><td>${hospData[h].fuel?'✅':'❌'}</td><td>${hospData[h].air?'✅':'❌'}</td><td>${hospData[h].waste?'✅':'❌'}</td><td>${hospData[h].sup?'✅':'❌'}</td><td>${hospData[h].chem?'✅':'❌'}</td><td>${s}</td></tr>`;
+        // ✅ แก้ไข: แสดงชัดเจนว่า "ปีตั้งต้น" (Baseline) คือปีที่เลือกกรอง ไม่ใช่ปีปัจจุบันเสมอไป
+        const noteEl = document.getElementById('summary-year-note');
+        if (noteEl) {
+            noteEl.innerHTML = `<i class="fas fa-info-circle me-2"></i>
+                <b>ปีตั้งต้น (Baseline):</b> พ.ศ. ${baseYear+543} (${baseYear})
+                &nbsp;|&nbsp;
+                <b>เปรียบเทียบกับปีย้อนหลัง:</b> พ.ศ. ${compareYear+543} (${compareYear})
+                &nbsp;|&nbsp; <span class="text-muted">ข้อมูลทั้งหมดเป็นข้อมูลจริงจากระบบหลังบ้าน หากไม่มีข้อมูลจะแสดงเป็น 0</span>`;
         }
-        if(document.getElementById('compliance-tbody')) document.getElementById('compliance-tbody').innerHTML = htmlComp || '<tr><td colspan="8" class="text-muted py-3 text-center">ยังไม่มีข้อมูลในงวดที่เลือก</td></tr>';
-        
-        let htmlTop='', hospLabels=[], cData=[];
-        for (let h in co2SrcByHosp) {
-            let s=co2SrcByHosp[h], topType='การใช้ไฟฟ้า', maxV=s.elec;
-            if(s.fuel>maxV){topType='เชื้อเพลิงและรถ';maxV=s.fuel;} if(s.air>maxV){topType='หมวดแอร์และดับเพลิง';maxV=s.air;}
-            htmlTop+=`<tr><td class="text-start fw-bold">${h}</td><td><span class="badge bg-info text-dark">${topType}</span></td><td class="fw-bold text-danger">${maxV.toLocaleString(undefined,{maximumFractionDigits:2})}</td></tr>`;
-            hospLabels.push(h); cData.push(co2ByHosp[h]);
-        }
-        if(document.getElementById('top-resource-tbody')) document.getElementById('top-resource-tbody').innerHTML = htmlTop || '<tr><td colspan="3" class="text-muted text-center">ยังไม่มีข้อมูล</td></tr>';
-        
-        if (charts.hospCompare) charts.hospCompare.destroy();
-        let ctx = document.getElementById('hospitalsCompareChart');
-        if (ctx) { charts.hospCompare = new Chart(ctx.getContext('2d'),{type:'bar',data:{labels:hospLabels,datasets:[{label:'Carbon (kgCO₂e)',data:cData,backgroundColor:'#15b371'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}}); }
-    }
 
-    function loadLeaderboard() {
-        const loadingDiv = document.getElementById('leaderboard-loading');
-        const contentDiv = document.getElementById('leaderboard-content');
-        const tbody = document.getElementById('leaderboard-tbody');
+        const tBase = getFilteredData(String(baseYear), hospFilter, 'all');
+        const tCompare = getFilteredData(String(compareYear), hospFilter, 'all');
 
-        if(loadingDiv) loadingDiv.style.display = 'block';
-        if(contentDiv) contentDiv.style.display = 'none';
-        if(tbody) tbody.innerHTML = '';
+        const container = document.getElementById('summary-cards-container');
+        if (!container) return;
 
-        setTimeout(() => {
-            let hospLogs = localDB.logs.filter(l => l.hospName === SESSION.hospName);
-            if (SESSION.role === 'superadmin') { hospLogs = localDB.logs; }
-
-            let userCounts = {};
-            hospLogs.forEach(log => {
-                let name = log.recorderName || 'ไม่ระบุชื่อ';
-                let key = SESSION.role === 'superadmin' ? `${log.hospName} - ${name}` : name;
-                userCounts[key] = (userCounts[key] || 0) + 1;
+        let html = '';
+        CATEGORY_DEFS.forEach(cat => {
+            let baseTotal = 0, compareTotal = 0;
+            let itemsHtml = '';
+            cat.items.forEach(item => {
+                let bv = tBase[item.field] || 0;
+                let cv = tCompare[item.field] || 0;
+                baseTotal += bv; compareTotal += cv;
+                itemsHtml += `<li><span>${item.label}</span><span class="summary-value">${bv.toLocaleString(undefined,{maximumFractionDigits:2})} ${item.unit}</span></li>`;
             });
 
-            let leaderboardData = Object.keys(userCounts).map(name => { return { name: name, count: userCounts[name] }; });
-            leaderboardData.sort((a, b) => b.count - a.count);
+            let diffPct = (compareTotal === 0) ? (baseTotal===0 ? 0 : 100) : ((baseTotal - compareTotal) / compareTotal * 100);
+            let yoyClass = diffPct > 0.01 ? 'yoy-up' : (diffPct < -0.01 ? 'yoy-down' : 'yoy-flat');
+            let yoyIcon  = diffPct > 0.01 ? '▲' : (diffPct < -0.01 ? '▼' : '—');
+            let yoyLabel = (compareTotal===0 && baseTotal===0) ? 'ไม่มีข้อมูลเทียบ' : `${yoyIcon} ${Math.abs(diffPct).toFixed(1)}%`;
 
-            if (!leaderboardData.length) {
-                if(tbody) tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4">ยังไม่มีข้อมูลบุคลากรของโรงพยาบาลนี้</td></tr>';
-            } else {
-                let html = '';
-                leaderboardData.forEach((item, i) => {
-                    let rank = i + 1;
-                    let rankBadge = `<span class="badge bg-secondary rounded-circle px-2">${rank}</span>`;
-                    if (rank === 1) rankBadge = `<span class="fs-4">🥇</span>`;
-                    if (rank === 2) rankBadge = `<span class="fs-4">🥈</span>`;
-                    if (rank === 3) rankBadge = `<span class="fs-4">🥉</span>`;
-                    let nameLabel = item.name;
-                    let isOwn = (nameLabel === SESSION.recorderName);
-                    let cls = isOwn ? 'table-success fw-bold' : '';
-                    if (isOwn && SESSION.role !== 'superadmin') nameLabel += ' (คุณ)';
+            html += `<div class="col-12 col-md-6 col-xl-4">
+                <div class="summary-card">
+                    <div class="summary-header bg-${cat.color}-subtle">
+                        <i class="fas ${cat.icon} text-${cat.color}"></i> ${cat.title}
+                        <span class="yoy-badge ${yoyClass} ms-auto">${yoyLabel}</span>
+                    </div>
+                    <ul class="summary-list">${itemsHtml}</ul>
+                    <div class="text-end small text-muted mt-2">เทียบปีก่อน (${compareYear+543}): ${compareTotal.toLocaleString(undefined,{maximumFractionDigits:2})}</div>
+                </div>
+            </div>`;
+        });
 
-                    html += `<tr class="${cls}"><td class="text-center fw-bold">${rankBadge}</td><td class="fw-semibold text-dark">${nameLabel}</td><td class="text-center text-success fw-bold">${item.count} ครั้ง</td></tr>`;
-                });
-                if(tbody) tbody.innerHTML = html;
-            }
-            if(loadingDiv) loadingDiv.style.display = 'none';
-            if(contentDiv) contentDiv.style.display = 'block';
-        }, 400); 
+        container.innerHTML = html;
     }
-    const btnRefreshLb = document.getElementById('btn-refresh-lb');
-    if(btnRefreshLb) btnRefreshLb.addEventListener('click', loadLeaderboard);
 
     // ============================================
-    // Sidebar & Navigation Event Listeners
+    // SuperAdmin Dashboard (ข้อมูลจริงเท่านั้น รวมทุกโรงพยาบาล)
     // ============================================
-    let mobileToggle = document.getElementById('mobile-toggle-btn');
-    if(mobileToggle) mobileToggle.addEventListener('click', () => { document.getElementById('app-sidebar').classList.toggle('active'); document.getElementById('sidebar-overlay').classList.toggle('active'); });
+    function renderSuperAdminDash() {
+        if (SESSION.role !== 'superadmin') return;
 
-    let sidebarOverlay = document.getElementById('sidebar-overlay');
-    if(sidebarOverlay) sidebarOverlay.addEventListener('click', () => { document.getElementById('app-sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').classList.remove('active'); });
+        let hospSet = new Set();
+        localDB.logs.forEach(log => { if (log.hospName) hospSet.add(log.hospName); });
+        let hospitals = Array.from(hospSet);
 
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            document.querySelectorAll('.nav-link,.view-section').forEach(el => el.classList.remove('active'));
-            link.classList.add('active');
-            const t = link.getAttribute('data-target');
-            if(document.getElementById(t)) document.getElementById(t).classList.add('active');
-            if(document.getElementById('entry-submenu')) document.getElementById('entry-submenu').style.display = t==='entry-view' ? 'flex' : 'none';
-            if(document.getElementById('global-filter-panel')) document.getElementById('global-filter-panel').style.display = ['dashboard-view','summary-view','superadmin-view'].includes(t) ? 'flex' : 'none';
-            if (window.innerWidth<992) { if(document.getElementById('app-sidebar')) document.getElementById('app-sidebar').classList.remove('active'); if(document.getElementById('sidebar-overlay')) document.getElementById('sidebar-overlay').classList.remove('active'); }
+        const yearFilter = document.getElementById('filter-year') ? document.getElementById('filter-year').value : 'all';
+        const monthFilter = document.getElementById('filter-month') ? document.getElementById('filter-month').value : 'all';
+
+        let orgTotal = createEmptyTotals();
+        let hospTotals = {};
+
+        hospitals.forEach(h => {
+            let t = getFilteredData(yearFilter, h, monthFilter);
+            hospTotals[h] = t;
+            Object.keys(orgTotal).forEach(k => {
+                if (typeof orgTotal[k] === 'number' && typeof t[k] === 'number') orgTotal[k] += t[k];
+            });
         });
-    });
+
+        let orgBreakdown = calcCarbonBreakdown(orgTotal);
+        setText('sa-kpi-co2', orgBreakdown.total.toFixed(2));
+        setText('sa-kpi-elec', (orgTotal.elec_kwh||0).toLocaleString());
+        setText('sa-kpi-waste', ((orgTotal.waste_gen||0)+(orgTotal.waste_inf||0)+(orgTotal.waste_org||0)+(orgTotal.waste_haz||0)).toLocaleString());
+
+        // เปรียบเทียบคาร์บอนแต่ละโรงพยาบาล
+        let hospLabels = hospitals;
+        let hospData = hospitals.map(h => calcCarbonBreakdown(hospTotals[h]).total);
+        renderBarChartSingle('hospCompare', 'hospitalsCompareChart', hospLabels, 'คาร์บอนฟุตพริ้นท์รวม (kgCO₂e)', hospData, '#0284c7');
+
+        // ตารางหมวดที่ปล่อย CO2 สูงสุดต่อโรงพยาบาล
+        let topResourceRows = '';
+        hospitals.forEach(h => {
+            let b = calcCarbonBreakdown(hospTotals[h]);
+            let cats = [
+                {name:'ไฟฟ้า', val:b.elec}, {name:'น้ำประปา', val:b.water}, {name:'เชื้อเพลิง', val:b.fuel},
+                {name:'แอร์/ดับเพลิง', val:b.air}, {name:'ขยะ', val:b.wasteTotal}, {name:'สิ้นเปลือง', val:b.consumables},
+                {name:'เคมี/น้ำเสีย', val:b.chemicals+b.waterTreatment}, {name:'ยาเฉพาะ', val:b.medicines}
+            ].sort((a,c) => c.val - a.val);
+            let top = cats[0] || {name:'-', val:0};
+            topResourceRows += `<tr><td class="text-start">${h}</td><td>${top.name}</td><td class="fw-bold text-danger">${top.val.toFixed(2)}</td></tr>`;
+        });
+        const topResTbody = document.getElementById('top-resource-tbody');
+        if (topResTbody) topResTbody.innerHTML = topResourceRows || '<tr><td colspan="3" class="text-muted">ยังไม่มีข้อมูล</td></tr>';
+
+        // Compliance table: ตรวจว่าโรงพยาบาลมีบันทึกในแต่ละหมวดหรือไม่ (ข้อมูลจริง)
+        let complianceRows = '';
+        hospitals.forEach(h => {
+            let t = hospTotals[h];
+            let checks = {
+                energy: (t.elec_kwh>0 || t.water_m3>0),
+                fuel: (t.diesel_v>0 || t.gasoline_v>0 || t.diesel_m>0 || t.total_lpg>0),
+                air: (t.hfc134a>0 || t.r22>0 || t.total_fire>0),
+                waste: (t.waste_gen>0 || t.waste_inf>0 || t.waste_org>0 || t.waste_haz>0),
+                supplies: (t.clean_pow>0 || t.paper_ream>0 || t.mask_box>0),
+                chemical: (t.alc_liq>0 || t.isoflurane>0 || t.wt_vol>0),
+                medicines: (t.amlodipine>0 || t.gpo_l_one>0 || t.gabapentin>0 || t.omeprazole>0)
+            };
+            let allDone = Object.values(checks).every(v => v);
+            let icon = (v) => v ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>';
+            complianceRows += `<tr>
+                <td class="text-start fw-bold">${h}</td>
+                <td>${icon(checks.energy)}</td><td>${icon(checks.fuel)}</td><td>${icon(checks.air)}</td>
+                <td>${icon(checks.waste)}</td><td>${icon(checks.supplies)}</td><td>${icon(checks.chemical)}</td><td>${icon(checks.medicines)}</td>
+                <td>${allDone ? '<span class="badge bg-success">ครบถ้วน</span>' : '<span class="badge bg-warning text-dark">ยังไม่ครบ</span>'}</td>
+            </tr>`;
+        });
+        const compTbody = document.getElementById('compliance-tbody');
+        if (compTbody) compTbody.innerHTML = complianceRows || '<tr><td colspan="8" class="text-muted">ยังไม่มีข้อมูลโรงพยาบาลในระบบ</td></tr>';
+    }
 
     // ============================================
-    // Modal Forms Handling 
+    // Leaderboard: ใช้ข้อมูลจริงของ "โรงพยาบาลที่ล็อกอินเข้ามาเท่านั้น"
     // ============================================
-    const inputHTML = (label,id,unit,type='number',val=0) => `<div class="mb-3"><label class="fw-bold small">${label} (${unit})</label><div class="input-group"><input type="${type}" step="any" id="${id}" class="form-control border-success" data-label="${label}" required value="${val}"><span class="input-group-text bg-light">${unit}</span></div></div>`;
+    function loadLeaderboard() {
+        const loadingEl = document.getElementById('leaderboard-loading');
+        const emptyEl   = document.getElementById('leaderboard-empty');
+        const contentEl = document.getElementById('leaderboard-content');
+        const tbody     = document.getElementById('leaderboard-tbody');
+        if (!tbody) return;
 
-    document.querySelectorAll('.cat-trigger').forEach(btn => {
-        btn.addEventListener('click', function() {
-            let mode = this.dataset.mode;
-            let categoryName = this.closest('.form-section-wrapper').querySelector('.form-section-title').innerText.replace(/[^ก-๙a-zA-Z]/g, '').trim() || mode;
-            document.getElementById('main-cat-key').value = mode;
-            document.getElementById('form-category-name').value = categoryName;
-            
-            const container = document.getElementById('dynamic-fields-container');
-            container.innerHTML = '';
-            if (!document.getElementById('entry-date').value) document.getElementById('entry-date').value = new Date().toISOString().split('T')[0];
-            
-            let title = '';
-            if      (mode==='elec')            { title='⚡ ไฟฟ้าหลัก'; container.innerHTML=inputHTML('ปริมาณไฟฟ้าที่ใช้','elec-kwh','kWh'); }
-            else if (mode==='water')           { title='💧 น้ำประปา'; container.innerHTML=inputHTML('ปริมาณน้ำที่ใช้','water-m3','m³'); }
-            else if (mode==='fuel-vehicle')    { title='🚗 น้ำมันยานพาหนะ';     container.innerHTML=inputHTML('⛽ ดีเซล','diesel_v','ลิตร')+inputHTML('⛽ เบนซิน','gasoline_v','ลิตร'); }
-            else if (mode==='fuel-machine')    { title='⚙️ น้ำมันเครื่องจักร';  container.innerHTML=inputHTML('⛽ ดีเซล','diesel_m','ลิตร')+inputHTML('⛽ เบนซิน','gasoline_m','ลิตร'); }
-            else if (mode==='lpg')             { title='🔥 ก๊าซหุงต้ม (LPG)';   container.innerHTML=`<div class="row g-2 mb-3"><div class="col-6"><label class="fw-bold small">ขนาดถัง (kg)</label><input type="number" id="lpg-size" data-label="ขนาดถัง LPG" class="form-control lpg-calc border-success"></div><div class="col-6"><label class="fw-bold small">จำนวนถัง</label><input type="number" id="lpg-qty" data-label="จำนวนถัง LPG" class="form-control lpg-calc border-success"></div></div>`+inputHTML('ปริมาณรวมอัตโนมัติ','total-lpg','kg','number',0); }
-            else if (mode==='air-ref')         { title='❄️ สารทำความเย็นแอร์';  container.innerHTML=inputHTML('🧪 HFC-134a','hfc134a','kg')+inputHTML('🧪 R22','r22','kg'); }
-            else if (mode==='fire-ext')        { title='🧯 ดับเพลิง CO₂';       container.innerHTML=`<div class="row g-2 mb-3"><div class="col-6"><label class="fw-bold small">ขนาดบรรจุ (kg)</label><input type="number" id="fire-size" data-label="ขนาดถังดับเพลิง" class="form-control fire-calc border-success"></div><div class="col-6"><label class="fw-bold small">จำนวนถัง</label><input type="number" id="fire-qty" data-label="จำนวนถังดับเพลิง" class="form-control fire-calc border-success"></div></div>`+inputHTML('ปริมาณรวมอัตโนมัติ','total-fire','kg','number',0); }
-            else if (mode==='waste-main')      { title='🗑️ ขยะหลัก 4 ประเภท';  container.innerHTML=inputHTML('ทั่วไป','waste-gen','kg')+inputHTML('ติดเชื้อ','waste-inf','kg')+inputHTML('อินทรีย์','waste-org','kg')+inputHTML('อันตราย','waste-haz','kg'); }
-            else if (mode==='waste-recycle')   { title='♻️ ขยะรีไซเคิล';        container.innerHTML=inputHTML('กระดาษ','rc-paper','kg')+inputHTML('อะลูมิเนียม','rc-alum','kg')+inputHTML('พลาสติก','rc-plastic','kg')+inputHTML('เหล็ก','rc-iron','kg')+inputHTML('โลหะ','rc-metal','kg')+inputHTML('แก้ว','rc-glass','kg'); }
-            else if (mode==='clean-supplies')  { title='🧼 ทำความสะอาด';         container.innerHTML=inputHTML('ผงซักฟอก','clean-pow','kg')+inputHTML('น้ำยาซักผ้า','clean-liq','ml')+inputHTML('ถุงพลาสติก','bags-kg','kg'); }
-            else if (mode==='office-supplies') { title='📄 สำนักงาน';            container.innerHTML=inputHTML('กระดาษ A4','paper-ream','รีม')+inputHTML('หมึกพิมพ์','ink-cart','ตลับ'); }
-            else if (mode==='medical-supplies'){ title='🩺 อุปกรณ์แพทย์';      container.innerHTML=inputHTML('หน้ากากอนามัย','mask-box','กล่อง')+inputHTML('ถุงมือ','glove-pcs','ชิ้น'); }
-            else if (mode==='med-chemicals')   { title='🧪 สารเคมี & ยาสลบ';
-                container.innerHTML=`<div class="text-success fw-bold mb-2 small">กลุ่มสารเคมี:</div>${inputHTML('Alcohol ชนิดน้ำ','alc-liq','ml')}${inputHTML('Ammonia','ammonia','ml')}<div class="text-danger fw-bold mt-3 mb-2 small">กลุ่มยาสลบ:</div>${inputHTML('ก๊าซไนตรัสออกไซด์','nitrous-kg','kg')}${inputHTML('Isoflurane','isoflurane','กล่อง')}${inputHTML('Desflurane','desflurane','กล่อง')}${inputHTML('Sevoflurane','sevoflurane','กล่อง')}`; }
-            else if (mode==='water-treatment') { title='🌊 ระบบบำบัดน้ำเสีย';
-                container.innerHTML=`<div class="text-primary fw-bold mb-2 small">1. ปริมาณน้ำเสีย:</div>${inputHTML('น้ำเสียที่เข้าสู่ระบบ','wt-vol','m³')}<div class="text-primary fw-bold mt-3 mb-2 small">2. ประเภทบ่อ:</div><div class="mb-3"><select id="wt-type" data-label="ประเภทบ่อ" class="form-select border-success"><option value="บ่อลึก (ลึกกว่า 2 เมตร)">บ่อลึก (ลึกกว่า 2 เมตร)</option><option value="บ่อตื้น (ลึกไม่เกิน 2 เมตร)">บ่อตื้น (ลึกไม่เกิน 2 เมตร)</option></select></div><div class="text-primary fw-bold mt-3 mb-2 small">3. ข้อมูลเคมีและ COD:</div>${inputHTML('ค่า COD','wt-cod','mg/l','number',282)}${inputHTML('โซเดียมไฮดรอกไซด์','wt-naoh','kg')}${inputHTML('สารส้ม','wt-alum','kg')}${inputHTML('กรดซัลฟุริค','wt-sulfuric','kg')}${inputHTML('ปูนขาว','wt-lime','kg')}${inputHTML('คลอรีน','wt-chlorine','kg')}`; }
-            else if (mode==='solar-system')    { title='☀️ พลังงานทดแทน Solar Cell';
-                container.innerHTML=`<div class="p-3 mb-3 rounded-3 border bg-white"><h6 class="fw-bold text-success mb-2 small"><i class="fas fa-info-circle me-2"></i>1. ข้อมูลทั่วไป</h6>${inputHTML('ไฟที่ใช้ผลิต','solar-internal-use','kWh')}</div><div class="p-3 rounded-3 border bg-white"><h6 class="fw-bold text-success mb-2 small"><i class="fas fa-solar-panel me-2"></i>2. ข้อมูลโซลาเซลล์</h6><div class="mb-3"><select id="solar-mode" data-label="รูปแบบมิเตอร์" class="form-select border-success"><option value="meter">กรณีมีมิเตอร์</option><option value="nometer">กรณีไม่มีมิเตอร์</option></select></div><div id="solar-meter-field" class="p-3 rounded bg-light border border-warning">${inputHTML('ไฟที่ผลิตได้','solar-kwh','kWh')}</div><div id="solar-nometer-fields" class="p-3 rounded bg-light border border-info" style="display:none;">${inputHTML('กำลังผลิต','solar-cap','kW')}${inputHTML('จำนวนแผง','solar-panels','แผง')}${inputHTML('จำนวนวัน','solar-days','วัน')}</div></div>`;
-                
-                setTimeout(() => {
-                    const sel = document.getElementById('solar-mode');
-                    if(sel) sel.addEventListener('change', function() {
-                        let m = this.value;
-                        if(document.getElementById('solar-meter-field')) document.getElementById('solar-meter-field').style.display    = m==='meter'   ? 'block' : 'none';
-                        if(document.getElementById('solar-nometer-fields')) document.getElementById('solar-nometer-fields').style.display = m==='nometer' ? 'block' : 'none';
-                        if(document.getElementById('solar-kwh')) document.getElementById('solar-kwh').required = (m==='meter');
-                        if(document.getElementById('solar-cap')) document.getElementById('solar-cap').required = (m==='nometer');
-                    });
-                }, 50); 
+        if (loadingEl) loadingEl.style.display = 'flex';
+        if (contentEl) contentEl.style.display = 'none';
+        if (emptyEl) emptyEl.style.display = 'none';
+
+        setTimeout(() => {
+            // ✅ กรองเฉพาะข้อมูลของโรงพยาบาลที่ผู้ใช้ล็อกอินเข้ามาเท่านั้น (ไม่ปนโรงพยาบาลอื่น)
+            let filtered = (localDB.logs || []).filter(log => log.hospName === SESSION.hospName && log.recorderName);
+
+            // นับจำนวน "ครั้งที่บันทึก" แบบไม่ซ้ำ (นับตาม date+recorderName เพื่อไม่ให้นับซ้ำจากหลาย field ในฟอร์มเดียว)
+            let uniqueEntries = new Set();
+            let countMap = {};
+            filtered.forEach(log => {
+                let entryKey = log.recorderName + '|' + log.date + '|' + (log.cat||'');
+                if (!uniqueEntries.has(entryKey)) {
+                    uniqueEntries.add(entryKey);
+                    countMap[log.recorderName] = (countMap[log.recorderName] || 0) + 1;
+                }
+            });
+
+            let ranking = Object.keys(countMap).map(name => ({ name, count: countMap[name] })).sort((a,b) => b.count - a.count);
+
+            if (loadingEl) loadingEl.style.display = 'none';
+
+            if (ranking.length === 0) {
+                if (emptyEl) emptyEl.style.display = 'block';
+                if (contentEl) contentEl.style.display = 'none';
+                return;
             }
-            
-            // Add input listeners for dynamic calculations
-            setTimeout(() => {
-                document.querySelectorAll('.lpg-calc').forEach(el => {
-                    el.addEventListener('input', () => { document.getElementById('total-lpg').value = ((parseFloat(document.getElementById('lpg-size').value)||0) * (parseFloat(document.getElementById('lpg-qty').value)||0)).toFixed(2); });
-                });
-                document.querySelectorAll('.fire-calc').forEach(el => {
-                    el.addEventListener('input', () => { document.getElementById('total-fire').value = ((parseFloat(document.getElementById('fire-size').value)||0) * (parseFloat(document.getElementById('fire-qty').value)||0)).toFixed(2); });
-                });
-            }, 100);
 
-            document.getElementById('form-title').innerText = title;
-            new bootstrap.Modal(document.getElementById('formModal')).show();
-        });
-    });
+            let medals = ['🥇','🥈','🥉'];
+            let rows = ranking.map((r, i) => `
+                <tr>
+                    <td class="text-center fw-bold">${medals[i] || (i+1)}</td>
+                    <td class="text-start">${r.name} <span class="text-muted small">(${SESSION.hospName})</span></td>
+                    <td class="text-center fw-bold text-success">${r.count} ครั้ง</td>
+                </tr>`).join('');
+
+            tbody.innerHTML = rows;
+            if (contentEl) contentEl.style.display = 'block';
+        }, 200);
+    }
+
+    const btnRefreshLb = document.getElementById('btn-refresh-lb');
+    if (btnRefreshLb) btnRefreshLb.addEventListener('click', loadLeaderboard);
 
 });
-   // ฟังก์ชันดึงข้อมูลสรุปรวม
-    function loadDashboardData() {
-      const currentHospitalId = 'HOSPITAL_001'; 
-      
-      google.script.run
-        .withSuccessHandler(function(data) {
-          if (data.error) {
-            console.error("Error:", data.error);
-            return;
-          }
-          
-          const labels = data.map(item => item.label); 
-          const powerData = data.map(item => item.power);
-          const waterData = data.map(item => item.water);
-          
-          // ❌ ต้องไปสร้างฟังก์ชัน updateChart ให้รับพารามิเตอร์ 3 ตัวนี้ก่อน
-          // หรือเปลี่ยนไปใช้ระบบกราฟเดิมที่คุณมี
-          // updateChart(labels, powerData, waterData); 
-        })
-        .withFailureHandler(function(error) {
-          console.error(error);
-        })
-        .getCombinedSummaryData(currentHospitalId);
-    }
-
-    // โหลดข้อมูลเมื่อเปิดหน้าเว็บ
-    window.onload = function() {
-      loadDashboardData();
-    };
-
-    // ✅ เอาแท็ก <script> ที่แทรกอยู่ออกไป
-    // ฟังก์ชันนี้จะถูกเรียกเมื่อกดปุ่ม "อัปเดต"
-    function updateDashboardContent() {
-      const currentHospitalId = 'HOSPITAL_001'; 
-      
-      // ✅ แก้ไข ID ให้ตรงกับ HTML ด้านบน (filter-year, filter-month)
-      const selectedYear = document.getElementById('filter-year').value;   
-      const selectedMonth = document.getElementById('filter-month').value; 
-      
-      Swal.fire({
-        title: 'กำลังคำนวณข้อมูล...',
-        allowOutsideClick: false,
-        didOpen: () => { Swal.showLoading(); }
-      });
-
-      google.script.run
-        .withSuccessHandler(function(totals) {
-          Swal.close();
-          if (totals.error) {
-            console.error("Error:", totals.error);
-            return;
-          }
-          
-          // ⚠️ ข้อควรระวัง: ต้องแน่ใจว่าได้สร้าง ID เหล่านี้ใน HTML แล้วจริงๆ ไม่งั้นจะ Error
-          const textPowerEl = document.getElementById('text-power');
-          if (textPowerEl) textPowerEl.innerText = totals.power.toLocaleString() + ' kWh';
-          
-          const textWaterEl = document.getElementById('text-water');
-          if (textWaterEl) textWaterEl.innerText = totals.water.toLocaleString() + ' m³';
-          
-          // ... (ทำแบบเดียวกันกับ ID อื่นๆ เพื่อป้องกัน Error กรณีหา Element ไม่เจอ)
-          
-        })
-        .withFailureHandler(function(error) {
-          Swal.close();
-          console.error(error);
-          alert('ดึงข้อมูลล้มเหลว');
-        })
-        .getFilteredDashboardData(currentHospitalId, selectedYear, selectedMonth);
-    }
-</script> 
+</script>
 </body>
 </html>
